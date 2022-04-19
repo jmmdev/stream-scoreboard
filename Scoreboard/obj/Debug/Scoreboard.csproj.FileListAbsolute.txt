@@ -36,8 +36,6 @@ C:\Users\Jose\Desktop\Layouts\Scoreboard\Scoreboard\bin\Debug\obs-websocket-dotn
 C:\Users\Jose\Desktop\Layouts\Scoreboard\Scoreboard\bin\Debug\websocket-sharp.dll
 C:\Users\Jose\Desktop\Layouts\Scoreboard\Scoreboard\bin\Debug\obs-websocket-dotnet.xml
 C:\Users\Jose\Desktop\Layouts\Scoreboard\Scoreboard\bin\Debug\websocket-sharp.xml
-C:\Users\Jose\Desktop\Layouts\Scoreboard\Scoreboard\obj\Debug\NewCommand.g.cs
-C:\Users\Jose\Desktop\Layouts\Scoreboard\Scoreboard\obj\Debug\NewCommand.baml
 C:\Users\Anabel\Desktop\Layouts\Scoreboard\Scoreboard\bin\Debug\Scoreboard.exe.config
 C:\Users\Anabel\Desktop\Layouts\Scoreboard\Scoreboard\bin\Debug\Scoreboard.exe
 C:\Users\Anabel\Desktop\Layouts\Scoreboard\Scoreboard\bin\Debug\Scoreboard.pdb

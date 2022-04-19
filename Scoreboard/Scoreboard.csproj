@@ -159,9 +159,6 @@
     <Compile Include="Command.cs" />
     <Compile Include="Entrant.cs" />
     <Compile Include="Event.cs" />
-    <Compile Include="NewCommand.xaml.cs">
-      <DependentUpon>NewCommand.xaml</DependentUpon>
-    </Compile>
     <Compile Include="Phase.cs" />
     <Compile Include="PhaseGroup.cs" />
     <Compile Include="PhaseGroupConnection.cs" />
@@ -182,10 +179,6 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="NewCommand.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">

@@ -14,6 +14,7 @@
     <Window.Resources>
         <Style x:Key="StandardButton" TargetType="Button">
             <Setter Property="Foreground" Value="#ffffff"/>
+            <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
@@ -49,6 +50,7 @@
 
         <Style x:Key="SaveButton" TargetType="Button">
             <Setter Property="Foreground" Value="#ffffff"/>
+            <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
@@ -91,15 +93,16 @@
 
         <Style x:Key="SmashGGButton" TargetType="Button">
             <Setter Property="Foreground" Value="#ffffff"/>
+            <Setter Property="FontWeight" Value="Bold" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
                         <Border Name="Border" CornerRadius="2" BorderThickness="0"
-                    Background="#cb333b">
+                    Background="#cb333b" >
                             <ContentPresenter Margin="2" 
                                  HorizontalAlignment="Center"
                                  VerticalAlignment="Center" 
-                                 RecognizesAccessKey="True"/>
+                                 RecognizesAccessKey="True" />
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="true">
@@ -215,10 +218,10 @@
                             <TabPanel x:Name="HeaderPanel"
                     Grid.Row="0"
                     Panel.ZIndex="1"
-                    Margin="0,0,4,-1"
+                    Margin="0"
                     IsItemsHost="True"
                     KeyboardNavigation.TabIndex="1"
-                    Background="Transparent" />
+                    Background="{DynamicResource FieldHighlight}" />
                             <Border x:Name="Border"
                   Grid.Row="1"
                   Background="{DynamicResource Background}"
@@ -248,11 +251,11 @@
                     <ControlTemplate TargetType="{x:Type TabItem}">
                         <Grid x:Name="Root">
                             <Border x:Name="Border"
-                  Margin="0,0,-4,0"
-                  BorderThickness="0,1,1,0"
-                  CornerRadius="7,7,0,0"
-                  BorderBrush="{DynamicResource FieldHighlight}"
-                  Background="{DynamicResource FieldHighlight}">
+                  Margin="0,0,2,0"
+                  BorderThickness="0"
+                  CornerRadius="3 3 0 0"
+                  BorderBrush="{DynamicResource Background}"
+                  Background="#0f0f12">
                                 <ContentPresenter x:Name="ContentSite"
                               VerticalAlignment="Center"
                               HorizontalAlignment="Center"
@@ -289,6 +292,9 @@
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="true">
                                 <Setter TargetName="Border" Property="Background" Value="{DynamicResource FieldHighlight}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter TargetName="Border" Property="Background" Value="#0f0f12"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -581,7 +587,7 @@
         </Style>
 
         <StackPanel x:Key="smashGGButtonConnect" Orientation="Horizontal" >
-            <Image Source="smashGGLogo.png" Height="28" Margin="0 0 4 0"></Image>
+            <Image Source="smashGGLogo.png" Height="28" Margin="0 0 3 0"></Image>
             <TextBlock Height="32" FontSize="15" Margin="3">Connect to smash.gg</TextBlock>
         </StackPanel>
 
@@ -601,7 +607,7 @@
     <Grid>
         <Grid Name="gridStart" Height="32" Width="452" Visibility="Visible">
             <Button Style="{StaticResource StandardButton}" Name="btnManual" Width="190" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Manual" FontSize="16" Click="BtnManual_Click" Cursor="Hand" />
-            <Button Style="{StaticResource SmashGGButton}" Name="btnSmashGG" Width="190" Height="32" HorizontalAlignment="Right" VerticalAlignment="Top" Content="{StaticResource smashGGButtonConnect}" FontSize="14" Click="BtnSmashGG_Click" Cursor="Hand" />
+            <Button Style="{StaticResource SmashGGButton}" Name="btnSmashGG" Width="190" Height="32" HorizontalAlignment="Right" VerticalAlignment="Top" Content="{StaticResource smashGGButtonConnect}" FontSize="1" Click="BtnSmashGG_Click" Cursor="Hand" />
             <Grid Name="gridUrl" Height="104" Margin="0 64 0 0" Visibility="Hidden">
                 <Label Content="Tournament url" VerticalAlignment="Top" VerticalContentAlignment="Bottom" FontWeight="Bold" FontSize="16" Padding="0"/>
                 <TextBox Name="tbUrl" Height="24" VerticalAlignment="Top" VerticalContentAlignment="Center" Margin="0 24 0 0" TextChanged="TbUrl_TextChanged" />
@@ -681,8 +687,8 @@
 
                         <Grid Name="gridSecondCaster" Width="322" Height="48" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 32 0 0" IsEnabled="False" >
                             <Button Style="{StaticResource StandardButton}" Name="btnSwapCasters" Width="100" Height="24" Content="← Swap →" FontSize="14" Margin="0 24 0 0" HorizontalAlignment="Left" VerticalAlignment="Top" Cursor="Hand" Click="SwapCasters" IsEnabled="false"/>
-                            <Label Width="180" Height="24" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Content="Caster 2" Padding="0" VerticalContentAlignment="Center" FontSize="14" HorizontalContentAlignment="Right"/>
-                            <TextBox Name="tbCaster2" Width="180" Height="24" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,24,0,0" FontSize="14" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" TextChanged="CheckSaveCasters" />
+                            <Label Width="180" Height="24" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0" Content="Caster 2" Padding="0" VerticalContentAlignment="Center" FontSize="14" HorizontalContentAlignment="Left"/>
+                            <TextBox Name="tbCaster2" Width="180" Height="24" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,24,0,0" FontSize="14" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" TextChanged="CheckSaveCasters" />
                         </Grid>
                         <Button Style="{StaticResource SaveButton}" Name="btnSaveCasters" Width="100" Height="32" Content="Update" FontSize="14" Margin="0 102 0 0" HorizontalAlignment="Center" VerticalAlignment="Top" Cursor="Hand" Click="SaveCasters" IsEnabled="false"/>
                     </Grid>
@@ -704,25 +710,36 @@
                         <PasswordBox Name="pbPassword" Width="140" Height="24" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="210 0 0 0" FontSize="14" VerticalContentAlignment="Center"/>
                     </Grid>
 
-                    <Button Style="{StaticResource StandardButton}" Name="btnObsConnection" Width="80" Height="24" Content="Connect" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 48 118 0" Cursor="Hand" Click="BtnObsConnection_Click" IsDefault="True"/>
+                    <Button Style="{StaticResource StandardButton}" Name="btnObsConnection" Width="80" Height="32" Content="Connect" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 44 118 0" Cursor="Hand" Click="BtnObsConnection_Click" IsDefault="True"/>
                     <Label Name="lblConnection" Height="24" Width="90" Margin="0 48 16 0 " HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Content="Disconnected" Foreground="Red"/>
 
                     <Grid Name="gridOptions" IsEnabled="false" Height="220" VerticalAlignment="Bottom" Cursor="Arrow">
-                        <Label Height="24" Width="122" Margin="16 16 0 0" Content="OBS shortcuts" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold" Padding="0" FontSize="14" VerticalContentAlignment="Center" />
-                        <ListBox Name="listCommand" Height="126" Width="122" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="16 0 0 52 " SelectionChanged="ListCommand_SelectionChanged" MouseDoubleClick="ListCommand_MouseDoubleClick" />
-                        <Button Style="{StaticResource StandardButton}" Name="btnAddCommand" Height="24" Width="24" Content="+" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="146 0 0 136" Click="ShowNewCommand" Cursor="Hand"/>
-                        <Button Style="{StaticResource StandardButton}" Name="btnRemoveCommand" Height="24" Width="24" Content="-" FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="146 0 0 104" Click="RemoveCommand" IsEnabled="false" Cursor="Hand" />
-                        <Button Style="{StaticResource StandardButton}" Name="btnEditCommand" Height="24" Width="24" Content="..." FontSize="14" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="146 0 0 72" Click="EditCommand" IsEnabled="false" Cursor="Hand" />
-                        <Button Style="{StaticResource StandardButton}" Name="btnApplyCommand" Width="122" Height="28" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="16" Content="Apply" FontSize="14" Click="BtnApplyCommand_Click" IsEnabled="False" Cursor="Hand" />
+                        <Label Height="24" Width="552" Margin="16 8 0 0" Content="OBS shortcuts" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold" Padding="0" FontSize="14" VerticalContentAlignment="Center" BorderBrush="#80ffffff" BorderThickness="0 0 0 1" />
+
+                        <Grid Width="154" Height="161" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="16">
+                            <ListBox Name="listCommand" Height="126" Width="122" HorizontalAlignment="Left" VerticalAlignment="Top" SelectionChanged="ListCommand_SelectionChanged" />
+                            <Button Style="{StaticResource StandardButton}" Name="btnRemoveCommand" Height="24" Width="24" Content="-" FontSize="14" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 33" Click="RemoveCommand" IsEnabled="false" Cursor="Hand" />
+                            <Button Style="{StaticResource StandardButton}" Name="btnEditCommand" Height="24" Width="24" Content="..." FontSize="14" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 65" Click="EditCommand" IsEnabled="false" Cursor="Hand" />
+                            <Button Style="{StaticResource StandardButton}" Name="btnApplyCommand" Width="122" Height="28" HorizontalAlignment="Left" VerticalAlignment="Bottom" Content="Apply" FontSize="14" Click="BtnApplyCommand_Click" IsEnabled="False" Cursor="Hand" />
+                        </Grid>
+                        
+                        <Grid Width="350" Height="161" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="16">
+                            <Label Content="Name" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="0" FontSize="14" VerticalContentAlignment="Bottom" FontWeight="Bold"/>
+                            <TextBox Name="tbCommandName" Width="350" Height="24" Margin="0 24 0 0" HorizontalAlignment="Center" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="16" TextChanged="tbCommandName_TextChanged"/>
+                            <Label Content="Value" Height="24" Margin="0 56 0 0" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="0" FontSize="14" VerticalContentAlignment="Bottom" FontWeight="Bold"/>
+                            <TextBox Name="tbCommandValue" Width="350" Height="24" Margin="0 80 0 0" HorizontalAlignment="Center" VerticalAlignment="Top" PreviewKeyDown="tbCommandValue_PreviewKeyDown" KeyDown="tbCommandValue_KeyDown" VerticalContentAlignment="Center" TextChanged="tbCommandValue_TextChanged" FontSize="16" />
+                            <Label Content="*alt, shift and ctrl plus an additional key (number, letter or F keys)*" Height="16" Margin="0,105,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="0" FontSize="12" VerticalContentAlignment="Top" />
+                            <Button Style="{DynamicResource SaveButton}" Name="btnSaveCommand" Margin="0 129 0 0" Height="32" Width="100" VerticalAlignment="Top" Content="Add" FontSize="14" Cursor="Hand" Click="SaveCommand" IsEnabled="False" IsDefault="True" />
+                        </Grid>
                     </Grid>
                 </Grid>
             </TabItem>
             <TabItem Name="settingsTab" Header="Settings" FontSize="14">
                 <Grid Cursor="Arrow">
-                    <Label Name="lbResourcesFolder" Content="Resources folder" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16" FontSize="14" Padding="0" VerticalContentAlignment="Center"/>
+                    <Label Name="lbResourcesFolder" Content="Resources folder" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16" FontSize="14" Padding="0" VerticalContentAlignment="Center" FontWeight="Bold"/>
                     <TextBox Name="tbResourcesFolder" IsEnabled="False" Width="230" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16 40" VerticalContentAlignment="Center" TextChanged="SettingsTextChanged"/>
                     <Button Style="{StaticResource StandardButton}" Name="btnResourcesFolder" Width="30" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="250 40" Content="..." FontSize="14" VerticalContentAlignment="Center" Click="BrowseResources" Cursor="Hand"/>
-                    <Label Name="lbOutputFolder" Content="Output folder" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16 72" FontSize="14" Padding="0" VerticalContentAlignment="Center"/>
+                    <Label Name="lbOutputFolder" Content="Output folder" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16 72" FontSize="14" Padding="0" VerticalContentAlignment="Center" FontWeight="Bold"/>
                     <TextBox Name="tbOutputFolder" IsEnabled="False" Width="230" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16 96" VerticalContentAlignment="Center" TextChanged="SettingsTextChanged"/>
                     <Button Style="{StaticResource StandardButton}" Name="btnOutputFolder" Width="30" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="250 96" Content="..." FontSize="14" VerticalContentAlignment="Center" Click="BrowseOutput" Cursor="Hand"/>
                     <Label Name="lbSaveMessage" Content="Changes saved!" Height="32" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="124 16" FontSize="14" Padding="0" VerticalContentAlignment="Center" Foreground="Green" Visibility="Hidden"/>

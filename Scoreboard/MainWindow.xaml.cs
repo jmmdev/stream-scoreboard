@@ -48,6 +48,9 @@ namespace Scoreboard
         string password;
 
         List<Command> commands = new List<Command>();
+        List<string> keys = new List<string>();
+
+        bool isEditing = false;
 
         bool showUrl = false;
 
@@ -486,6 +489,10 @@ namespace Scoreboard
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             lbSaveMessage.Visibility = Visibility.Hidden;
+            isEditing = false;
+            tbCommandName.Text = "";
+            tbCommandValue.Text = "";
+            btnSaveCommand.Content = "Add";
         }
 
         private void EnableBtnApply(object sender, EventArgs e)
@@ -552,42 +559,13 @@ namespace Scoreboard
             lblConnection.Foreground = new SolidColorBrush(Color.FromRgb(0x00, 0xff, 0x00));
         }
 
-        private void ShowNewCommand(object sender, RoutedEventArgs e)
-        {
-            PromptCommandWindow(false);
-        }
-
         private void EditCommand(object sender, RoutedEventArgs e)
         {
-            PromptCommandWindow(true);
+            EditCommandValues(commands[listCommand.SelectedIndex].name, commands[listCommand.SelectedIndex].value);
+            isEditing = true;
         }
 
-        private void PromptCommandWindow(bool edit)
-        {
-            NewCommand window = new NewCommand();
-            window.Show();
-            window.Activate();
-            window.Focus();
-            window.Topmost = true;
-            window.Closed += RefocusMain;
-
-            if (edit)
-            {
-                Command c = commands[listCommand.SelectedIndex];
-                window.isEditing = true;
-                window.Title = "Edit command";
-                window.EditCommand(c.name, c.value);
-            }
-
-            IsEnabled = false;
-        }
-
-        public void RefocusMain(object sender, EventArgs e)
-        {
-            IsEnabled = true;
-        }
-
-        public void SaveCommand(string name, string value, bool isEditing)
+        private void SaveCommand(string name, string value, bool isEditing)
         {
             if (!isEditing)
             {
@@ -647,6 +625,8 @@ namespace Scoreboard
             btnRemoveCommand.IsEnabled = enabled;
             btnEditCommand.IsEnabled = enabled;
             btnApplyCommand.IsEnabled = enabled;
+
+            isEditing = false;
         }
 
         private void BtnApplyCommand_Click(object sender, RoutedEventArgs e)
@@ -687,13 +667,6 @@ namespace Scoreboard
                 }
             }
         }
-
-        private void ListCommand_MouseDoubleClick(object sender, MouseButtonEventArgs e)
-        {
-            if (listCommand.SelectedItem != null)
-                PromptCommandWindow(true);
-        }
-
 
         private void TbInfo_TextChanged(object sender, TextChangedEventArgs e)
         {
@@ -1056,7 +1029,7 @@ namespace Scoreboard
 
                 int threshold = roundWords.Length;
 
-                if (int.TryParse(roundWords[roundWords.Length-1], out int value))
+                if (int.TryParse(roundWords[roundWords.Length - 1], out int value))
                 {
                     tbRoundNum.Text = value.ToString();
                     threshold--;
@@ -1139,6 +1112,145 @@ namespace Scoreboard
         private void DisplayErrorMessage()
         {
 
+        }
+
+        private void SaveCommand(object sender, RoutedEventArgs e)
+        {
+            SaveCommand(tbCommandName.Text, tbCommandValue.Text, isEditing);
+            tbCommandName.Text = "";
+            tbCommandValue.Text = "";
+            btnSaveCommand.Content = "Add";
+        }
+
+        private void tbCommandValue_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            e.Handled = true;
+
+            string keyString;
+
+            if (IsAcceptedKey(e.Key))
+            {
+                string keyValue = e.Key.ToString();
+
+                if (keyValue.ToLower().Contains("system"))
+                    keyString = "Alt";
+                else if (keyValue.ToLower().Contains("ctrl"))
+                    keyString = "Control";
+                else if (keyValue.ToLower().Contains("shift"))
+                    keyString = "Shift";
+                else if (int.TryParse(keyValue.Replace("D", string.Empty), out int value))
+                {
+                    keyString = value.ToString();
+                }
+                else
+                    keyString = e.Key.ToString();
+
+
+                if (!ListContainsPrimaryKey())
+                {
+                    if (IsModifier(keyString))
+                    {
+                        if (keys.IndexOf(keyString) < 0)
+                            keys.Add(keyString);
+                    }
+                    else
+                    {
+                        keys.Add(keyString);
+                    }
+
+                    UpdateCommandValue();
+                }
+
+            }
+        }
+
+        private void tbCommandValue_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (!IsAcceptedKey(e.Key))
+
+                e.Handled = true;
+
+            else if (e.Key == Key.Back)
+            {
+                e.Handled = true;
+
+                if (keys.Count > 0)
+                    keys.Remove(keys[keys.Count - 1]);
+
+                UpdateCommandValue();
+            }
+        }
+
+        private bool IsAcceptedKey(Key key)
+        {
+            int code = (int)key;
+            return (code >= 34 && code <= 69) || (code >= 90 && code <= 101)
+                || (code >= 116 && code <= 119) || code == 156 || code == 2;
+        }
+
+        private bool IsModifier(string key)
+        {
+            return key == "Alt" || key == "Shift" || key == "Control";
+        }
+
+        private bool ListContainsPrimaryKey()
+        {
+            foreach (string key in keys)
+            {
+                if (key != "Control" && key != "Alt" && key != "Shift")
+                    return true;
+            }
+
+            return false;
+        }
+
+        private void UpdateCommandValue()
+        {
+            tbCommandValue.Text = "";
+
+            foreach (string key in keys)
+            {
+                tbCommandValue.Text += key;
+
+                if (keys.IndexOf(key) != keys.Count - 1)
+                    tbCommandValue.Text += " + ";
+            }
+
+            tbCommandValue.SelectionStart = tbCommandValue.Text.Length;
+        }
+
+        private void tbCommandName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            CheckTextboxes();
+        }
+
+        private void tbCommandValue_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            CheckTextboxes();
+        }
+
+        private void CheckTextboxes()
+        {
+            bool hasName = !string.IsNullOrEmpty(tbCommandName.Text) && !string.IsNullOrWhiteSpace(tbCommandName.Text);
+            bool hasValue = !string.IsNullOrEmpty(tbCommandValue.Text) && !string.IsNullOrWhiteSpace(tbCommandValue.Text);
+
+            btnSaveCommand.IsEnabled = hasName && hasValue;
+        }
+
+        private void EditCommandValues(string name, string value)
+        {
+            tbCommandName.Text = name;
+            tbCommandValue.Text = value;
+
+            char[] separators = { ' ', '+' };
+            string[] values = value.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (string k in values)
+            {
+                keys.Add(k);
+            }
+
+            btnSaveCommand.Content = "Update";
         }
     }
 }
