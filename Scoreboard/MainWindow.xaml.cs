@@ -1,58 +1,53 @@
-﻿using Newtonsoft.Json;
+﻿using GraphQL;
+using GraphQL.Client.Abstractions;
+using GraphQL.Client.Http;
+using GraphQL.Client.Serializer.Newtonsoft;
+using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using OBSWebsocketDotNet;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
-using GraphQL.Client.Serializer.Newtonsoft;
-using GraphQL.Client.Http;
-using GraphQL.Client.Abstractions;
-using System.Net.Http.Headers;
-using GraphQL;
 
 namespace Scoreboard
 {
     public partial class MainWindow : Window
     {
-        private const int CB_SETCUEBANNER = 0x1703;
+        private GraphQLHttpClient client = new GraphQLHttpClient("https://api.smash.gg/gql/alpha", new NewtonsoftJsonSerializer());
+        private const string token = "ceffaeed94948ae90d5c11287386b979";
 
-        [System.Runtime.InteropServices.DllImport("user32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto)]
-        private static extern int SendMessage(IntPtr hWnd, int msg, int wParam, [System.Runtime.InteropServices.MarshalAs(System.Runtime.InteropServices.UnmanagedType.LPWStr)] string lParam);
-
-        GraphQLHttpClient client = new GraphQLHttpClient("https://api.smash.gg/gql/alpha", new NewtonsoftJsonSerializer());
-        const string token = "ceffaeed94948ae90d5c11287386b979";
-
-        List<Event> localEvents = new List<Event>();
-        List<Phase> localPhases = new List<Phase>();
-        List<PhaseGroup> localGroups = new List<PhaseGroup>();
-        List<Set> localSets = new List<Set>();
+        private List<Event> localEvents = new List<Event>();
+        private List<Phase> localPhases = new List<Phase>();
+        private List<PhaseGroup> localGroups = new List<PhaseGroup>();
+        private List<Set> localSets = new List<Set>();
 
         protected OBSWebsocket obs;
 
-        string resourcesDir;
-        string outputDir;
+        private string resourcesDir;
+        private string outputDir;
 
-        bool isDoubles = false;
-        bool isSmashgg = false;
-        bool roundNum = true;
-        bool obsIsConnected = false;
+        private bool isDoubles = false;
+        private bool isSmashgg = false;
+        private bool roundNum = true;
+        private bool obsIsConnected = false;
 
-        readonly string url = "ws://127.0.0.1:";
-        string port;
-        string password;
+        private readonly string url = "ws://127.0.0.1:";
+        private string port;
+        private string password;
 
-        List<Command> commands = new List<Command>();
-        List<string> keys = new List<string>();
+        private List<Command> commands = new List<Command>();
+        private List<string> keys = new List<string>();
 
-        bool isEditing = false;
+        private bool isEditing = false;
 
-        bool showUrl = false;
+        private bool showUrl = false;
 
         public MainWindow()
         {
@@ -72,7 +67,7 @@ namespace Scoreboard
             tbUrl.Text = "ultima-stock-iii";
         }
 
-        public void ClearFields()
+        private void ClearFields()
         {
             cbEvent.Items.Clear();
             localEvents.Clear();
@@ -91,7 +86,7 @@ namespace Scoreboard
             lbScore2.Content = "0";
         }
 
-        public void InitializeManual()
+        private void InitializeManual()
         {
             ClearFields();
 
@@ -135,7 +130,7 @@ namespace Scoreboard
             roundGrid.Margin = margin;
         }
 
-        public void InitializeSmashGG()
+        private void InitializeSmashGG()
         {
             ClearFields();
 
@@ -158,12 +153,12 @@ namespace Scoreboard
             LoadTournament(slug);
         }
 
-        public void TbUrl_TextChanged(object sender, TextChangedEventArgs e)
+        private void TbUrl_TextChanged(object sender, TextChangedEventArgs e)
         {
             btnSubmitUrl.IsEnabled = !string.IsNullOrEmpty(tbUrl.Text) && !string.IsNullOrWhiteSpace(tbUrl.Text);
         }
 
-        public void BtnSubmitUrl_Click(object sender, RoutedEventArgs e)
+        private void BtnSubmitUrl_Click(object sender, RoutedEventArgs e)
         {
             if (!string.IsNullOrEmpty(tbUrl.Text) && !string.IsNullOrWhiteSpace(tbUrl.Text))
             {
@@ -902,7 +897,7 @@ namespace Scoreboard
             }
         }
 
-        public async void CbPhase_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private async void CbPhase_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (cbPhase.SelectedIndex >= 0 && !cbPhase.SelectedValue.ToString().Contains("..."))
             {
@@ -963,12 +958,12 @@ namespace Scoreboard
             }
         }
 
-        public void CbPhaseGroup_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CbPhaseGroup_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             LoadSets();
         }
 
-        public void CbSet_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        private void CbSet_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (cbSet.SelectedIndex >= 0 && !cbSet.SelectedValue.ToString().Contains("..."))
             {

@@ -654,7 +654,7 @@
                 <Button Style="{StaticResource StandardButton}" Name="btnSubmitUrl" Content="Done" VerticalAlignment="Top" Margin="0 72 0 0" Width="100" Height="32" FontSize="16" Click="BtnSubmitUrl_Click" Cursor="Hand" />
             </Grid>
         </Grid>
-        <TabControl Name="tabControl" SelectionChanged="TabControl_SelectionChanged" MouseDown="TabControl_MouseDown" Visibility="Hidden">
+        <TabControl Name="tabControl" SelectionChanged="TabControl_SelectionChanged" MouseDown="TabControl_MouseDown" Visibility="Visible">
             <TabItem Name="scoreTab" Header="Scoreboard" FontSize="14">
                 <Grid Cursor="Arrow">
                     <Label Width="180" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" Content="Event" Padding="0" VerticalContentAlignment="Bottom" FontSize="14" FontWeight="Bold"/>
@@ -719,7 +719,8 @@
                     <Button Style="{StaticResource SaveButton}" Name="btnSave" Width="100" Height="24" HorizontalAlignment="Center" VerticalAlignment="Bottom" Content="Update" FontSize="14" Margin="0 11" Cursor="Hand" Click="SaveChanges" IsEnabled="False"/>
 
                     <Button Style="{StaticResource BackButton}" Name="btnBack" Content="← Back" Height="24" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="16 8" FontSize="16" Padding="0" VerticalContentAlignment="Center" Cursor="Hand" BorderThickness="0" Click="BtnBack_Click" />
-
+                    <Label 
+                    
                 </Grid>
             </TabItem>
             <TabItem Name="extraTab" Header="Extra" FontSize="14">
