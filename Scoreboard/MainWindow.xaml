@@ -664,10 +664,12 @@
         <Grid Name="gridStart" Height="32" Width="452" Visibility="Visible">
             <Button Style="{StaticResource StandardButton}" Name="btnManual" Width="190" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Manual" FontSize="16" Click="BtnManual_Click" Cursor="Hand" />
             <Button Style="{StaticResource SmashGGButton}" Name="btnSmashGG" Width="190" Height="32" HorizontalAlignment="Right" VerticalAlignment="Top" Content="{StaticResource smashGGButtonConnect}" FontSize="1" Click="BtnSmashGG_Click" Cursor="Hand" />
-            <Grid Name="gridUrl" Height="104" Margin="0 64 0 0" Visibility="Hidden">
-                <Label Content="Tournament url" VerticalAlignment="Top" VerticalContentAlignment="Bottom" FontWeight="Bold" FontSize="16" Padding="0"/>
-                <TextBox Name="tbUrl" Height="24" VerticalAlignment="Top" VerticalContentAlignment="Center" Margin="0 24 0 0" TextChanged="TbUrl_TextChanged" />
-                <Button Style="{StaticResource StandardButton}" Name="btnSubmitUrl" Content="Done" VerticalAlignment="Top" Margin="0 72 0 0" Width="100" Height="32" FontSize="16" Click="BtnSubmitUrl_Click" Cursor="Hand" />
+            <Grid Name="gridUrl" Height="152" Margin="0 64 0 0" Visibility="Hidden">
+                <Label Content="Recent tournaments" VerticalAlignment="Top" VerticalContentAlignment="Bottom" FontWeight="Bold" FontSize="14" Padding="0"/>
+                <ComboBox Name="cbTournaments" Height="24" VerticalAlignment="Top" VerticalContentAlignment="Center" Margin="0 24 0 0" IsEnabled="false" SelectionChanged="cbTournaments_SelectionChanged" FontSize="14" Foreground="White" Cursor="Hand" />
+                <Label Content="Tournament url" VerticalAlignment="Top" VerticalContentAlignment="Bottom" Margin="0 56 0 0" FontWeight="Bold" FontSize="14" Padding="0"/>
+                <TextBox Name="tbUrl"  Height="24" VerticalAlignment="Top" VerticalContentAlignment="Center" Margin="0 80 0 0" TextChanged="TbUrl_TextChanged" />
+                <Button Style="{StaticResource StandardButton}" Name="btnSubmitUrl" Content="Done" VerticalAlignment="Top" Margin="0 120 0 0" Width="100" Height="32" FontSize="16" Click="BtnSubmitUrl_Click" FontWeight="Normal" Cursor="Hand" />
             </Grid>
         </Grid>
         <TabControl Name="tabControl" SelectionChanged="TabControl_SelectionChanged" MouseDown="TabControl_MouseDown" Visibility="Hidden">
@@ -675,7 +677,7 @@
                 <Grid Cursor="Arrow">
                     <Label Width="180" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" Content="Event" Padding="0" VerticalContentAlignment="Bottom" FontSize="14" FontWeight="Bold"/>
                     <ComboBox Name="cbEvent" Width="180" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8,32,0,0" Cursor="Hand" SelectionChanged="CbEvent_SelectionChanged"/>
-                    <Button Style="{StaticResource RefreshButton}" Name="btnRefresh" Width="32" Height="32" Content="P" FontFamily="Wingdings 3" FontSize="19" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="188 76 0 0" Click="btnRefresh_Click" Visibility="Hidden" />
+                    <Button Style="{StaticResource RefreshButton}" Name="btnRefresh" Width="32" Height="32" Content="P" FontFamily="Wingdings 3" FontSize="19" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="188 75 0 0" Click="btnRefresh_Click" Visibility="Hidden" />
                     <Grid Name="gridSmashGG" Height="112" VerticalAlignment="Top" Visibility="Hidden">
                         <Label Width="180" Height="24" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 8" Content="Phase" Padding="0" VerticalContentAlignment="Bottom" FontSize="14" FontWeight="Bold"/>
                         <ComboBox Name="cbPhase" Width="180" Height="24" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 32 0 0" Cursor="Hand" SelectionChanged="CbPhase_SelectionChanged"/>

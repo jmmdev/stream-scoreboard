@@ -167,6 +167,7 @@
     <Compile Include="Settings.cs" />
     <Compile Include="Slot.cs" />
     <Compile Include="Tournament.cs" />
+    <Compile Include="TournamentItem.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>

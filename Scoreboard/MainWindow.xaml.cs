@@ -25,6 +25,7 @@ namespace Scoreboard
         private GraphQLHttpClient client = new GraphQLHttpClient("https://api.smash.gg/gql/alpha", new NewtonsoftJsonSerializer());
         private const string token = "ceffaeed94948ae90d5c11287386b979";
 
+        private List<TournamentItem> localTournaments = new List<TournamentItem>();
         private List<Event> localEvents = new List<Event>();
         private List<Phase> localPhases = new List<Phase>();
         private List<PhaseGroup> localGroups = new List<PhaseGroup>();
@@ -57,6 +58,10 @@ namespace Scoreboard
 
             client.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
+            LoadTournamentFile();
+
+            cbTournaments.SelectedIndex = 0;
+
             LoadSettings();
             LoadCommands();
 
@@ -65,8 +70,6 @@ namespace Scoreboard
             obs = new OBSWebsocket();
             obs.Connected += OnConnect;
             obs.Disconnected += OnDisconnect;
-
-            tbUrl.Text = "ultima-stock-iii";
         }
 
         private void ClearFields()
@@ -158,6 +161,9 @@ namespace Scoreboard
         private void TbUrl_TextChanged(object sender, TextChangedEventArgs e)
         {
             btnSubmitUrl.IsEnabled = !string.IsNullOrEmpty(tbUrl.Text) && !string.IsNullOrWhiteSpace(tbUrl.Text);
+
+            if (tbUrl.IsFocused)
+                cbTournaments.SelectedIndex = 0;
         }
 
         private void BtnSubmitUrl_Click(object sender, RoutedEventArgs e)
@@ -173,7 +179,7 @@ namespace Scoreboard
         {
             if (cbEvent.SelectedIndex >= 0 && !cbEvent.SelectedValue.ToString().Contains("..."))
             {
-                if(localEvents.Count > 1 && cbEvent.Items[0].ToString().Contains("..."))
+                if (localEvents.Count > 1 && cbEvent.Items[0].ToString().Contains("..."))
                 {
                     cbEvent.Items.Remove(cbEvent.Items[0]);
                     localEvents.RemoveAt(0);
@@ -748,15 +754,13 @@ namespace Scoreboard
 
             if (showUrl)
             {
-                gridStart.Height = 172;
-                margin.Top = 30;
+                gridStart.Height = 216;
                 gridUrl.Visibility = Visibility.Visible;
                 btnSmashGG.Content = Resources["smashGGButtonCancel"];
             }
             else
             {
                 gridStart.Height = 32;
-                margin.Top = 0;
                 gridUrl.Visibility = Visibility.Hidden;
                 btnSmashGG.Content = Resources["smashGGButtonConnect"];
             }
@@ -778,7 +782,14 @@ namespace Scoreboard
                 gridStart.Visibility = Visibility.Visible;
                 btnRefresh.Visibility = Visibility.Hidden;
 
-                if(isSmashgg)
+                if (isSmashgg)
+                    ClearSelectiveFields("P");
+
+                LoadTournamentFile();
+                cbTournaments.SelectedIndex = 0;
+                tbUrl.Text = "";
+
+                if (isSmashgg)
                     Title = "Stream Scoreboard";
             }
         }
@@ -818,7 +829,7 @@ namespace Scoreboard
                     localEvents.Clear();
                     cbEvent.Items.Clear();
 
-                    Title = "Stream Scoreboard - " + response.Data.Tournament.name; ;
+                    Title = "Stream Scoreboard - " + response.Data.Tournament.name;
 
                     foreach (Event ev in response.Data.Tournament.events)
                     {
@@ -829,6 +840,8 @@ namespace Scoreboard
                     gridStart.Visibility = Visibility.Hidden;
                     tabControl.Visibility = Visibility.Visible;
                     gridSmashGG.Visibility = Visibility.Visible;
+
+                    AddTournamentToFile(slug, response.Data.Tournament.name);
 
                     if (localEvents.Count > 1)
                     {
@@ -844,9 +857,9 @@ namespace Scoreboard
 
                 DisplayErrorMessage();
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                DisplayErrorMessage();
+                Console.WriteLine(e.Message);
             }
             finally
             {
@@ -1335,6 +1348,89 @@ namespace Scoreboard
         {
             Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
             e.Handled = true;
+        }
+
+        private void LoadTournamentFile()
+        {
+            string tournamentFile = "tournaments.json";
+
+            if (File.Exists(tournamentFile))
+            {
+                string tournamentsString = File.ReadAllText(tournamentFile);
+                TournamentItem[] tournamentItems = JsonConvert.DeserializeObject<TournamentItem[]>(tournamentsString);
+
+                localTournaments.Clear();
+                cbTournaments.Items.Clear();
+
+                foreach (TournamentItem t in tournamentItems)
+                {
+                    localTournaments.Add(t);
+                    cbTournaments.Items.Add(t.name);
+                }
+
+            }
+
+            if (cbTournaments.Items.Count > 0)
+            {
+                cbTournaments.Items.Insert(0, "Select a tournament...");
+                cbTournaments.IsEnabled = true;
+            }
+            else
+                cbTournaments.Items.Add("No recent tournaments");
+
+            localTournaments.Insert(0, null);
+        }
+
+        private void AddTournamentToFile(string slug, string name)
+        {
+            TournamentItem t = new TournamentItem()
+            {
+                name = name,
+                slug = slug
+            };
+
+            if (localTournaments.Count == 1)
+            {
+                cbTournaments.Items.RemoveAt(0);
+                cbTournaments.Items.Add("Select a tournament");
+            }
+
+            if (!TournamentExists(slug))
+            {
+                localTournaments.Insert(1, t);
+                cbTournaments.Items.Insert(1, t.name);
+            }
+            else
+            {
+                localTournaments.RemoveAt(cbTournaments.SelectedIndex);
+                localTournaments.Insert(1, t);
+
+                cbTournaments.Items.RemoveAt(cbTournaments.SelectedIndex);
+                cbTournaments.Items.Insert(1, t.name);
+            }
+
+            TournamentItem[] actualTournaments = new ArraySegment<TournamentItem>(localTournaments.ToArray(), 1, localTournaments.Count - 1).ToArray();
+            string json = JsonConvert.SerializeObject(actualTournaments);
+            File.WriteAllText("tournaments.json", json);
+        }
+
+        private void cbTournaments_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cbTournaments.SelectedIndex >= 1)
+            {
+                tbUrl.Text = localTournaments[cbTournaments.SelectedIndex].slug;
+            }
+        }
+
+        private bool TournamentExists(string slug)
+        {
+            foreach (TournamentItem t in localTournaments)
+            {
+                if (t != null && t.slug == slug)
+                    return true;
+            }
+
+            return false;
         }
     }
 }
