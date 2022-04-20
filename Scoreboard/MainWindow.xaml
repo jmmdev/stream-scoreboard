@@ -626,6 +626,16 @@
             </Style.Triggers>
         </Style>
 
+        <Style TargetType="Hyperlink">
+            <Setter Property="Foreground" Value="{DynamicResource StandardButtonPressed}"/>
+            <Setter Property="TextDecorations" Value="" />
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="White" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
         <StackPanel x:Key="smashGGButtonConnect" Orientation="Horizontal" >
             <Image Source="smashGGLogo.png" Height="28" Margin="0 0 3 0"></Image>
             <TextBlock Height="32" FontSize="15" Margin="3">Connect to smash.gg</TextBlock>
@@ -791,6 +801,10 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <Label Content="github.com/jmmdev" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="8 0"/>
+        <Label HorizontalAlignment="Right" VerticalAlignment="Bottom" FontStyle="Italic" FontFamily="Calibri" FontSize="13" Margin="8 0">
+            <Hyperlink NavigateUri="http://github.com/jmmdev" RequestNavigate="Hyperlink_RequestNavigate">
+                github.com/jmmdev
+            </Hyperlink>
+        </Label>
     </Grid>
 </Window>
