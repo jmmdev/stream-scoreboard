@@ -134,12 +134,52 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="true">
+                                <Setter Property="Foreground" Value="{DynamicResource StandardButtonIdle}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
                                 <Setter Property="Foreground" Value="{DynamicResource StandardButtonPressed}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+        </Style>
+
+        <Style x:Key="RefreshButton" TargetType="Button">
+            <Setter Property="Foreground" Value="#ffffff"/>
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Name="Border" CornerRadius="0" BorderThickness="0" BorderBrush="Transparent"
+                    Background="Transparent">
+                            <ContentPresenter Margin="0 3 0 0" 
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Center" 
+                                 RecognizesAccessKey="True"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter TargetName="Border" Property="Background" Value="Transparent"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.5" />
+                    <Setter Property="Cursor" Value="Arrow" />
+                </Trigger>
+                <Trigger Property="IsMouseOver" Value="true">
+                    <Setter Property="Foreground" Value="{DynamicResource StandardButtonMouseOver}"/>
+                </Trigger>
+                <Trigger Property="IsPressed" Value="True">
+                    <Setter Property="Foreground" Value="{DynamicResource StandardButtonPressed}" />
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
         <Style TargetType="TextBox">
@@ -523,7 +563,7 @@
                 BorderThickness="0"
                 CornerRadius="2"
                 Background = "{DynamicResource FieldIdle}">
-                                    <ScrollViewer Margin="0"
+                            <ScrollViewer Margin="0"
                         Focusable="false">
                                 <StackPanel Margin="0"
                         IsItemsHost="True" />
@@ -619,6 +659,7 @@
                 <Grid Cursor="Arrow">
                     <Label Width="180" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" Content="Event" Padding="0" VerticalContentAlignment="Bottom" FontSize="14" FontWeight="Bold"/>
                     <ComboBox Name="cbEvent" Width="180" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8,32,0,0" Cursor="Hand" SelectionChanged="CbEvent_SelectionChanged"/>
+                    <Button Style="{StaticResource RefreshButton}" Name="btnRefresh" Width="32" Height="32" Content="P" FontFamily="Wingdings 3" FontSize="19" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="188 76 0 0" Click="btnRefresh_Click" Visibility="Hidden" />
                     <Grid Name="gridSmashGG" Height="112" VerticalAlignment="Top" Visibility="Hidden">
                         <Label Width="180" Height="24" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 8" Content="Phase" Padding="0" VerticalContentAlignment="Bottom" FontSize="14" FontWeight="Bold"/>
                         <ComboBox Name="cbPhase" Width="180" Height="24" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 32 0 0" Cursor="Hand" SelectionChanged="CbPhase_SelectionChanged"/>
@@ -632,37 +673,40 @@
                         <ComboBox Name="cbRound" Width="152" Height="24" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,24,28,0" Cursor="Hand" SelectionChanged="CbRound_SelectionChanged"/>
                         <TextBox Name="tbRoundNum" Text="1" Width="24" Height="24" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,24,0,0" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="14"/>
                     </Grid>
-                    <Label Name="lbScore1" Width="40" Height="64" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,0,331,18" Content="0" FontSize="60" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="sans serif" FontWeight="bold"/>
-                    <Button Style="{StaticResource ScoreButton}" Name="btnP1Up" Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,24,40" Content="▲" FontSize="14" Cursor="Hand" Click="P1ScoreUp" BorderThickness="0 0 1 1" >
-                        <Button.Resources>
-                            <Style TargetType="{x:Type Border}">
-                                <Setter Property="CornerRadius" Value="3 0 0 0"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
-                    <Button Style="{StaticResource ScoreButton}" Name="btnP2Up" Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="24,0,0,40" Content="▲" FontSize="14" Cursor="Hand" Click="P2ScoreUp" BorderThickness="1 0 0 1">
-                        <Button.Resources>
-                            <Style TargetType="{x:Type Border}">
-                                <Setter Property="CornerRadius" Value="0 3 0 0"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
-                    <Button Style="{StaticResource ScoreButton}" Name="btnP1Down" Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,8,24,0" Content="▼" FontSize="14" Cursor="Hand" Click="P1ScoreDown" BorderThickness="0 1 1 0">
-                        <Button.Resources>
-                            <Style TargetType="{x:Type Border}">
-                                <Setter Property="CornerRadius" Value="0 0 0 3"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
-                    <Button Style="{StaticResource ScoreButton}" Name="btnP2Down" Width="24" Height="24" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="24,8,0,0" Content="▼" FontSize="14" Cursor="Hand" Click="P2ScoreDown" BorderThickness="1 1 0 0">
-                        <Button.Resources>
-                            <Style TargetType="{x:Type Border}">
-                                <Setter Property="CornerRadius" Value="0 0 3 0"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
-                    <Label Name="lbScore2" Width="40" Height="64" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="331,0,0,18" Content="0" FontSize="60" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="sans serif" FontWeight="bold"/>
-
+                    <Grid Width="170" Height="64" Name="scoreGrid" Cursor="Arrow">
+                        <Label Name="lbScore1" Width="40" Height="64" HorizontalAlignment="Left" Content="0" FontSize="60" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="sans serif" FontWeight="bold"/>
+                        <Grid Width="48" Height="48" Name="scoreButtons" Cursor="Arrow">
+                            <Button Style="{StaticResource ScoreButton}" Name="btnP1Up" Width="24" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Content="▲" FontSize="14" Cursor="Hand" Click="P1ScoreUp" BorderThickness="0 0 1 1" >
+                                <Button.Resources>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Setter Property="CornerRadius" Value="3 0 0 0"/>
+                                    </Style>
+                                </Button.Resources>
+                            </Button>
+                            <Button Style="{StaticResource ScoreButton}" Name="btnP2Up" Width="24" Height="24" HorizontalAlignment="Right" VerticalAlignment="Top" Content="▲" FontSize="14" Cursor="Hand" Click="P2ScoreUp" BorderThickness="1 0 0 1">
+                                <Button.Resources>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Setter Property="CornerRadius" Value="0 3 0 0"/>
+                                    </Style>
+                                </Button.Resources>
+                            </Button>
+                            <Button Style="{StaticResource ScoreButton}" Name="btnP1Down" Width="24" Height="24" HorizontalAlignment="Left" VerticalAlignment="Bottom" Content="▼" FontSize="14" Cursor="Hand" Click="P1ScoreDown" BorderThickness="0 1 1 0">
+                                <Button.Resources>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Setter Property="CornerRadius" Value="0 0 0 3"/>
+                                    </Style>
+                                </Button.Resources>
+                            </Button>
+                            <Button Style="{StaticResource ScoreButton}" Name="btnP2Down" Width="24" Height="24" HorizontalAlignment="Right" VerticalAlignment="Bottom" Content="▼" FontSize="14" Cursor="Hand" Click="P2ScoreDown" BorderThickness="1 1 0 0">
+                                <Button.Resources>
+                                    <Style TargetType="{x:Type Border}">
+                                        <Setter Property="CornerRadius" Value="0 0 3 0"/>
+                                    </Style>
+                                </Button.Resources>
+                            </Button>
+                        </Grid>
+                        <Label Name="lbScore2" Width="40" Height="64" HorizontalAlignment="Right" Content="0" FontSize="60" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="sans serif" FontWeight="bold"/>
+                    </Grid>
                     <Label Name="lbSide1" Width="180" Height="24" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="16,84,0,0" Content="Player 1" FontSize="13" Padding="0" VerticalContentAlignment="Center" FontWeight="bold" />
                     <TextBox Name="tbPlayer1" Width="180" Height="24" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="16,132,0,0" FontSize="14" VerticalContentAlignment="Center" TextChanged="CheckTextboxes" />
                     <Button Style="{StaticResource StandardButton}" Name="btnSwap" Width="100" Height="24" Content="← Swap →" FontSize="14" Margin="0,132,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Cursor="Hand" Click="SwapPlayers"/>
@@ -718,11 +762,11 @@
 
                         <Grid Width="154" Height="161" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="16">
                             <ListBox Name="listCommand" Height="126" Width="122" HorizontalAlignment="Left" VerticalAlignment="Top" SelectionChanged="ListCommand_SelectionChanged" />
-                            <Button Style="{StaticResource StandardButton}" Name="btnRemoveCommand" Height="24" Width="24" Content="-" FontSize="14" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 33" Click="RemoveCommand" IsEnabled="false" Cursor="Hand" />
+                            <Button Style="{StaticResource StandardButton}" Name="btnRemoveCommand" Height="24" Width="24" Content="r" FontFamily="Webdings" FontSize="14" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 33" Click="RemoveCommand" IsEnabled="false" Cursor="Hand" />
                             <Button Style="{StaticResource StandardButton}" Name="btnEditCommand" Height="24" Width="24" Content="..." FontSize="14" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 65" Click="EditCommand" IsEnabled="false" Cursor="Hand" />
                             <Button Style="{StaticResource StandardButton}" Name="btnApplyCommand" Width="122" Height="28" HorizontalAlignment="Left" VerticalAlignment="Bottom" Content="Apply" FontSize="14" Click="BtnApplyCommand_Click" IsEnabled="False" Cursor="Hand" />
                         </Grid>
-                        
+
                         <Grid Width="350" Height="161" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="16">
                             <Label Content="Name" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="0" FontSize="14" VerticalContentAlignment="Bottom" FontWeight="Bold"/>
                             <TextBox Name="tbCommandName" Width="350" Height="24" Margin="0 24 0 0" HorizontalAlignment="Center" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="16" TextChanged="tbCommandName_TextChanged"/>

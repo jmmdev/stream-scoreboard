@@ -128,6 +128,8 @@ namespace Scoreboard
 
             gridSmashGG.Visibility = Visibility.Hidden;
 
+            cbEvent.IsEnabled = true;
+
             Thickness margin = roundGrid.Margin;
             margin.Top = 8;
             roundGrid.Margin = margin;
@@ -149,6 +151,8 @@ namespace Scoreboard
             tbPlayer4.IsEnabled = false;
 
             string slug = tbUrl.Text;
+
+            cbEvent.IsEnabled = false;
 
             System.Windows.Forms.Application.UseWaitCursor = true;
             LoadTournament(slug);
@@ -172,6 +176,12 @@ namespace Scoreboard
         {
             if (cbEvent.SelectedIndex >= 0 && !cbEvent.SelectedValue.ToString().Contains("..."))
             {
+                if(localEvents.Count > 1)
+                {
+                    cbEvent.Items.Remove(cbEvent.Items[0]);
+                    localEvents.RemoveAt(0);
+                }
+
                 string ev = cbEvent.SelectedValue.ToString().ToLower();
                 if (ev.Contains("double") || ev.Contains("team"))
                 {
@@ -769,6 +779,7 @@ namespace Scoreboard
             {
                 tabControl.Visibility = Visibility.Hidden;
                 gridStart.Visibility = Visibility.Visible;
+                btnRefresh.Visibility = Visibility.Hidden;
             }
         }
 
@@ -796,6 +807,9 @@ namespace Scoreboard
 
                 var response = await client.SendQueryAsync(request, () => new { Tournament = new Tournament() });
 
+                if (response.Data.Tournament == null)
+                    DisplayErrorMessage();
+
                 if (response.Data.Tournament.events != null)
                 {
                     localEvents.Clear();
@@ -815,9 +829,9 @@ namespace Scoreboard
                     {
                         localEvents.Insert(0, null);
                         cbEvent.Items.Insert(0, "Select an event...");
+                        cbEvent.IsEnabled = true;
                     }
 
-                    cbEvent.IsEnabled = true;
                     cbEvent.SelectedIndex = 0;
 
                     return;
@@ -892,6 +906,12 @@ namespace Scoreboard
         {
             if (cbPhase.SelectedIndex >= 0 && !cbPhase.SelectedValue.ToString().Contains("..."))
             {
+                if (localPhases.Count > 1)
+                {
+                    cbPhase.Items.Remove(cbPhase.Items[0]);
+                    localPhases.RemoveAt(0);
+                }
+
                 try
                 {
                     GraphQLRequest request = new GraphQLRequest
@@ -943,10 +963,76 @@ namespace Scoreboard
             }
         }
 
-        public async void CbPhaseGroup_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        public void CbPhaseGroup_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            LoadSets();
+        }
+
+        public void CbSet_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cbSet.SelectedIndex >= 0 && !cbSet.SelectedValue.ToString().Contains("..."))
+            {
+                if (localSets.Count > 1)
+                {
+                    cbSet.Items.Remove(cbSet.Items[0]);
+                    localSets.RemoveAt(0);
+                }
+
+                cbRound.Items.Clear();
+                tbRoundNum.Text = "";
+
+                string[] setText = cbSet.SelectedValue.ToString().Split(new string[] { " vs " }, StringSplitOptions.None);
+                if (!isDoubles)
+                {
+                    tbPlayer1.Text = setText[0];
+                    tbPlayer2.Text = setText[1];
+
+                }
+
+                string round = localSets[cbSet.SelectedIndex].fullRoundText;
+
+                string[] roundWords = round.Split(' ');
+
+                int threshold = roundWords.Length;
+
+                if (int.TryParse(roundWords[roundWords.Length - 1], out int value))
+                {
+                    tbRoundNum.Text = value.ToString();
+                    threshold--;
+                }
+
+                string output = "";
+
+                for (int i = 0; i < threshold; i++)
+                {
+                    string s = roundWords[i];
+
+                    if (s.Contains("-Final"))
+                        output += s.Replace("-Final", "s");
+                    else if (s.Contains("Final"))
+                        output += s + "s";
+                    else
+                        output += s;
+
+                    if (i < threshold - 1)
+                        output += " ";
+                }
+
+                cbRound.Items.Add(output);
+                cbRound.SelectedIndex = 0;
+            }
+        }
+
+        private async void LoadSets()
         {
             if (cbPhaseGroup.SelectedIndex >= 0 && !cbPhaseGroup.SelectedValue.ToString().Contains("..."))
             {
+                if (localGroups.Count > 1)
+                {
+                    cbPhaseGroup.Items.Remove(cbPhaseGroup.Items[0]);
+                    localGroups.RemoveAt(0);
+                }
+
                 try
                 {
                     GraphQLRequest request = new GraphQLRequest
@@ -1000,60 +1086,17 @@ namespace Scoreboard
                         }
 
                         cbSet.SelectedIndex = 0;
+
+                        btnRefresh.Visibility = Visibility.Visible;
                     }
                 }
                 catch (Exception)
                 {
                 }
-            }
-        }
-
-        public void CbSet_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (cbSet.SelectedIndex >= 0 && !cbSet.SelectedValue.ToString().Contains("..."))
-            {
-                cbRound.Items.Clear();
-                tbRoundNum.Text = "";
-
-                string[] setText = cbSet.SelectedValue.ToString().Split(new string[] { " vs " }, StringSplitOptions.None);
-                if (!isDoubles)
+                finally
                 {
-                    tbPlayer1.Text = setText[0];
-                    tbPlayer2.Text = setText[1];
-
+                    tabControl.IsEnabled = true;
                 }
-
-                string round = localSets[cbSet.SelectedIndex].fullRoundText;
-
-                string[] roundWords = round.Split(' ');
-
-                int threshold = roundWords.Length;
-
-                if (int.TryParse(roundWords[roundWords.Length - 1], out int value))
-                {
-                    tbRoundNum.Text = value.ToString();
-                    threshold--;
-                }
-
-                string output = "";
-
-                for (int i = 0; i < threshold; i++)
-                {
-                    string s = roundWords[i];
-
-                    if (s.Contains("-Final"))
-                        output += s.Replace("-Final", "s");
-                    else if (s.Contains("Final"))
-                        output += s + "s";
-                    else
-                        output += s;
-
-                    if (i < threshold - 1)
-                        output += " ";
-                }
-
-                cbRound.Items.Add(output);
-                cbRound.SelectedIndex = 0;
             }
         }
 
@@ -1065,6 +1108,7 @@ namespace Scoreboard
             tbPlayer2.Text = "";
             tbPlayer3.Text = "";
             tbPlayer4.Text = "";
+            btnRefresh.Visibility = Visibility.Hidden;
 
             if (fieldsToChange.Contains("P"))
             {
@@ -1251,6 +1295,12 @@ namespace Scoreboard
             }
 
             btnSaveCommand.Content = "Update";
+        }
+
+        private void btnRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            tabControl.IsEnabled = false;
+            LoadSets();
         }
     }
 }
