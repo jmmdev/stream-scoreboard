@@ -171,7 +171,7 @@ namespace Scoreboard
         {
             if (cbEvent.SelectedIndex >= 0 && !cbEvent.SelectedValue.ToString().Contains("..."))
             {
-                if(localEvents.Count > 1)
+                if(localEvents.Count > 1 && cbEvent.Items[0].ToString().Contains("..."))
                 {
                     cbEvent.Items.Remove(cbEvent.Items[0]);
                     localEvents.RemoveAt(0);
@@ -775,6 +775,9 @@ namespace Scoreboard
                 tabControl.Visibility = Visibility.Hidden;
                 gridStart.Visibility = Visibility.Visible;
                 btnRefresh.Visibility = Visibility.Hidden;
+
+                if(isSmashgg)
+                    Title = "Stream Scoreboard";
             }
         }
 
@@ -803,12 +806,17 @@ namespace Scoreboard
                 var response = await client.SendQueryAsync(request, () => new { Tournament = new Tournament() });
 
                 if (response.Data.Tournament == null)
+                {
                     DisplayErrorMessage();
+                    return;
+                }
 
                 if (response.Data.Tournament.events != null)
                 {
                     localEvents.Clear();
                     cbEvent.Items.Clear();
+
+                    Title = "Stream Scoreboard - " + response.Data.Tournament.name; ;
 
                     foreach (Event ev in response.Data.Tournament.events)
                     {
@@ -848,11 +856,21 @@ namespace Scoreboard
 
         private async void LoadEvent()
         {
-            try
+            tabControl.IsEnabled = false;
+            if (cbEvent.SelectedIndex >= 0 && !cbEvent.SelectedValue.ToString().Contains("..."))
             {
-                GraphQLRequest request = new GraphQLRequest
+
+                if (localEvents.Count > 1 && cbEvent.Items[0].ToString().Contains("..."))
                 {
-                    Query = @"
+                    cbEvent.Items.Remove(cbEvent.Items[0]);
+                    localEvents.RemoveAt(0);
+                }
+
+                try
+                {
+                    GraphQLRequest request = new GraphQLRequest
+                    {
+                        Query = @"
                             query EventQuery($id: ID!) {
 		                        event(id: $id){
                                     id
@@ -863,45 +881,49 @@ namespace Scoreboard
     	                            }
 		                        }
 	                        }",
-                    Variables = new
+                        Variables = new
+                        {
+                            id = int.Parse(localEvents[cbEvent.SelectedIndex].id)
+                        }
+                    };
+
+                    var response = await client.SendQueryAsync(request, () => new { Event = new Event() });
+
+                    if (response.Data.Event.phases != null)
                     {
-                        id = int.Parse(localEvents[cbEvent.SelectedIndex].id)
+                        ClearSelectiveFields("P");
+
+                        foreach (Phase p in response.Data.Event.phases)
+                        {
+                            localPhases.Add(p);
+                            cbPhase.Items.Add(p.name);
+                        }
+
+                        if (localPhases.Count > 1)
+                        {
+                            localPhases.Insert(0, null);
+                            cbPhase.Items.Insert(0, "Select a phase...");
+                            cbPhase.IsEnabled = true;
+                        }
+
+                        cbPhase.SelectedIndex = 0;
                     }
-                };
-
-                var response = await client.SendQueryAsync(request, () => new { Event = new Event() });
-
-                if (response.Data.Event.phases != null)
+                }
+                catch (Exception e)
                 {
-                    ClearSelectiveFields("P");
-
-                    foreach (Phase p in response.Data.Event.phases)
-                    {
-                        localPhases.Add(p);
-                        cbPhase.Items.Add(p.name);
-                    }
-
-                    if (localPhases.Count > 1)
-                    {
-                        localPhases.Insert(0, null);
-                        cbPhase.Items.Insert(0, "Select a phase...");
-                        cbPhase.IsEnabled = true;
-                    }
-
-                    cbPhase.SelectedIndex = 0;
+                    Console.WriteLine(e);
                 }
             }
-            catch (Exception e)
-            {
-                Console.WriteLine(e);
-            }
+
+            tabControl.IsEnabled = true;
         }
 
         private async void CbPhase_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
+            tabControl.IsEnabled = false;
             if (cbPhase.SelectedIndex >= 0 && !cbPhase.SelectedValue.ToString().Contains("..."))
             {
-                if (localPhases.Count > 1)
+                if (localPhases.Count > 1 && cbPhase.Items[0].ToString().Contains("..."))
                 {
                     cbPhase.Items.Remove(cbPhase.Items[0]);
                     localPhases.RemoveAt(0);
@@ -956,6 +978,7 @@ namespace Scoreboard
                 {
                 }
             }
+            tabControl.IsEnabled = true;
         }
 
         private void CbPhaseGroup_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -967,7 +990,7 @@ namespace Scoreboard
         {
             if (cbSet.SelectedIndex >= 0 && !cbSet.SelectedValue.ToString().Contains("..."))
             {
-                if (localSets.Count > 1)
+                if (localSets.Count > 1 && cbSet.Items[0].ToString().Contains("..."))
                 {
                     cbSet.Items.Remove(cbSet.Items[0]);
                     localSets.RemoveAt(0);
@@ -982,6 +1005,16 @@ namespace Scoreboard
                     tbPlayer1.Text = setText[0];
                     tbPlayer2.Text = setText[1];
 
+                }
+                else
+                {
+                    string[] team1 = setText[0].Split(new string[] { " / " }, StringSplitOptions.None);
+                    string[] team2 = setText[1].Split(new string[] { " / " }, StringSplitOptions.None);
+
+                    tbPlayer1.Text = team1[0];
+                    tbPlayer2.Text = team2[0];
+                    tbPlayer3.Text = team1[1];
+                    tbPlayer4.Text = team2[1];
                 }
 
                 string round = localSets[cbSet.SelectedIndex].fullRoundText;
@@ -1020,9 +1053,10 @@ namespace Scoreboard
 
         private async void LoadSets()
         {
+            tabControl.IsEnabled = false;
             if (cbPhaseGroup.SelectedIndex >= 0 && !cbPhaseGroup.SelectedValue.ToString().Contains("..."))
             {
-                if (localGroups.Count > 1)
+                if (localGroups.Count > 1 && cbPhaseGroup.Items[0].ToString().Contains("..."))
                 {
                     cbPhaseGroup.Items.Remove(cbPhaseGroup.Items[0]);
                     localGroups.RemoveAt(0);
@@ -1088,11 +1122,8 @@ namespace Scoreboard
                 catch (Exception)
                 {
                 }
-                finally
-                {
-                    tabControl.IsEnabled = true;
-                }
             }
+            tabControl.IsEnabled = true;
         }
 
         private void ClearSelectiveFields(string fieldsToChange)
