@@ -98,7 +98,7 @@
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
                         <Border Name="Border" CornerRadius="2" BorderThickness="0"
-                    Background="#cb333b" >
+                    Background="{DynamicResource SmashGGButtonIdle}" >
                             <ContentPresenter Margin="2" 
                                  HorizontalAlignment="Center"
                                  VerticalAlignment="Center" 
@@ -106,7 +106,10 @@
                         </Border>
                         <ControlTemplate.Triggers>
                             <Trigger Property="IsMouseOver" Value="true">
-                                <Setter TargetName="Border" Property="Background" Value="#b21a22"/>
+                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource SmashGGButtonMouseOver}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="true">
+                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource SmashGGButtonPressed}"/>
                             </Trigger>
                         </ControlTemplate.Triggers>
                     </ControlTemplate>
@@ -647,11 +650,14 @@
         </StackPanel>
 
         <SolidColorBrush x:Key="StandardButtonIdle">#9147ff</SolidColorBrush>
-        <SolidColorBrush x:Key="StandardButtonPressed">#a258ff</SolidColorBrush>
         <SolidColorBrush x:Key="StandardButtonMouseOver">#8036ff</SolidColorBrush>
+        <SolidColorBrush x:Key="StandardButtonPressed">#a258ff</SolidColorBrush>
         <SolidColorBrush x:Key="FieldIdle">#636366</SolidColorBrush>
         <SolidColorBrush x:Key="FieldHighlight">#000000</SolidColorBrush>
         <SolidColorBrush x:Key="Background">#1f1f23</SolidColorBrush>
+        <SolidColorBrush x:Key="SmashGGButtonIdle">#cb333b</SolidColorBrush>
+        <SolidColorBrush x:Key="SmashGGButtonMouseOver">#b21a22</SolidColorBrush>
+        <SolidColorBrush x:Key="SmashGGButtonPressed">#e44c44</SolidColorBrush>
     </Window.Resources>
 
     <Grid>
@@ -801,7 +807,7 @@
                 </Grid>
             </TabItem>
         </TabControl>
-        <Label HorizontalAlignment="Right" VerticalAlignment="Bottom" FontStyle="Italic" FontFamily="Calibri" FontSize="13" Margin="8 0">
+        <Label HorizontalAlignment="Right" VerticalAlignment="Bottom" FontStyle="Italic" FontFamily="Calibri" FontSize="13" Margin="4 0">
             <Hyperlink NavigateUri="http://github.com/jmmdev" RequestNavigate="Hyperlink_RequestNavigate">
                 github.com/jmmdev
             </Hyperlink>
