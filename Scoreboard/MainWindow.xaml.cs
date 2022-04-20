@@ -1362,21 +1362,34 @@ namespace Scoreboard
                 localTournaments.Clear();
                 cbTournaments.Items.Clear();
 
-                foreach (TournamentItem t in tournamentItems)
+                for (int i = 0; i < tournamentItems.Length; i++)
                 {
+                    TournamentItem t = tournamentItems[i];
+
+                    ComboBoxItem item = new ComboBoxItem();
+                    item.Content = t.name;
+                    item.Tag = i+1;
                     localTournaments.Add(t);
-                    cbTournaments.Items.Add(t.name);
+                    cbTournaments.Items.Add(item);
                 }
 
             }
 
+            ComboBoxItem firstItem = new ComboBoxItem();
+
             if (cbTournaments.Items.Count > 0)
             {
-                cbTournaments.Items.Insert(0, "Select a tournament...");
+                firstItem.Content = "Select a tournament...";
+                firstItem.Tag = "0";
+                cbTournaments.Items.Insert(0, firstItem);
                 cbTournaments.IsEnabled = true;
             }
             else
-                cbTournaments.Items.Add("No recent tournaments");
+            {
+                firstItem.Content = "No recent tournaments";
+                firstItem.Tag = "0";
+                cbTournaments.Items.Add(firstItem);
+            }
 
             localTournaments.Insert(0, null);
         }
@@ -1395,17 +1408,19 @@ namespace Scoreboard
                 cbTournaments.Items.Add("Select a tournament");
             }
 
-            if (!TournamentExists(slug))
+            int index = TournamentExists(slug);
+
+            if (index < 1)
             {
                 localTournaments.Insert(1, t);
                 cbTournaments.Items.Insert(1, t.name);
             }
             else
             {
-                localTournaments.RemoveAt(cbTournaments.SelectedIndex);
+                localTournaments.RemoveAt(index);
                 localTournaments.Insert(1, t);
 
-                cbTournaments.Items.RemoveAt(cbTournaments.SelectedIndex);
+                cbTournaments.Items.RemoveAt(index);
                 cbTournaments.Items.Insert(1, t.name);
             }
 
@@ -1422,15 +1437,60 @@ namespace Scoreboard
             }
         }
 
-        private bool TournamentExists(string slug)
+        private int TournamentExists(string slug)
         {
-            foreach (TournamentItem t in localTournaments)
+            for (int i = 1; i < localTournaments.Count; i++)
             {
+                TournamentItem t = localTournaments[i];
                 if (t != null && t.slug == slug)
-                    return true;
+                    return i;
             }
 
-            return false;
+            return -1;
+        }
+
+        private void DeleteTournamentButton_Click(object sender, RoutedEventArgs e)
+        {
+            DependencyObject parent = FindParent(sender as DependencyObject);
+
+            int index = int.Parse(((ComboBoxItem)parent).Tag.ToString());
+
+            DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("Delete tournament \"" + ((ComboBoxItem)cbTournaments.Items[index]).Content + "\"?", "Deleting tournament", MessageBoxButtons.YesNo);
+
+            if (dialogResult == System.Windows.Forms.DialogResult.Yes)
+            {
+
+                if (cbTournaments.SelectedIndex == index)
+                {
+                    cbTournaments.SelectedIndex = 0;
+                    tbUrl.Text = "";
+                }
+
+                cbTournaments.Items.RemoveAt(index);
+                localTournaments.RemoveAt(index);
+
+                UpdateTournamentTags();
+
+                TournamentItem[] actualTournaments = new ArraySegment<TournamentItem>(localTournaments.ToArray(), 1, localTournaments.Count - 1).ToArray();
+                string json = JsonConvert.SerializeObject(actualTournaments);
+                File.WriteAllText("tournaments.json", json);
+            }
+        }
+
+        private void UpdateTournamentTags()
+        {
+            for(int i = 1; i < cbTournaments.Items.Count; i++)
+                ((ComboBoxItem)cbTournaments.Items[i]).Tag = i;
+        }
+
+        private DependencyObject FindParent(DependencyObject child)        
+        {
+            DependencyObject parent = VisualTreeHelper.GetParent(child);
+
+            if (parent.GetType() == typeof(ComboBoxItem))
+                return parent;
+            else
+                return FindParent(parent);
         }
     }
 }
