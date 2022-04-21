@@ -150,7 +150,10 @@ namespace Scoreboard
             tbPlayer3.IsEnabled = false;
             tbPlayer4.IsEnabled = false;
 
-            string slug = tbUrl.Text;
+            string[] separators = { "/" };
+            string[] urlFields = tbUrl.Text.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+            string slug = urlFields[urlFields.Length-1];
 
             cbEvent.IsEnabled = false;
 
@@ -796,6 +799,7 @@ namespace Scoreboard
 
         private async void LoadTournament(string slug)
         {
+            bool error = false;
             try
             {
                 GraphQLRequest request = new GraphQLRequest
@@ -820,7 +824,7 @@ namespace Scoreboard
 
                 if (response.Data.Tournament == null)
                 {
-                    DisplayErrorMessage();
+                    DisplayErrorMessage("Tournament not found. Check the url and try again");
                     return;
                 }
 
@@ -851,21 +855,19 @@ namespace Scoreboard
                     }
 
                     cbEvent.SelectedIndex = 0;
+                    tbUrl.Text = "";
+                    doShowUrl();
 
                     return;
                 }
 
-                DisplayErrorMessage();
+                DisplayErrorMessage("An error ocurred while getting the tournament events. Please try again");
             }
-            catch (Exception e)
+            catch (Exception)
             {
-                Console.WriteLine(e.Message);
             }
             finally
             {
-                System.Windows.Forms.Cursor.Current = System.Windows.Forms.Cursors.Cross;
-                btnSubmitUrl.IsEnabled = true;
-                doShowUrl();
             }
         }
 
@@ -1194,9 +1196,12 @@ namespace Scoreboard
             }
         }
 
-        private void DisplayErrorMessage()
+        private void DisplayErrorMessage(string message)
         {
+            DialogResult dialogResult = System.Windows.Forms.MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 
+            if (dialogResult == System.Windows.Forms.DialogResult.OK)
+                btnSubmitUrl.IsEnabled = true;
         }
 
         private void SaveCommand(object sender, RoutedEventArgs e)
@@ -1377,7 +1382,7 @@ namespace Scoreboard
 
             ComboBoxItem firstItem = new ComboBoxItem();
 
-            if (cbTournaments.Items.Count > 0)
+            if (cbTournaments.Items.Count > 0 && !cbTournaments.Items[0].ToString().Contains("recent"))
             {
                 firstItem.Content = "Select a tournament...";
                 firstItem.Tag = "0";
@@ -1405,7 +1410,7 @@ namespace Scoreboard
             if (localTournaments.Count == 1)
             {
                 cbTournaments.Items.RemoveAt(0);
-                cbTournaments.Items.Add("Select a tournament");
+                cbTournaments.Items.Add("Select a tournament...");
             }
 
             int index = TournamentExists(slug);
@@ -1470,6 +1475,13 @@ namespace Scoreboard
                 localTournaments.RemoveAt(index);
 
                 UpdateTournamentTags();
+
+                if(localTournaments.Count < 2)
+                {
+                    cbTournaments.Items[0] = "No recent tournaments";
+                    cbTournaments.SelectedIndex = 0;
+                    cbTournaments.IsEnabled = false;
+                }
 
                 TournamentItem[] actualTournaments = new ArraySegment<TournamentItem>(localTournaments.ToArray(), 1, localTournaments.Count - 1).ToArray();
                 string json = JsonConvert.SerializeObject(actualTournaments);

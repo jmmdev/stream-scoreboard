@@ -740,15 +740,33 @@
         </Style>
 
         <Style x:Key="ComboBoxItemDelete" TargetType="{x:Type Button}">
-            <Setter Property="Background" Value="Transparent" />
             <Setter Property="Foreground" Value="White" />
-            <Setter Property="BorderThickness" Value="0" />
             <Setter Property="Cursor" Value="Hand" />
             <Setter Property="Width" Value="20" />
             <Setter Property="Height" Value="20" />
             <Setter Property="FontFamily" Value="Webdings" />
             <Setter Property="Content" Value="r" />
             <Setter Property="HorizontalAlignment" Value="Right" />
+
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type Button}">
+                        <Border Name="Border" CornerRadius="0" BorderThickness="0" BorderBrush="Transparent"
+                    Background="Transparent">
+                            <ContentPresenter Margin="2" 
+                                 HorizontalAlignment="Center"
+                                 VerticalAlignment="Center" 
+                                 RecognizesAccessKey="True"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="true">
+                                <Setter TargetName="Border" Property="Background" Value="Transparent"/>
+                                <Setter Property="Foreground" Value="Red"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
         </Style>
 
         <Style x:Key="{x:Type ListBox}"
@@ -877,7 +895,7 @@
                 <ComboBox Style="{StaticResource TournamentComboBox}" Name="cbTournaments" Height="24" VerticalAlignment="Top" VerticalContentAlignment="Center" Margin="0 24 0 0" IsEnabled="false" SelectionChanged="cbTournaments_SelectionChanged" FontSize="14" Foreground="White" Cursor="Hand" />
                 <Label Content="Tournament url" VerticalAlignment="Top" VerticalContentAlignment="Bottom" Margin="0 56 0 0" FontWeight="Bold" FontSize="14" Padding="0"/>
                 <TextBox Name="tbUrl"  Height="24" VerticalAlignment="Top" VerticalContentAlignment="Center" Margin="0 80 0 0" TextChanged="TbUrl_TextChanged" />
-                <Button Style="{StaticResource StandardButton}" Name="btnSubmitUrl" Content="Done" VerticalAlignment="Top" Margin="0 120 0 0" Width="100" Height="32" FontSize="16" Click="BtnSubmitUrl_Click" FontWeight="Normal" Cursor="Hand" />
+                <Button Style="{StaticResource StandardButton}" Name="btnSubmitUrl" Content="Done" VerticalAlignment="Top" Margin="0 120 0 0" Width="100" Height="32" FontSize="16" Click="BtnSubmitUrl_Click" FontWeight="Normal" Cursor="Hand" IsEnabled="false" />
             </Grid>
         </Grid>
         <TabControl Name="tabControl" SelectionChanged="TabControl_SelectionChanged" MouseDown="TabControl_MouseDown" Visibility="Hidden">
@@ -1013,7 +1031,7 @@
                     <TextBox Name="tbOutputFolder" IsEnabled="False" Width="230" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16 96" VerticalContentAlignment="Center" TextChanged="SettingsTextChanged"/>
                     <Button Style="{StaticResource StandardButton}" Name="btnOutputFolder" Width="30" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="250 96" Content="..." FontSize="14" VerticalContentAlignment="Center" Click="BrowseOutput" Cursor="Hand"/>
                     <Label Name="lbSaveMessage" Content="Changes saved!" Height="32" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="124 16" FontSize="14" Padding="0" VerticalContentAlignment="Center" Foreground="Green" Visibility="Hidden"/>
-                    <Button Style="{StaticResource StandardButton}" Name="btnSaveSettings" Width="100" Height="32" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="16" Content="Save settings" FontSize="14" VerticalContentAlignment="Center" Click="SaveSettings" Cursor="Hand" />
+                    <Button Style="{StaticResource StandardButton}" Name="btnSaveSettings" Width="100" Height="32" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="16" Content="Save settings" FontSize="14" VerticalContentAlignment="Center" Click="SaveSettings" Cursor="Hand" />
                 </Grid>
             </TabItem>
         </TabControl>
