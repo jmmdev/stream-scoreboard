@@ -1014,9 +1014,9 @@
                         <Grid Width="350" Height="161" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="16">
                             <Label Content="Name" Height="24" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="0" FontSize="14" VerticalContentAlignment="Bottom" FontWeight="Bold"/>
                             <TextBox Name="tbCommandName" Width="350" Height="24" Margin="0 24 0 0" HorizontalAlignment="Center" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="16" TextChanged="tbCommandName_TextChanged"/>
-                            <Label Content="Value" Height="24" Margin="0 56 0 0" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="0" FontSize="14" VerticalContentAlignment="Bottom" FontWeight="Bold"/>
-                            <TextBox Name="tbCommandValue" Width="350" Height="24" Margin="0 80 0 0" HorizontalAlignment="Center" VerticalAlignment="Top" PreviewKeyDown="tbCommandValue_PreviewKeyDown" KeyDown="tbCommandValue_KeyDown" VerticalContentAlignment="Center" TextChanged="tbCommandValue_TextChanged" FontSize="16" />
-                            <Label Content="*alt, shift and ctrl plus an additional key (number, letter or F keys)*" Height="16" Margin="0,105,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="0" FontSize="12" VerticalContentAlignment="Top" />
+                            <Label Content="Value" Height="24" Margin="0 48 0 0" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="0" FontSize="14" VerticalContentAlignment="Bottom" FontWeight="Bold"/>
+                            <TextBox Name="tbCommandValue" Width="350" Height="24" Margin="0 72 0 0" HorizontalAlignment="Center" VerticalAlignment="Top" PreviewKeyDown="tbCommandValue_PreviewKeyDown" KeyDown="tbCommandValue_KeyDown" VerticalContentAlignment="Center" TextChanged="tbCommandValue_TextChanged" FontSize="16" />
+                            <Label Content="*alt, shift and ctrl plus an additional key (number, letter or F keys)*" Height="16" Margin="0,97,0,0" VerticalAlignment="Top" HorizontalAlignment="Left" Padding="0" FontSize="12" VerticalContentAlignment="Top" />
                             <Button Style="{DynamicResource SaveButton}" Name="btnSaveCommand" Margin="0 129 0 0" Height="32" Width="100" VerticalAlignment="Top" Content="Add" FontSize="14" Cursor="Hand" Click="SaveCommand" IsEnabled="False" IsDefault="True" />
                         </Grid>
                     </Grid>
