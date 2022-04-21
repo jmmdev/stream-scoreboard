@@ -865,6 +865,69 @@
             </Style.Triggers>
         </Style>
 
+        <Style TargetType="CheckBox">
+            <Setter Property="FontSize" Value="15" />
+            <Setter Property="FocusVisualStyle"
+          Value="{DynamicResource CheckBoxFocusVisual}" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type CheckBox}">
+                        <BulletDecorator Background="Transparent">
+                            <BulletDecorator.Bullet>
+                                <Border x:Name="Border"
+                    Width="13"
+                    Height="13"
+                    CornerRadius="0"
+                    BorderThickness="1"
+                    BorderBrush = "White"
+                    Background = "{DynamicResource FieldHighlight}">
+                                    <Grid>
+                                        <Path Visibility="Collapsed"
+                      Width="7"
+                      Height="7"
+                      x:Name="CheckMark"
+                      SnapsToDevicePixels="False"
+                      StrokeThickness="2"
+                      Data="M 0 0 L 7 7 M 0 7 L 7 0">
+                                            <Path.Stroke>
+                                                <SolidColorBrush Color="White" />
+                                            </Path.Stroke>
+                                        </Path>
+                                        <Path Visibility="Collapsed"
+                      Width="7"
+                      Height="7"
+                      x:Name="InderminateMark"
+                      SnapsToDevicePixels="False"
+                      StrokeThickness="2"
+                      Data="M 0 7 L 7 0">
+                                            <Path.Stroke>
+                                                <SolidColorBrush Color="White" />
+                                            </Path.Stroke>
+                                        </Path>
+                                    </Grid>
+                                </Border>
+                            </BulletDecorator.Bullet>
+                            <ContentPresenter Margin="4,-2,0,0"
+                            VerticalAlignment="Center"
+                            HorizontalAlignment="Left"
+                            RecognizesAccessKey="True" />
+                        </BulletDecorator>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Border" Property="Background" Value="{DynamicResource Background}" />
+                            </Trigger>
+                            <Trigger Property="IsChecked" Value="True">
+                                <Setter TargetName="CheckMark" Property="Visibility" Value="Visible" />
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.5" />
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
         <StackPanel x:Key="smashGGButtonConnect" Orientation="Horizontal" >
             <Image Source="smashGGLogo.png" Height="28" Margin="0 0 3 0"></Image>
             <TextBlock Height="32" FontSize="15" Margin="3">Connect to smash.gg</TextBlock>
@@ -951,10 +1014,12 @@
                         </Grid>
                         <Label Name="lbScore2" Width="40" Height="64" HorizontalAlignment="Right" Content="0" FontSize="60" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="sans serif" FontWeight="bold"/>
                     </Grid>
-                    <Label Name="lbSide1" Width="180" Height="24" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="8,84,0,0" Content="Player 1" FontSize="13" Padding="0" VerticalContentAlignment="Center" FontWeight="bold" />
+                    <CheckBox Name="chkLosers1" Width="36" Content="[L]" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="152,84,0,0" VerticalContentAlignment="Center" Foreground="White" Visibility="Hidden" Checked="chkLosers1_Checked" Unchecked="chkLosers1_Unchecked"/>
+                    <Label Name="lbSide1" Height="24" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="8,84,0,0" Content="Player 1" FontSize="13" Padding="0" VerticalContentAlignment="Center" FontWeight="bold" />
                     <TextBox Name="tbPlayer1" Width="180" Height="24" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="8,132,0,0" FontSize="14" VerticalContentAlignment="Center" TextChanged="CheckTextboxes" />
                     <Button Style="{StaticResource StandardButton}" Name="btnSwap" Width="100" Height="24" Content="← Swap →" FontSize="14" Margin="0,132,0,0" HorizontalAlignment="Center" VerticalAlignment="Center" Cursor="Hand" Click="SwapPlayers"/>
-                    <Label Name="lbSide2" Width="180" Height="24" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,84,8,0" Content="Player 2" FontSize="13" Padding="0" VerticalContentAlignment="Center" FontWeight="bold"/>
+                    <CheckBox Name="chkLosers2" Width="36" Content="[L]" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,84,152,0" Foreground="White" Visibility="Hidden" Checked="chkLosers2_Checked" Unchecked="chkLosers2_Unchecked" />
+                    <Label Name="lbSide2" Height="24" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,84,8,0" Content="Player 2" FontSize="13" Padding="0" VerticalContentAlignment="Center" FontWeight="bold"/>
                     <TextBox Name="tbPlayer2" Width="180" Height="24" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,132,8,0" FontSize="14" VerticalContentAlignment="Center" TextChanged="CheckTextboxes" />
 
                     <TextBox Name="tbPlayer3" Width="180" Height="24" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="8,184,0,0" FontSize="14" VerticalContentAlignment="Center" Visibility="Hidden" TextChanged="CheckTextboxes"/>

@@ -103,6 +103,8 @@ namespace Scoreboard
             tbPlayer2.IsEnabled = true;
             tbPlayer3.IsEnabled = true;
             tbPlayer4.IsEnabled = true;
+            chkLosers1.IsEnabled = true;
+            chkLosers2.IsEnabled = true;
 
             string[] events = { "Singles Bracket", "Doubles Bracket" };
             string[] brackets = { "Winners", "Losers" };
@@ -123,6 +125,7 @@ namespace Scoreboard
             }
 
             cbRound.Items.Add("Grand Finals");
+            cbRound.Items.Add("Grand Finals Reset");
 
             cbRound.SelectedIndex = 0;
 
@@ -149,6 +152,8 @@ namespace Scoreboard
             tbPlayer2.IsEnabled = false;
             tbPlayer3.IsEnabled = false;
             tbPlayer4.IsEnabled = false;
+            chkLosers1.IsEnabled = false;
+            chkLosers2.IsEnabled = false;
 
             string[] separators = { "/" };
             string[] urlFields = tbUrl.Text.Split(separators, StringSplitOptions.RemoveEmptyEntries);
@@ -231,6 +236,9 @@ namespace Scoreboard
         {
             if (cbRound.SelectedIndex >= 0)
             {
+                chkLosers1.IsChecked = false;
+                chkLosers2.IsChecked = false;
+
                 Thickness roundMargin = cbRound.Margin;
                 if (cbRound.SelectedValue.ToString().ToLower().Contains("round"))
                 {
@@ -247,9 +255,32 @@ namespace Scoreboard
                     roundNum = false;
                 }
 
+                if (cbRound.SelectedValue.ToString().ToLower().Contains("grand"))
+                {
+                    chkLosers1.Visibility = Visibility.Visible;
+                    chkLosers2.Visibility = Visibility.Visible;
+
+                    if (isSmashgg)
+                    {
+                        chkLosers2.IsChecked = true;
+                        if(cbRound.SelectedValue.ToString().ToLower().Contains("reset"))
+                            chkLosers1.IsChecked = true;
+                    }
+                }
+                else
+                {
+                    chkLosers1.Visibility = Visibility.Hidden;
+                    chkLosers2.Visibility = Visibility.Hidden;
+                }
+
                 cbRound.Margin = roundMargin;
 
                 CheckSaveState();
+            }
+            else
+            {
+                chkLosers1.Visibility = Visibility.Hidden;
+                chkLosers2.Visibility = Visibility.Hidden;
             }
         }
 
@@ -312,6 +343,10 @@ namespace Scoreboard
             string auxScore = lbScore1.Content.ToString();
             lbScore1.Content = lbScore2.Content.ToString();
             lbScore2.Content = auxScore;
+
+            bool auxChk = chkLosers1.IsChecked.Value;
+            chkLosers1.IsChecked = chkLosers2.IsChecked;
+            chkLosers2.IsChecked = auxChk;
         }
 
         private void SwapCasters(object sender, RoutedEventArgs e)
@@ -340,6 +375,15 @@ namespace Scoreboard
                 enabled &= !string.IsNullOrEmpty(tbPlayer3.Text) && !string.IsNullOrWhiteSpace(tbPlayer3.Text) &&
                     !string.IsNullOrEmpty(tbPlayer4.Text) && !string.IsNullOrWhiteSpace(tbPlayer4.Text);
             }
+
+            if (cbRound.SelectedValue != null && cbRound.SelectedValue.ToString().ToLower().Contains("grand"))
+            {
+                if(cbRound.SelectedValue != null && cbRound.SelectedValue.ToString().ToLower().Contains("reset"))
+                    enabled &= chkLosers1.IsChecked.Value && chkLosers2.IsChecked.Value;
+                else
+                    enabled &= chkLosers1.IsChecked.Value || chkLosers2.IsChecked.Value;
+            }
+               
 
             EnableUpdateButton(btnSave, enabled);
         }
@@ -378,6 +422,12 @@ namespace Scoreboard
                 p1 += " & " + tbPlayer3.Text;
                 p2 += " & " + tbPlayer4.Text;
             }
+
+            if (chkLosers1.IsChecked.Value)
+                p1 += " [L]";
+
+            if (chkLosers2.IsChecked.Value)
+                p2 += " [L]";
 
             File.WriteAllText(outputDir + "player1.txt", p1);
             File.WriteAllText(outputDir + "player2.txt", p2);
@@ -1503,6 +1553,26 @@ namespace Scoreboard
                 return parent;
             else
                 return FindParent(parent);
+        }
+
+        private void chkLosers1_Checked(object sender, RoutedEventArgs e)
+        {
+            CheckSaveState();
+        }
+
+        private void chkLosers1_Unchecked(object sender, RoutedEventArgs e)
+        {
+            CheckSaveState();
+        }
+
+        private void chkLosers2_Checked(object sender, RoutedEventArgs e)
+        {
+            CheckSaveState();
+        }
+
+        private void chkLosers2_Unchecked(object sender, RoutedEventArgs e)
+        {
+            CheckSaveState();
         }
     }
 }
