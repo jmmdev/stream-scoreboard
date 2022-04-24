@@ -980,8 +980,8 @@
                         <ComboBox Name="cbRound" Width="152" Height="24" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,24,28,0" Cursor="Hand" SelectionChanged="CbRound_SelectionChanged"/>
                         <TextBox Name="tbRoundNum" Text="1" Width="24" Height="24" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0,24,0,0" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontSize="14"/>
                     </Grid>
-                    <Grid Width="170" Height="64" Name="scoreGrid" Cursor="Arrow">
-                        <Label Name="lbScore1" Width="40" Height="64" HorizontalAlignment="Left" Content="0" FontSize="60" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="sans serif" FontWeight="bold"/>
+                    <Grid Width="250" Height="64" Name="scoreGrid" Cursor="Arrow">
+                        <Label Name="lbScore1" Width="80" Height="64" HorizontalAlignment="Left" Content="0" FontSize="60" Padding="0" HorizontalContentAlignment="Right" VerticalContentAlignment="Center" FontFamily="sans serif" FontWeight="bold"/>
                         <Grid Width="48" Height="48" Name="scoreButtons" Cursor="Arrow">
                             <Button Style="{StaticResource ScoreButton}" Name="btnP1Up" Width="24" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Content="▲" FontSize="14" Cursor="Hand" Click="P1ScoreUp" BorderThickness="0 0 1 1" >
                                 <Button.Resources>
@@ -1012,7 +1012,7 @@
                                 </Button.Resources>
                             </Button>
                         </Grid>
-                        <Label Name="lbScore2" Width="40" Height="64" HorizontalAlignment="Right" Content="0" FontSize="60" Padding="0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" FontFamily="sans serif" FontWeight="bold"/>
+                        <Label Name="lbScore2" Width="80" Height="64" HorizontalAlignment="Right" Content="0" FontSize="60" Padding="0" HorizontalContentAlignment="Left" VerticalContentAlignment="Center" FontFamily="sans serif" FontWeight="bold"/>
                     </Grid>
                     <CheckBox Name="chkLosers1" Width="36" Content="[L]" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="152,84,0,0" VerticalContentAlignment="Center" Foreground="White" Visibility="Hidden" Checked="chkLosers1_Checked" Unchecked="chkLosers1_Unchecked"/>
                     <Label Name="lbSide1" Height="24" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="8,84,0,0" Content="Player 1" FontSize="13" Padding="0" VerticalContentAlignment="Center" FontWeight="bold" />

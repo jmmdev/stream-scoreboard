@@ -288,7 +288,7 @@ namespace Scoreboard
         {
             int score1 = int.Parse(lbScore1.Content.ToString());
 
-            if (score1 < 3)
+            if (score1 < 99)
             {
                 score1++;
                 lbScore1.Content = score1;
@@ -312,7 +312,7 @@ namespace Scoreboard
         {
             int score2 = int.Parse(lbScore2.Content.ToString());
 
-            if (score2 < 3)
+            if (score2 < 99)
             {
                 score2++;
                 lbScore2.Content = score2;
@@ -382,6 +382,7 @@ namespace Scoreboard
                     enabled &= chkLosers1.IsChecked.Value && chkLosers2.IsChecked.Value;
                 else
                     enabled &= chkLosers1.IsChecked.Value || chkLosers2.IsChecked.Value;
+
             }
                
 
