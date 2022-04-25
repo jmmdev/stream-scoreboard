@@ -278,3 +278,5 @@ D:\Projects\stream-scoreboard\Scoreboard\obj\Debug\ConfirmationMessage.g.cs
 D:\Projects\stream-scoreboard\Scoreboard\obj\Debug\ConfirmationMessage.baml
 D:\Projects\stream-scoreboard\Scoreboard\obj\Debug\ErrorMessage.g.cs
 D:\Projects\stream-scoreboard\Scoreboard\obj\Debug\ErrorMessage.baml
+D:\Projects\stream-scoreboard\Scoreboard\obj\Debug\InfoMessage.g.cs
+D:\Projects\stream-scoreboard\Scoreboard\obj\Debug\InfoMessage.baml

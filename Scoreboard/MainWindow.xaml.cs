@@ -33,7 +33,6 @@ namespace Scoreboard
 
         protected OBSWebsocket obs;
 
-        private string resourcesDir;
         private string outputDir;
 
         private bool isDoubles = false;
@@ -158,7 +157,7 @@ namespace Scoreboard
             string[] separators = { "/" };
             string[] urlFields = tbUrl.Text.Split(separators, StringSplitOptions.RemoveEmptyEntries);
 
-            string slug = urlFields[urlFields.Length-1];
+            string slug = urlFields[urlFields.Length - 1];
 
             cbEvent.IsEnabled = false;
 
@@ -263,7 +262,7 @@ namespace Scoreboard
                     if (isSmashgg)
                     {
                         chkLosers2.IsChecked = true;
-                        if(cbRound.SelectedValue.ToString().ToLower().Contains("reset"))
+                        if (cbRound.SelectedValue.ToString().ToLower().Contains("reset"))
                             chkLosers1.IsChecked = true;
                     }
                 }
@@ -365,6 +364,8 @@ namespace Scoreboard
 
         private void CheckSaveState()
         {
+            lblSuccess.Visibility = Visibility.Hidden;
+
             bool enabled;
 
             enabled = !string.IsNullOrEmpty(tbPlayer1.Text) && !string.IsNullOrWhiteSpace(tbPlayer1.Text) &&
@@ -378,13 +379,13 @@ namespace Scoreboard
 
             if (cbRound.SelectedValue != null && cbRound.SelectedValue.ToString().ToLower().Contains("grand"))
             {
-                if(cbRound.SelectedValue != null && cbRound.SelectedValue.ToString().ToLower().Contains("reset"))
+                if (cbRound.SelectedValue != null && cbRound.SelectedValue.ToString().ToLower().Contains("reset"))
                     enabled &= chkLosers1.IsChecked.Value && chkLosers2.IsChecked.Value;
                 else
                     enabled &= chkLosers1.IsChecked.Value || chkLosers2.IsChecked.Value;
 
             }
-               
+
 
             EnableUpdateButton(btnSave, enabled);
         }
@@ -406,70 +407,67 @@ namespace Scoreboard
 
         private void SaveChanges(object sender, RoutedEventArgs e)
         {
-            File.WriteAllText(outputDir + "event.txt", cbEvent.Text);
-
-            string round = cbRound.SelectedValue.ToString();
-
-            if (roundNum)
-                round += " " + tbRoundNum.Text;
-
-            File.WriteAllText(outputDir + "round.txt", round);
-
-            string p1 = tbPlayer1.Text;
-            string p2 = tbPlayer2.Text;
-
-            if (isDoubles)
+            bool allOk = false;
+            if (!string.IsNullOrEmpty(outputDir) && !string.IsNullOrWhiteSpace(outputDir) && Directory.Exists(outputDir))
             {
-                p1 += " & " + tbPlayer3.Text;
-                p2 += " & " + tbPlayer4.Text;
-            }
-
-            if (chkLosers1.IsChecked.Value)
-                p1 += " [L]";
-
-            if (chkLosers2.IsChecked.Value)
-                p2 += " [L]";
-
-            File.WriteAllText(outputDir + "player1.txt", p1);
-            File.WriteAllText(outputDir + "player2.txt", p2);
-            File.WriteAllText(outputDir + "match.txt", p1 + " vs " + p2);
-
-            string score1 = lbScore1.Content.ToString();
-            string score2 = lbScore2.Content.ToString();
-
-            File.WriteAllText(outputDir + "score1.txt", score1);
-            File.WriteAllText(outputDir + "score2.txt", score2);
-
-            if (!string.IsNullOrEmpty(resourcesDir))
-            {
-                string fileToWrite1 = resourcesDir + score1 + ".png";
-
-                if (File.Exists(fileToWrite1))
+                try
                 {
-                    string score1File = outputDir + "score1.png";
+                    File.WriteAllText(outputDir + "event.txt", cbEvent.Text);
 
-                    if (File.Exists(score1File))
+                    string round = cbRound.SelectedValue.ToString();
 
-                        File.Delete(score1File);
+                    if (roundNum)
+                        round += " " + tbRoundNum.Text;
 
-                    File.Copy(fileToWrite1, score1File);
+                    File.WriteAllText(outputDir + "round.txt", round);
+
+                    string p1 = tbPlayer1.Text;
+                    string p2 = tbPlayer2.Text;
+
+                    if (isDoubles)
+                    {
+                        p1 += " & " + tbPlayer3.Text;
+                        p2 += " & " + tbPlayer4.Text;
+                    }
+
+                    if (chkLosers1.IsChecked.Value)
+                        p1 += " [L]";
+
+                    if (chkLosers2.IsChecked.Value)
+                        p2 += " [L]";
+
+                    File.WriteAllText(outputDir + "player1.txt", p1);
+                    File.WriteAllText(outputDir + "player2.txt", p2);
+                    File.WriteAllText(outputDir + "match.txt", p1 + " vs " + p2);
+
+                    string score1 = lbScore1.Content.ToString();
+                    string score2 = lbScore2.Content.ToString();
+
+                    File.WriteAllText(outputDir + "score1.txt", score1);
+                    File.WriteAllText(outputDir + "score2.txt", score2);
+
+                    allOk = true;
                 }
-
-                string fileToWrite2 = resourcesDir + score2 + ".png";
-
-                if (File.Exists(fileToWrite2))
+                catch (Exception)
                 {
-                    string score2File = outputDir + "score2.png";
+                }
+                finally
+                {
+                    if (allOk)
+                    {
+                        lblSuccess.Foreground = (Brush)new BrushConverter().ConvertFrom("#FF00FF00");
+                        lblSuccess.Content = "All files updated successfully";
+                    }
+                    else
+                    {
+                        lblSuccess.Foreground = (Brush)new BrushConverter().ConvertFrom("#FFFF0000");
+                        lblSuccess.Content = "An error ocurred. Try again";
+                    }
 
-                    if (File.Exists(score2File))
-
-                        File.Delete(score2File);
-
-                    File.Copy(fileToWrite2, score2File);
+                    lblSuccess.Visibility = Visibility.Visible;
+                    EnableUpdateButton(btnSave, false);
                 }
             }
-
-            EnableUpdateButton(btnSave, false);
         }
 
         private void SaveCasters(object sender, RoutedEventArgs e)
@@ -483,19 +481,6 @@ namespace Scoreboard
                 File.WriteAllText(outputDir + "caster2.txt", c2);
 
             EnableUpdateButton(btnSaveCasters, false);
-        }
-
-        private void BrowseResources(object sender, RoutedEventArgs e)
-        {
-            FolderBrowserDialog folder = new FolderBrowserDialog();
-            folder.ShowDialog();
-
-            if (!string.IsNullOrEmpty(folder.SelectedPath))
-            {
-                string path = folder.SelectedPath;
-
-                tbResourcesFolder.Text = path;
-            }
         }
 
         private void BrowseOutput(object sender, RoutedEventArgs e)
@@ -518,13 +503,10 @@ namespace Scoreboard
                 string settingsString = File.ReadAllText("settings.json");
                 Settings settings = JsonConvert.DeserializeObject<Settings>(settingsString);
 
-                string resourcesPath = settings.resourcesPath;
                 string outputPath = settings.outputPath;
 
-                tbResourcesFolder.Text = resourcesPath;
                 tbOutputFolder.Text = outputPath;
 
-                resourcesDir = resourcesPath + "\\";
                 outputDir = outputPath + "\\";
             }
         }
@@ -534,13 +516,11 @@ namespace Scoreboard
             Settings newSettings = new Settings
             {
                 outputPath = tbOutputFolder.Text,
-                resourcesPath = tbResourcesFolder.Text
             };
 
             string json = JsonConvert.SerializeObject(newSettings);
             File.WriteAllText("settings.json", json);
 
-            resourcesDir = newSettings.resourcesPath + "\\";
             outputDir = newSettings.outputPath + "\\";
 
             lbSaveMessage.Visibility = Visibility.Visible;
@@ -1245,6 +1225,10 @@ namespace Scoreboard
                 return;
             }
         }
+        private void DisplayInfoMessage(string message)
+        {
+            new InfoMessage(message, this).ShowDialog();
+        }
 
         private void DisplayErrorMessage(string message)
         {
@@ -1424,7 +1408,7 @@ namespace Scoreboard
 
                     ComboBoxItem item = new ComboBoxItem();
                     item.Content = t.name;
-                    item.Tag = i+1;
+                    item.Tag = i + 1;
                     localTournaments.Add(t);
                     cbTournaments.Items.Add(item);
                 }
@@ -1527,7 +1511,7 @@ namespace Scoreboard
 
                 UpdateTournamentTags();
 
-                if(localTournaments.Count < 2)
+                if (localTournaments.Count < 2)
                 {
                     cbTournaments.Items[0] = "No recent tournaments";
                     cbTournaments.SelectedIndex = 0;
@@ -1542,11 +1526,11 @@ namespace Scoreboard
 
         private void UpdateTournamentTags()
         {
-            for(int i = 1; i < cbTournaments.Items.Count; i++)
+            for (int i = 1; i < cbTournaments.Items.Count; i++)
                 ((ComboBoxItem)cbTournaments.Items[i]).Tag = i;
         }
 
-        private DependencyObject FindParent(DependencyObject child)        
+        private DependencyObject FindParent(DependencyObject child)
         {
             DependencyObject parent = VisualTreeHelper.GetParent(child);
 
