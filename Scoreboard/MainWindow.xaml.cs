@@ -1248,10 +1248,11 @@ namespace Scoreboard
 
         private void DisplayErrorMessage(string message)
         {
-            DialogResult dialogResult = System.Windows.Forms.MessageBox.Show(message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-            if (dialogResult == System.Windows.Forms.DialogResult.OK)
-                btnSubmitUrl.IsEnabled = true;
+            new ErrorMessage(message, this).ShowDialog();
+        }
+        public void EnableSubmitUrl()
+        {
+            btnSubmitUrl.IsEnabled = true;
         }
 
         private void SaveCommand(object sender, RoutedEventArgs e)

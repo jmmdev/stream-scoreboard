@@ -276,3 +276,5 @@ C:\Users\Anabel\Desktop\Layouts\stream-scoreboard\Scoreboard\obj\Debug\Scoreboar
 C:\Users\Anabel\Desktop\Layouts\stream-scoreboard\Scoreboard\obj\Debug\Scoreboard.pdb
 D:\Projects\stream-scoreboard\Scoreboard\obj\Debug\ConfirmationMessage.g.cs
 D:\Projects\stream-scoreboard\Scoreboard\obj\Debug\ConfirmationMessage.baml
+D:\Projects\stream-scoreboard\Scoreboard\obj\Debug\ErrorMessage.g.cs
+D:\Projects\stream-scoreboard\Scoreboard\obj\Debug\ErrorMessage.baml

@@ -161,6 +161,9 @@
       <DependentUpon>ConfirmationMessage.xaml</DependentUpon>
     </Compile>
     <Compile Include="Entrant.cs" />
+    <Compile Include="ErrorMessage.xaml.cs">
+      <DependentUpon>ErrorMessage.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Event.cs" />
     <Compile Include="Phase.cs" />
     <Compile Include="PhaseGroup.cs" />
@@ -172,6 +175,10 @@
     <Compile Include="Tournament.cs" />
     <Compile Include="TournamentItem.cs" />
     <Page Include="ConfirmationMessage.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ErrorMessage.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
