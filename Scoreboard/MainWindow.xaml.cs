@@ -673,9 +673,9 @@ namespace Scoreboard
 
         private void RemoveCommand(object sender, RoutedEventArgs e)
         {
-            DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("Delete command \"" + listCommand.SelectedValue + "\"?", "Deleting command", MessageBoxButtons.YesNo);
+            ConfirmationMessage confMsg = new ConfirmationMessage("Delete command \"" + listCommand.SelectedValue + "\"?", this);
 
-            if (dialogResult == System.Windows.Forms.DialogResult.Yes)
+            if (confMsg.ShowDialog() == true)
             {
                 commands.Remove(commands[listCommand.SelectedIndex]);
 
@@ -754,9 +754,9 @@ namespace Scoreboard
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("Close this program?", "Confirm", MessageBoxButtons.YesNo);
+            ConfirmationMessage confMsg = new ConfirmationMessage("Close this program?", this);
 
-            e.Cancel = dialogResult == System.Windows.Forms.DialogResult.No;
+            e.Cancel = confMsg.ShowDialog() == false;
         }
 
         private void EnableUpdateButton(System.Windows.Controls.Button target, bool enabled)
@@ -828,9 +828,9 @@ namespace Scoreboard
 
         private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
-            DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("Go back to main menu?", "Exit", MessageBoxButtons.YesNo);
+            ConfirmationMessage confMsg = new ConfirmationMessage("Go back to main menu?", this);
 
-            if (dialogResult == System.Windows.Forms.DialogResult.Yes)
+            if (confMsg.ShowDialog() == true)
             {
                 tabControl.Visibility = Visibility.Hidden;
                 gridStart.Visibility = Visibility.Visible;
@@ -850,7 +850,6 @@ namespace Scoreboard
 
         private async void LoadTournament(string slug)
         {
-            bool error = false;
             try
             {
                 GraphQLRequest request = new GraphQLRequest
@@ -1511,9 +1510,9 @@ namespace Scoreboard
 
             int index = int.Parse(((ComboBoxItem)parent).Tag.ToString());
 
-            DialogResult dialogResult = System.Windows.Forms.MessageBox.Show("Delete tournament \"" + ((ComboBoxItem)cbTournaments.Items[index]).Content + "\"?", "Deleting tournament", MessageBoxButtons.YesNo);
+            ConfirmationMessage confMsg = new ConfirmationMessage("Delete tournament \n\"" + ((ComboBoxItem)cbTournaments.Items[index]).Content + "\"?", this);
 
-            if (dialogResult == System.Windows.Forms.DialogResult.Yes)
+            if (confMsg.ShowDialog() == true)
             {
 
                 if (cbTournaments.SelectedIndex == index)

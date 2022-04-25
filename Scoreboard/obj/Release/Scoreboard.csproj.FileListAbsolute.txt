@@ -158,3 +158,5 @@ D:\Projects\stream-scoreboard\Scoreboard\obj\Release\Scoreboard.csproj.CoreCompi
 D:\Projects\stream-scoreboard\Scoreboard\obj\Release\Scoreboard.csproj.CopyComplete
 D:\Projects\stream-scoreboard\Scoreboard\obj\Release\Scoreboard.exe
 D:\Projects\stream-scoreboard\Scoreboard\obj\Release\Scoreboard.pdb
+D:\Projects\stream-scoreboard\Scoreboard\obj\Release\ConfirmationMessage.g.cs
+D:\Projects\stream-scoreboard\Scoreboard\obj\Release\ConfirmationMessage.baml
