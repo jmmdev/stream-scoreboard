@@ -160,3 +160,7 @@ D:\Projects\stream-scoreboard\Scoreboard\obj\Release\Scoreboard.exe
 D:\Projects\stream-scoreboard\Scoreboard\obj\Release\Scoreboard.pdb
 D:\Projects\stream-scoreboard\Scoreboard\obj\Release\ConfirmationMessage.g.cs
 D:\Projects\stream-scoreboard\Scoreboard\obj\Release\ConfirmationMessage.baml
+D:\Projects\stream-scoreboard\Scoreboard\obj\Release\ErrorMessage.g.cs
+D:\Projects\stream-scoreboard\Scoreboard\obj\Release\InfoMessage.g.cs
+D:\Projects\stream-scoreboard\Scoreboard\obj\Release\ErrorMessage.baml
+D:\Projects\stream-scoreboard\Scoreboard\obj\Release\InfoMessage.baml

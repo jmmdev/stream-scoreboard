@@ -10,11 +10,11 @@ none
 false
 TRACE
 D:\Projects\stream-scoreboard\Scoreboard\App.xaml
-2824035469
+41212323614
 
-18-1835785397
+20290513659
 50-1303681352
-ConfirmationMessage.xaml;MainWindow.xaml;
+ConfirmationMessage.xaml;ErrorMessage.xaml;InfoMessage.xaml;MainWindow.xaml;
 
 False
 

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Scoreboard"
         mc:Ignorable="d"
-        ResizeMode="NoResize"
+        ResizeMode="CanMinimize"
         WindowStartupLocation="CenterScreen"
         Closing="Window_Closing"
         Icon="icon1.ico"
@@ -937,7 +937,7 @@
 
         <StackPanel x:Key="smashGGButtonCancel" Orientation="Horizontal">
             <Image Source="smashGGLogo.png" Height="28" Margin="0 0 0 0"></Image>
-            <TextBlock Height="32" FontSize="15" Margin="54 3 54 3">Cancel</TextBlock>
+            <TextBlock Height="32" FontSize="15" Margin="12 3 12 3">Cancel</TextBlock>
         </StackPanel>
 
         <SolidColorBrush x:Key="StandardButtonIdle">#9147ff</SolidColorBrush>
@@ -954,13 +954,13 @@
     <Grid>
         <Grid Name="gridStart" Height="32" Width="452" Visibility="Visible">
             <Button Style="{StaticResource StandardButton}" Name="btnManual" Width="190" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Manual" FontSize="16" Click="BtnManual_Click" Cursor="Hand" />
-            <Button Style="{StaticResource SmashGGButton}" Name="btnSmashGG" Width="190" Height="32" HorizontalAlignment="Right" VerticalAlignment="Top" Content="{StaticResource smashGGButtonConnect}" FontSize="1" Click="BtnSmashGG_Click" Cursor="Hand" />
-            <Grid Name="gridUrl" Height="152" Margin="0 64 0 0" Visibility="Hidden">
+            <Button Style="{StaticResource SmashGGButton}" Name="btnSmashGG" Width="190" Height="32" HorizontalAlignment="Right" VerticalAlignment="Top" Content="{StaticResource smashGGButtonConnect}" FontSize="15" Click="BtnSmashGG_Click" Cursor="Hand" />
+            <Grid Name="gridUrl" Height="168" Margin="0 48 0 0" Visibility="Hidden">
                 <Label Content="Recent tournaments" VerticalAlignment="Top" VerticalContentAlignment="Bottom" FontWeight="Bold" FontSize="14" Padding="0"/>
                 <ComboBox Style="{StaticResource TournamentComboBox}" Name="cbTournaments" Height="24" VerticalAlignment="Top" VerticalContentAlignment="Center" Margin="0 24 0 0" IsEnabled="false" SelectionChanged="cbTournaments_SelectionChanged" FontSize="14" Foreground="White" Cursor="Hand" />
                 <Label Content="Tournament url / identifier" VerticalAlignment="Top" VerticalContentAlignment="Bottom" Margin="0 56 0 0" FontWeight="Bold" FontSize="14" Padding="0"/>
                 <TextBox Name="tbUrl"  Height="24" VerticalAlignment="Top" VerticalContentAlignment="Center" Margin="0 80 0 0" TextChanged="TbUrl_TextChanged" />
-                <Button Style="{StaticResource StandardButton}" Name="btnSubmitUrl" Content="Done" VerticalAlignment="Top" Margin="0 120 0 0" Width="100" Height="32" FontSize="16" Click="BtnSubmitUrl_Click" FontWeight="Normal" Cursor="Hand" IsEnabled="false" />
+                <Button Style="{StaticResource StandardButton}" Name="btnSubmitUrl" Content="Submit" VerticalAlignment="Bottom" Width="100" Height="32" FontSize="16" Click="BtnSubmitUrl_Click" FontWeight="Normal" Cursor="Hand" IsEnabled="false" />
             </Grid>
         </Grid>
         <Grid Background="{DynamicResource FieldHighlight}" Name="tabControl" Visibility="Hidden">

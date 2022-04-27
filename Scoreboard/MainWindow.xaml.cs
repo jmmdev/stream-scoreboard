@@ -790,12 +790,18 @@ namespace Scoreboard
             {
                 gridStart.Height = 216;
                 gridUrl.Visibility = Visibility.Visible;
-                btnSmashGG.Content = Resources["smashGGButtonCancel"];
+                btnManual.Visibility = Visibility.Hidden;
+                btnSmashGG.Width = 32;
+                btnSmashGG.FontFamily = new FontFamily("Webdings");
+                btnSmashGG.Content = "r";
             }
             else
             {
                 gridStart.Height = 32;
                 gridUrl.Visibility = Visibility.Hidden;
+                btnManual.Visibility = Visibility.Visible;
+                btnSmashGG.Width = 190;
+                btnSmashGG.ClearValue(FontFamilyProperty);
                 btnSmashGG.Content = Resources["smashGGButtonConnect"];
             }
 
