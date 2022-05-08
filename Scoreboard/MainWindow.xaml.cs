@@ -555,6 +555,7 @@ namespace Scoreboard
 
         private void ObsConnect()
         {
+            bool wasConnected = obsIsConnected;
             port = tbPort.Text;
             password = pbPassword.Password;
 
@@ -567,14 +568,17 @@ namespace Scoreboard
 
                 tabControl.IsEnabled = true;
                 obsIsConnected = !obsIsConnected;
+
+                btnObsConnection.IsEnabled = true;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(e);
             }
             finally
             {
-                btnObsConnection.IsEnabled = true;
+                if(obsIsConnected == wasConnected)
+                    DisplayErrorMessage("Connection with OBS was not possible. Check the credentials and try again");
             }
         }
 
@@ -722,7 +726,15 @@ namespace Scoreboard
 
         private void BtnSaveInfo_Click(object sender, RoutedEventArgs e)
         {
-            File.WriteAllText(outputDir + "info.txt", tbInfo.Text);
+            string text = tbInfo.Text;
+            if(chkScroll.IsChecked == true)
+            {
+                for(int i=0; i<text.Length/2; i++)
+                {
+                    text += " ";
+                }
+            }
+            File.WriteAllText(outputDir + "info.txt", text);
             HighlightInfoButton(false);
         }
 
@@ -844,6 +856,7 @@ namespace Scoreboard
                 query TournamentQuery($slug: String) {
 		            tournament(slug: $slug){
                         name
+                        state
 			            events {
 				            id
 				            name
@@ -858,9 +871,17 @@ namespace Scoreboard
 
                 var response = await client.SendQueryAsync(request, () => new { Tournament = new Tournament() });
 
-                if (response.Data.Tournament == null)
+                Tournament t = response.Data.Tournament;
+
+                if (t == null)
                 {
                     DisplayErrorMessage("Tournament not found. Check the url and try again");
+                    return;
+                }
+
+                if(t.state == 3)
+                {
+                    DisplayInfoMessage("Tournament finalized", t.name + " is already over. Please select a different tournament or enter a new one");
                     return;
                 }
 
@@ -904,6 +925,7 @@ namespace Scoreboard
             }
             finally
             {
+                EnableSubmitUrl();
             }
         }
 
@@ -1124,7 +1146,7 @@ namespace Scoreboard
 		                        phaseGroup(id: $id){
                                     id
                                     displayIdentifier
-    	                            sets (perPage: 500, filters: {state: [1, 2, 3, 4, 6, 7], hideEmpty: true }, sortType: CALL_ORDER){
+    	                            sets (perPage: 500, filters: {state: [1, 2, 4, 6, 7], hideEmpty: true }, sortType: CALL_ORDER){
                                         nodes {
                                             id
                                             fullRoundText
@@ -1231,9 +1253,9 @@ namespace Scoreboard
                 return;
             }
         }
-        private void DisplayInfoMessage(string message)
+        private void DisplayInfoMessage(string title, string message)
         {
-            new InfoMessage(message, this).ShowDialog();
+            new InfoMessage(title, message, this).ShowDialog();
         }
 
         private void DisplayErrorMessage(string message)
@@ -1243,6 +1265,11 @@ namespace Scoreboard
         public void EnableSubmitUrl()
         {
             btnSubmitUrl.IsEnabled = true;
+        }
+        
+        public void EnableOBSConnection()
+        {
+            btnObsConnection.IsEnabled = true;
         }
 
         private void SaveCommand(object sender, RoutedEventArgs e)

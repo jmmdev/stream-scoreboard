@@ -8,6 +8,7 @@
         Closed="Window_Closed"
         WindowStartupLocation="CenterOwner"
         Background="{DynamicResource Background}"
+        Icon="icon1.ico"
         Title="Error" Height="152" Width="358">
     <Window.Resources>
         <Style TargetType="Button">

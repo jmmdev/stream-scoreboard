@@ -931,8 +931,8 @@
         </Style>
 
         <StackPanel x:Key="smashGGButtonConnect" Orientation="Horizontal" >
-            <Image Source="smashGGLogo.png" Height="28" Margin="0 0 3 0"></Image>
-            <TextBlock Height="32" FontSize="15" Margin="3">Connect to smash.gg</TextBlock>
+            <Image Source="smashGGLogo.png" Height="24" Margin="0 0 8 0"></Image>
+            <TextBlock Height="32" FontSize="15" Margin="0 5 0 0">Connect to smash.gg</TextBlock>
         </StackPanel>
 
         <StackPanel x:Key="smashGGButtonCancel" Orientation="Horizontal">
@@ -956,11 +956,11 @@
             <Button Style="{StaticResource StandardButton}" Name="btnManual" Width="190" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Manual" FontSize="16" Click="BtnManual_Click" Cursor="Hand" />
             <Button Style="{StaticResource SmashGGButton}" Name="btnSmashGG" Width="190" Height="32" HorizontalAlignment="Right" VerticalAlignment="Top" Content="{StaticResource smashGGButtonConnect}" FontSize="15" Click="BtnSmashGG_Click" Cursor="Hand" />
             <Grid Name="gridUrl" Height="168" Margin="0 48 0 0" Visibility="Hidden">
-                <Label Content="Recent tournaments" VerticalAlignment="Top" VerticalContentAlignment="Bottom" FontWeight="Bold" FontSize="14" Padding="0"/>
+                <Label Content="Recent tournaments" Height="24" VerticalAlignment="Top" VerticalContentAlignment="Bottom" FontWeight="Bold" FontSize="14" Padding="0"/>
                 <ComboBox Style="{StaticResource TournamentComboBox}" Name="cbTournaments" Height="24" VerticalAlignment="Top" VerticalContentAlignment="Center" Margin="0 24 0 0" IsEnabled="false" SelectionChanged="cbTournaments_SelectionChanged" FontSize="14" Foreground="White" Cursor="Hand" />
-                <Label Content="Tournament url / identifier" VerticalAlignment="Top" VerticalContentAlignment="Bottom" Margin="0 56 0 0" FontWeight="Bold" FontSize="14" Padding="0"/>
+                <Label Content="Tournament url / identifier" Height="24" VerticalAlignment="Top" VerticalContentAlignment="Bottom" Margin="0 56 0 0" FontWeight="Bold" FontSize="14" Padding="0"/>
                 <TextBox Name="tbUrl"  Height="24" VerticalAlignment="Top" VerticalContentAlignment="Center" Margin="0 80 0 0" TextChanged="TbUrl_TextChanged" />
-                <Button Style="{StaticResource StandardButton}" Name="btnSubmitUrl" Content="Submit" VerticalAlignment="Bottom" Width="100" Height="32" FontSize="16" Click="BtnSubmitUrl_Click" FontWeight="Normal" Cursor="Hand" IsEnabled="false" />
+                <Button Style="{StaticResource StandardButton}" Name="btnSubmitUrl" Content="Submit" VerticalAlignment="Bottom" Width="100" Height="32" FontSize="16" Click="BtnSubmitUrl_Click" FontWeight="Normal" Cursor="Hand" IsDefault="true" IsEnabled="false" />
             </Grid>
         </Grid>
         <Grid Background="{DynamicResource FieldHighlight}" Name="tabControl" Visibility="Hidden">
@@ -1029,7 +1029,7 @@
                         <TextBox Name="tbPlayer3" Width="180" Height="24" HorizontalAlignment="Left" VerticalAlignment="Center" Margin="8,184,0,0" FontSize="14" VerticalContentAlignment="Center" Visibility="Hidden" TextChanged="CheckTextboxes"/>
                         <TextBox Name="tbPlayer4" Width="180" Height="24" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="0,184,8,0" FontSize="14" VerticalContentAlignment="Center" Visibility="Hidden" TextChanged="CheckTextboxes"/>
 
-                        <Button Style="{StaticResource SaveButton}" Name="btnSave" Width="100" Height="24" HorizontalAlignment="Center" VerticalAlignment="Bottom" Content="Update" FontSize="14" Margin="0 11" Cursor="Hand" Click="SaveChanges" IsEnabled="False"/>
+                        <Button Style="{StaticResource SaveButton}" Name="btnSave" Width="100" Height="24" HorizontalAlignment="Center" VerticalAlignment="Bottom" Content="Update" FontSize="14" Margin="0 11" Cursor="Hand" IsDefault="true" Click="SaveChanges" IsEnabled="False"/>
 
                         <Label Name="lblSuccess" FontSize="11" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="160" Padding="0" Margin="8 0" Visibility="Hidden"/>
                     </Grid>
@@ -1051,6 +1051,7 @@
                         <Border Height="1" Margin="16 179 16 0" VerticalAlignment="Top" BorderThickness="1" BorderBrush="#999999" />
                         <Grid Margin="16 195 16 0" Height="88" VerticalAlignment="Top" >
                             <Label Height="24" Margin="0 16 0 0" Padding="0" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="14" FontWeight="Bold" Content="Additional info / scrolling message" HorizontalAlignment="Left"/>
+                            <CheckBox Name="chkScroll" Height="20" Margin="375 19 0 0" Padding="0" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="14" FontWeight="Bold" Content="Scrolling text" HorizontalAlignment="Left" Foreground="White"/>
                             <TextBox Width="481" Name="tbInfo" Margin="0 40 0 0" Padding="0" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" TextChanged="TbInfo_TextChanged"/>
                             <Button Style="{StaticResource StandardButton}" Name="btnSaveInfo" Width="48" Height="24" Content="Save" FontSize="14" Margin="0 40 0 0" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="Hand" Click="BtnSaveInfo_Click" />
                         </Grid>

@@ -17,12 +17,14 @@ namespace Scoreboard
 
     private void btnOk_Click(object sender, RoutedEventArgs e)
         {
+            DialogResult = true;
             Close();
         }
 
         private void Window_Closed(object sender, EventArgs e)
         {
             ((MainWindow)Owner).EnableSubmitUrl();
+            ((MainWindow)Owner).EnableOBSConnection();
         }
     }
 }
