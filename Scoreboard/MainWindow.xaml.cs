@@ -94,6 +94,16 @@ namespace Scoreboard
         {
             ClearFields();
 
+            Thickness margin = gridGeneral.Margin;
+            margin.Left = 8;
+            margin.Top = 64;
+            gridGeneral.Margin = margin;
+            gridGeneral.Height = 192;
+
+            margin = lbGithub.Margin;
+            margin.Left = 466;
+            lbGithub.Margin = margin;
+
             isSmashgg = false;
             cbRound.IsEnabled = true;
             tbRoundNum.IsEnabled = true;
@@ -128,13 +138,17 @@ namespace Scoreboard
 
             cbRound.SelectedIndex = 0;
 
-            gridSmashGG.Visibility = Visibility.Hidden;
+            gridSmashGG.Visibility = Visibility.Collapsed;
 
             cbEvent.IsEnabled = true;
 
-            Thickness margin = roundGrid.Margin;
-            margin.Top = 8;
+            roundGrid.HorizontalAlignment = System.Windows.HorizontalAlignment.Right;
+            margin = roundGrid.Margin;
+            margin.Top = 0;
             roundGrid.Margin = margin;
+
+            if(showUrl)
+                doShowUrl();
         }
 
         private void InitializeSmashGG()
@@ -153,6 +167,12 @@ namespace Scoreboard
             tbPlayer4.IsEnabled = false;
             chkLosers1.IsEnabled = false;
             chkLosers2.IsEnabled = false;
+
+
+            roundGrid.HorizontalAlignment = System.Windows.HorizontalAlignment.Left;
+            Thickness margin = roundGrid.Margin;
+            margin.Top = gridEvent.Height + gridSmashGG.Height;
+            roundGrid.Margin = margin;
 
             string[] separators = { "/" };
             string[] urlFields = tbUrl.Text.Split(separators, StringSplitOptions.RemoveEmptyEntries);
@@ -201,7 +221,7 @@ namespace Scoreboard
                     tbPlayer4.Visibility = Visibility.Visible;
 
                     Thickness swapMargin = btnSwap.Margin;
-                    swapMargin.Top = 158;
+                    swapMargin.Top = 118;
                     btnSwap.Margin = swapMargin;
 
                     lbSide1.Content = "Team 1";
@@ -216,7 +236,7 @@ namespace Scoreboard
 
 
                     Thickness swapMargin = btnSwap.Margin;
-                    swapMargin.Top = 132;
+                    swapMargin.Top = 104;
                     btnSwap.Margin = swapMargin;
 
 
@@ -243,14 +263,14 @@ namespace Scoreboard
                 {
                     tbRoundNum.Visibility = Visibility.Visible;
                     cbRound.Width = 152;
-                    roundMargin.Right = 28;
+                    roundMargin.Right = 36;
                     roundNum = true;
                 }
                 else
                 {
                     tbRoundNum.Visibility = Visibility.Collapsed;
                     cbRound.Width = 180;
-                    roundMargin.Right = 0;
+                    roundMargin.Right = 8;
                     roundNum = false;
                 }
 
@@ -447,6 +467,20 @@ namespace Scoreboard
                     File.WriteAllText(outputDir + "score2.txt", score2);
 
                     allOk = true;
+
+                    if (allOk)
+                    {
+                        lblSuccess.Foreground = (Brush)new BrushConverter().ConvertFrom("#FF00FF00");
+                        lblSuccess.Content = "All files updated successfully";
+                    }
+                    else
+                    {
+                        lblSuccess.Foreground = (Brush)new BrushConverter().ConvertFrom("#FFFF0000");
+                        lblSuccess.Content = "An error ocurred. Try again";
+                    }
+
+                    lblSuccess.Visibility = Visibility.Visible;
+                    EnableUpdateButton(btnSave, false);
                 }
                 catch (Exception)
                 {
@@ -540,6 +574,31 @@ namespace Scoreboard
             tbCommandName.Text = "";
             tbCommandValue.Text = "";
             btnSaveCommand.Content = "Add";
+
+            Thickness generalMargin = gridGeneral.Margin;
+            Thickness githubMargin = lbGithub.Margin;
+
+            if (isSmashgg)
+            {
+                if (tabs.SelectedIndex == 0)
+                {
+                    generalMargin.Left = 244;
+                    githubMargin.Left = 702;
+                }
+                else
+                {
+                    generalMargin.Left = 8;
+                    githubMargin.Left = 466;
+                }
+            }
+            else
+            {
+                generalMargin.Left = 8;
+                githubMargin.Left = 466;
+            }
+
+            gridGeneral.Margin = generalMargin;
+            lbGithub.Margin = githubMargin;
         }
 
         private void EnableBtnApply(object sender, EventArgs e)
@@ -722,7 +781,15 @@ namespace Scoreboard
 
         private void BtnSaveInfo_Click(object sender, RoutedEventArgs e)
         {
-            File.WriteAllText(outputDir + "info.txt", tbInfo.Text);
+            string text = tbInfo.Text;
+            if (chkScroll.IsChecked == true)
+            {
+                for (int i = 0; i < text.Length / 2; i++)
+                {
+                    text += " ";
+                }
+            }
+            File.WriteAllText(outputDir + "info.txt", text);
             HighlightInfoButton(false);
         }
 
@@ -788,22 +855,26 @@ namespace Scoreboard
 
             if (showUrl)
             {
-                gridStart.Height = 216;
+                gridStart.Height = 212;
                 gridUrl.Visibility = Visibility.Visible;
-                btnSmashGG.Content = Resources["smashGGButtonCancel"];
+                btnManual.Visibility = Visibility.Hidden;
+                btnSmashGG.Width = 32;
+                btnSmashGG.FontSize = 15;
+                btnSmashGG.FontFamily = new FontFamily("Webdings");
+                btnSmashGG.Content = "r";
             }
             else
             {
                 gridStart.Height = 32;
                 gridUrl.Visibility = Visibility.Hidden;
+                btnManual.Visibility = Visibility.Visible;
+                btnSmashGG.Width = 190;
+                btnSmashGG.FontSize = 1;
+                btnSmashGG.FontFamily = new FontFamily("sans-serif");
                 btnSmashGG.Content = Resources["smashGGButtonConnect"];
             }
 
             gridStart.Margin = margin;
-
-            margin = roundGrid.Margin;
-            margin.Top = 56;
-            roundGrid.Margin = margin;
         }
 
         private void BtnBack_Click(object sender, RoutedEventArgs e)
@@ -815,16 +886,19 @@ namespace Scoreboard
                 tabControl.Visibility = Visibility.Hidden;
                 gridStart.Visibility = Visibility.Visible;
                 btnRefresh.Visibility = Visibility.Hidden;
+                gridSmashGG.Visibility = Visibility.Collapsed;
 
                 if (isSmashgg)
+                {
                     ClearSelectiveFields("P");
+                    Title = "Stream Scoreboard";
+                }
 
                 LoadTournamentFile();
                 cbTournaments.SelectedIndex = 0;
                 tbUrl.Text = "";
 
-                if (isSmashgg)
-                    Title = "Stream Scoreboard";
+                InitializeManual();
             }
         }
 
@@ -857,7 +931,7 @@ namespace Scoreboard
                     DisplayErrorMessage("Tournament not found. Check the url and try again");
                     return;
                 }
-
+                
                 if (response.Data.Tournament.events != null)
                 {
                     localEvents.Clear();
@@ -874,6 +948,16 @@ namespace Scoreboard
                     gridStart.Visibility = Visibility.Hidden;
                     tabControl.Visibility = Visibility.Visible;
                     gridSmashGG.Visibility = Visibility.Visible;
+
+                    Thickness margin = gridGeneral.Margin;
+                    margin.Left = 244;
+                    margin.Top = 32;
+                    gridGeneral.Margin = margin;
+                    gridGeneral.Height = 224;
+
+                    margin = lbGithub.Margin;
+                    margin.Left = 702;
+                    lbGithub.Margin = margin;
 
                     AddTournamentToFile(slug, response.Data.Tournament.name);
 
@@ -1008,7 +1092,11 @@ namespace Scoreboard
                         foreach (PhaseGroup pg in response.Data.Phase.phaseGroups.nodes)
                         {
                             localGroups.Add(pg);
-                            cbPhaseGroup.Items.Add("Pool " + pg.displayIdentifier);
+
+                            if (!pg.displayIdentifier.ToLower().Contains("pool"))
+                                cbPhaseGroup.Items.Add("Pool " + pg.displayIdentifier);
+                            else
+                                cbPhaseGroup.Items.Add(pg.displayIdentifier);
                         }
 
                         if (localGroups.Count > 1)
@@ -1118,7 +1206,7 @@ namespace Scoreboard
 		                        phaseGroup(id: $id){
                                     id
                                     displayIdentifier
-    	                            sets (perPage: 500, filters: {state: [1, 2, 3, 4, 6, 7], hideEmpty: true }, sortType: CALL_ORDER){
+    	                            sets (perPage: 500, filters: {state: [1, 2, 4, 6, 7], hideEmpty: true }, sortType: CALL_ORDER){
                                         nodes {
                                             id
                                             fullRoundText
@@ -1163,7 +1251,8 @@ namespace Scoreboard
 
                         cbSet.SelectedIndex = 0;
 
-                        btnRefresh.Visibility = Visibility.Visible;
+                        if(cbSet.Items.Count > 0)
+                            btnRefresh.Visibility = Visibility.Visible;
                     }
                 }
                 catch (Exception)

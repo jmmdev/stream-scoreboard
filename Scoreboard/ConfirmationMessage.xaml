@@ -53,8 +53,8 @@
     <Grid>
         <TextBox Name="tbMessage" Height="34" Margin="14,12,14,0" VerticalAlignment="Top" Padding="0" TextWrapping="Wrap" MaxLength="50" IsReadOnly="True" Background="Transparent" Foreground="White" BorderThickness="0" />
         <Grid Name="buttonsGrid" Height="43" VerticalAlignment="Bottom">
-            <Button Name="btnYes" Width="74" Height="20" Content="Yes" Margin="14,0,0,0" HorizontalAlignment="Left" FontSize="12" Click="btnYes_Click" />
-            <Button Name="btnNo" Width="74" Height="20" Content="No" Margin="0,0,14,0" HorizontalAlignment="Right" FontSize="12" Click="btnNo_Click" />
+            <Button Name="btnYes" Width="74" Height="20" Content="Yes" Margin="14,0,0,0" HorizontalAlignment="Left" FontSize="11" Click="btnYes_Click" />
+            <Button Name="btnNo" Width="74" Height="20" Content="No" Margin="0,0,14,0" HorizontalAlignment="Right" FontSize="11" Click="btnNo_Click" />
         </Grid>
     </Grid>
 </Window>

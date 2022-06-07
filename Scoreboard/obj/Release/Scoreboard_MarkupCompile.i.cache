@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-D:\Projects\stream-scoreboard\Scoreboard\obj\Release\
+C:\Users\Jose\Desktop\Layouts\stream-scoreboard\Scoreboard\obj\Release\
 Scoreboard
 none
 false
 TRACE
-D:\Projects\stream-scoreboard\Scoreboard\App.xaml
-2824035469
+C:\Users\Jose\Desktop\Layouts\stream-scoreboard\Scoreboard\App.xaml
+41212323614
 
-191381603067
-50-1303681352
-ConfirmationMessage.xaml;MainWindow.xaml;
+21-787065173
+50261727935
+ConfirmationMessage.xaml;ErrorMessage.xaml;InfoMessage.xaml;MainWindow.xaml;
 
 True
 

@@ -242,5 +242,8 @@
     <Resource Include="check-circle.png" />
     <Resource Include="info-circle.png" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="startGGLogo.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
