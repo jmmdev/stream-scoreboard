@@ -9,11 +9,19 @@ Scoreboard
 none
 false
 TRACE
+<<<<<<< HEAD
 C:\Users\Jose\Desktop\Layouts\stream-scoreboard\Scoreboard\App.xaml
 41212323614
 
 20290513659
 50261727935
+=======
+D:\Projects\stream-scoreboard\Scoreboard\App.xaml
+41212323614
+
+20290513659
+50-1303681352
+>>>>>>> e58f9c046112fd7b8d12c5ef24541edb47f5b497
 ConfirmationMessage.xaml;ErrorMessage.xaml;InfoMessage.xaml;MainWindow.xaml;
 
 False

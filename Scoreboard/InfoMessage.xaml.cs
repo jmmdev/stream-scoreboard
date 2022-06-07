@@ -9,9 +9,10 @@ namespace Scoreboard
     /// </summary>
     public partial class InfoMessage : Window
     {
-        public InfoMessage(string msg, Window owner)
+        public InfoMessage(string title, string msg, Window owner)
         {
             InitializeComponent();
+            Title = title;
             tbMessage.Text = msg;
             Owner = owner;
         }

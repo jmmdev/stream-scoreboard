@@ -7,6 +7,7 @@
         mc:Ignorable="d"
         WindowStartupLocation="CenterOwner"
         Background="{DynamicResource Background}"
+        Icon="icon1.ico"
         Title="InfoMessage" Height="152" Width="358">
     <Window.Resources>
         <Style TargetType="Button">
@@ -49,7 +50,7 @@
 
 
     <Grid>
-        <Image Name="iconImg" Width="32" Height="32" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="22,23,0,0" RenderOptions.BitmapScalingMode="HighQuality"/>
+        <Image Name="iconImg" Width="32" Height="32" VerticalAlignment="Top" HorizontalAlignment="Left" Source="info-circle.png" Margin="22,23,0,0" RenderOptions.BitmapScalingMode="HighQuality"/>
         <TextBox Name="tbMessage" Height="34" Margin="63,22,17,0" VerticalAlignment="Top" Padding="0" TextWrapping="Wrap" MaxLength="50" IsReadOnly="True" Background="Transparent" Foreground="White" BorderThickness="0" VerticalContentAlignment="Center" />
         <Grid Name="buttonsGrid" Height="43" VerticalAlignment="Bottom">
             <Button Name="btnOk" Width="74" Height="20" Content="OK" Margin="0,0,17,0" HorizontalAlignment="Right" FontSize="11" Click="btnOk_Click" />

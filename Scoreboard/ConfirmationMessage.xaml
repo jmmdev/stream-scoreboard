@@ -8,6 +8,7 @@
         ResizeMode="NoResize"
         WindowStartupLocation="CenterOwner"
         Background="{DynamicResource Background}"
+        Icon="icon1.ico"
         Title="Confirm" Height="133" Width="202">
 
     <Window.Resources>

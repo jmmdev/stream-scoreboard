@@ -614,6 +614,7 @@ namespace Scoreboard
 
         private void ObsConnect()
         {
+            bool wasConnected = obsIsConnected;
             port = tbPort.Text;
             password = pbPassword.Password;
 
@@ -626,14 +627,17 @@ namespace Scoreboard
 
                 tabControl.IsEnabled = true;
                 obsIsConnected = !obsIsConnected;
+
+                btnObsConnection.IsEnabled = true;
             }
             catch (Exception e)
             {
-                Console.WriteLine(e.Message);
+                Console.WriteLine(e);
             }
             finally
             {
-                btnObsConnection.IsEnabled = true;
+                if(obsIsConnected == wasConnected)
+                    DisplayErrorMessage("Connection with OBS was not possible. Check the credentials and try again");
             }
         }
 
@@ -912,6 +916,7 @@ namespace Scoreboard
                 query TournamentQuery($slug: String) {
 		            tournament(slug: $slug){
                         name
+                        state
 			            events {
 				            id
 				            name
@@ -926,7 +931,9 @@ namespace Scoreboard
 
                 var response = await client.SendQueryAsync(request, () => new { Tournament = new Tournament() });
 
-                if (response.Data.Tournament == null)
+                Tournament t = response.Data.Tournament;
+
+                if (t == null)
                 {
                     DisplayErrorMessage("Tournament not found. Check the url and try again");
                     return;
@@ -982,6 +989,7 @@ namespace Scoreboard
             }
             finally
             {
+                EnableSubmitUrl();
             }
         }
 
@@ -1314,9 +1322,9 @@ namespace Scoreboard
                 return;
             }
         }
-        private void DisplayInfoMessage(string message)
+        private void DisplayInfoMessage(string title, string message)
         {
-            new InfoMessage(message, this).ShowDialog();
+            new InfoMessage(title, message, this).ShowDialog();
         }
 
         private void DisplayErrorMessage(string message)
@@ -1326,6 +1334,11 @@ namespace Scoreboard
         public void EnableSubmitUrl()
         {
             btnSubmitUrl.IsEnabled = true;
+        }
+        
+        public void EnableOBSConnection()
+        {
+            btnObsConnection.IsEnabled = true;
         }
 
         private void SaveCommand(object sender, RoutedEventArgs e)
