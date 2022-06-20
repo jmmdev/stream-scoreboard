@@ -34,4 +34,4 @@ The final tab "Settings" is pretty intuitive. The resources folder directory can
 
 ![8](https://user-images.githubusercontent.com/100143610/172509066-d92ea3bc-035d-4449-9926-efa834cc29c5.png)
 
-And that's all. To be honest this is not the last version I made. That one was a bit more refined and detailed covering some errors and removing unnecessary stuff but there were problems with repositories and files and I got to rescue this one. I dont' have much time right now to redo all that stuff so feel free to change, improve or do whatever you want with anything in the code
+And that's all. To be honest this is not the latest version I made. That one was a bit more refined and detailed covering some errors and removing unnecessary stuff but there were problems with repositories and files and I got to rescue this one. I dont' have much time right now to redo all that stuff so feel free to change, improve or do whatever you want with anything in the code
