@@ -1,0 +1,367 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GraphQL.NewtonsoftJson</name>
+    </assembly>
+    <members>
+        <member name="T:GraphQL.NewtonsoftJson.ExecutionErrorJsonConverter">
+            <summary>
+            Converts an instance of <see cref="T:GraphQL.ExecutionError"/> to JSON. Doesn't support read from JSON.
+            </summary>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.ExecutionErrorJsonConverter.#ctor(GraphQL.Execution.IErrorInfoProvider)">
+            <summary>
+            Initializes a new instance with the specified <see cref="T:GraphQL.Execution.IErrorInfoProvider"/>.
+            </summary>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.ExecutionErrorJsonConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.ExecutionErrorJsonConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <summary>
+            This JSON converter does not support reading.
+            </summary>
+        </member>
+        <member name="P:GraphQL.NewtonsoftJson.ExecutionErrorJsonConverter.CanRead">
+            <inheritdoc/>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.ExecutionErrorJsonConverter.CanConvert(System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="T:GraphQL.NewtonsoftJson.ExecutionResultJsonConverter">
+            <summary>
+            Converts an instance of <see cref="T:GraphQL.ExecutionResult"/> to JSON. Doesn't support read from JSON.
+            </summary>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.ExecutionResultJsonConverter.#ctor">
+            <summary>
+            Initializes a new instance.
+            </summary>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.ExecutionResultJsonConverter.#ctor(Newtonsoft.Json.Serialization.NamingStrategy)">
+            <summary>
+            Initializes a new instance with the specified <see cref="T:Newtonsoft.Json.Serialization.NamingStrategy"/>.
+            </summary>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.ExecutionResultJsonConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.ExecutionResultJsonConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <summary>
+            This JSON converter does not support reading.
+            </summary>
+        </member>
+        <member name="P:GraphQL.NewtonsoftJson.ExecutionResultJsonConverter.CanRead">
+            <inheritdoc/>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.ExecutionResultJsonConverter.CanConvert(System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="T:GraphQL.NewtonsoftJson.FixPrecisionConverter">
+            <summary>
+            JSON converter for writing floating-point values without loss of precision.
+            </summary>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.FixPrecisionConverter.#ctor(System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Initializes the converter and enables it for the specified floating-point types.
+            </summary>
+        </member>
+        <member name="P:GraphQL.NewtonsoftJson.FixPrecisionConverter.CanRead">
+            <inheritdoc/>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.FixPrecisionConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.FixPrecisionConverter.CanConvert(System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.FixPrecisionConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <inheritdoc/>
+        </member>
+        <member name="T:GraphQL.NewtonsoftJson.GraphQLContractResolver">
+            <summary>
+            An <see cref="T:Newtonsoft.Json.Serialization.IContractResolver"/> for GraphQL.NET.
+            </summary>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.GraphQLContractResolver.#ctor(GraphQL.Execution.IErrorInfoProvider)">
+            <summary>
+            Initializes an instance with the specified <see cref="T:GraphQL.Execution.IErrorInfoProvider"/>.
+            </summary>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.GraphQLContractResolver.ResolveContractConverter(System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.GraphQLContractResolver.CreateProperty(System.Reflection.MemberInfo,Newtonsoft.Json.MemberSerialization)">
+            <inheritdoc/>
+        </member>
+        <member name="T:GraphQL.NewtonsoftJson.GraphQLRequestJsonConverter">
+            <summary>
+            A custom JsonConverter for reading or writing a <see cref="T:GraphQL.Transport.GraphQLRequest"/> object.
+            </summary>
+        </member>
+        <member name="F:GraphQL.NewtonsoftJson.GraphQLRequestJsonConverter.OPERATION_NAME_KEY">
+            <summary>
+            Name for the operation name parameter.
+            See https://github.com/graphql/graphql-over-http/blob/master/spec/GraphQLOverHTTP.md#request-parameters
+            </summary>
+        </member>
+        <member name="F:GraphQL.NewtonsoftJson.GraphQLRequestJsonConverter.QUERY_KEY">
+            <summary>
+            Name for the query parameter.
+            See https://github.com/graphql/graphql-over-http/blob/master/spec/GraphQLOverHTTP.md#request-parameters
+            </summary>
+        </member>
+        <member name="F:GraphQL.NewtonsoftJson.GraphQLRequestJsonConverter.VARIABLES_KEY">
+            <summary>
+            Name for the variables parameter.
+            See https://github.com/graphql/graphql-over-http/blob/master/spec/GraphQLOverHTTP.md#request-parameters
+            </summary>
+        </member>
+        <member name="F:GraphQL.NewtonsoftJson.GraphQLRequestJsonConverter.EXTENSIONS_KEY">
+            <summary>
+            Name for the extensions parameter.
+            See https://github.com/graphql/graphql-over-http/blob/master/spec/GraphQLOverHTTP.md#request-parameters
+            </summary>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.GraphQLRequestJsonConverter.CanConvert(System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="P:GraphQL.NewtonsoftJson.GraphQLRequestJsonConverter.CanRead">
+            <inheritdoc/>
+        </member>
+        <member name="P:GraphQL.NewtonsoftJson.GraphQLRequestJsonConverter.CanWrite">
+            <inheritdoc/>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.GraphQLRequestJsonConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.GraphQLRequestJsonConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <inheritdoc/>
+        </member>
+        <member name="T:GraphQL.NewtonsoftJson.GraphQLRequestListJsonConverter">
+            <summary>
+            A custom JsonConverter for reading a list of <see cref="T:GraphQL.Transport.GraphQLRequest"/> objects.
+            Will deserialize a single request into a list containing one request. Doesn't support writing.
+            <br/><br/>
+            To determine if a single request is a batch request or not, deserialize to the type
+            <see cref="T:System.Collections.Generic.IList`1">IList</see>&lt;<see cref="T:GraphQL.Transport.GraphQLRequest"/>&gt; and examine the type
+            of the returned object to see if it is <see cref="T:GraphQL.Transport.GraphQLRequest"/>[].
+            If the returned object is an array, then it is not a batch request.
+            </summary>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.GraphQLRequestListJsonConverter.CanConvert(System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="P:GraphQL.NewtonsoftJson.GraphQLRequestListJsonConverter.CanRead">
+            <inheritdoc/>
+        </member>
+        <member name="P:GraphQL.NewtonsoftJson.GraphQLRequestListJsonConverter.CanWrite">
+            <inheritdoc/>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.GraphQLRequestListJsonConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.GraphQLRequestListJsonConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <inheritdoc/>
+        </member>
+        <member name="T:GraphQL.NewtonsoftJson.GraphQLSerializer">
+            <summary>
+            Serializes an <see cref="T:GraphQL.ExecutionResult"/> (or any other object) to a stream using
+            the <see cref="N:Newtonsoft.Json"/> library.
+            </summary>
+        </member>
+        <member name="P:GraphQL.NewtonsoftJson.GraphQLSerializer.Serializer">
+            <summary>
+            Returns the underlying serializer.
+            </summary>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.GraphQLSerializer.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:GraphQL.NewtonsoftJson.GraphQLSerializer"/> class with default settings:
+            no indenting and a default instance of the <see cref="T:GraphQL.Execution.ErrorInfoProvider"/> class.
+            </summary>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.GraphQLSerializer.#ctor(System.Boolean)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GraphQL.NewtonsoftJson.GraphQLSerializer"/> class with the specified settings
+            and a default instance of the <see cref="T:GraphQL.Execution.ErrorInfoProvider"/> class.
+            </summary>
+            <param name="indent">Indicates if child objects should be indented</param>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.GraphQLSerializer.#ctor(System.Boolean,GraphQL.Execution.IErrorInfoProvider)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GraphQL.NewtonsoftJson.GraphQLSerializer"/> class with the specified settings.
+            </summary>
+            <param name="indent">Indicates if child objects should be indented</param>
+            <param name="errorInfoProvider">Specifies the <see cref="T:GraphQL.Execution.IErrorInfoProvider"/> instance to use to serialize GraphQL errors</param>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.GraphQLSerializer.#ctor(GraphQL.Execution.IErrorInfoProvider)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GraphQL.NewtonsoftJson.GraphQLSerializer"/> class with no indenting and the
+            specified <see cref="T:GraphQL.Execution.IErrorInfoProvider"/>.
+            </summary>
+            <param name="errorInfoProvider">Specifies the <see cref="T:GraphQL.Execution.IErrorInfoProvider"/> instance to use to serialize GraphQL errors</param>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.GraphQLSerializer.#ctor(System.Action{GraphQL.NewtonsoftJson.JsonSerializerSettings})">
+            <summary>
+            Initializes a new instance of the <see cref="T:GraphQL.NewtonsoftJson.GraphQLSerializer"/> class configured with the specified callback.
+            Configuration defaults to no indenting and a default instance of the <see cref="T:GraphQL.Execution.ErrorInfoProvider"/> class.
+            </summary>
+            <param name="configureSerializerSettings">Specifies a callback used to configure the JSON serializer</param>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.GraphQLSerializer.#ctor(GraphQL.NewtonsoftJson.JsonSerializerSettings)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GraphQL.NewtonsoftJson.GraphQLSerializer"/> class with the specified settings
+            and a default instance of the <see cref="T:GraphQL.Execution.ErrorInfoProvider"/> class.
+            </summary>
+            <param name="serializerSettings">Specifies the JSON serializer settings</param>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.GraphQLSerializer.#ctor(GraphQL.NewtonsoftJson.JsonSerializerSettings,GraphQL.Execution.IErrorInfoProvider)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GraphQL.NewtonsoftJson.GraphQLSerializer"/> class with the specified settings.
+            </summary>
+            <param name="serializerSettings">Specifies the JSON serializer settings</param>
+            <param name="errorInfoProvider">Specifies the <see cref="T:GraphQL.Execution.IErrorInfoProvider"/> instance to use to serialize GraphQL errors</param>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.GraphQLSerializer.#ctor(System.Action{GraphQL.NewtonsoftJson.JsonSerializerSettings},GraphQL.Execution.IErrorInfoProvider)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GraphQL.NewtonsoftJson.GraphQLSerializer"/> class with the specified settings.
+            Configuration defaults to no indenting and the specified instance of the <see cref="T:GraphQL.Execution.ErrorInfoProvider"/> class.
+            </summary>
+            <param name="configureSerializerSettings">Specifies a callback used to configure the JSON serializer</param>
+            <param name="errorInfoProvider">Specifies the <see cref="T:GraphQL.Execution.IErrorInfoProvider"/> instance to use to serialize GraphQL errors</param>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.GraphQLSerializer.#ctor(Newtonsoft.Json.JsonSerializer)">
+            <summary>
+            Initializes a new instance of the <see cref="T:GraphQL.NewtonsoftJson.GraphQLSerializer"/> class with the specified <see cref="T:Newtonsoft.Json.JsonSerializer"/>.
+            The specified <see cref="T:Newtonsoft.Json.JsonSerializer"/> should support serializing and/or deserializing <see cref="T:GraphQL.ExecutionResult"/>,
+            <see cref="T:GraphQL.Transport.GraphQLRequest"/>, <see cref="T:GraphQL.Inputs"/>, <see cref="T:GraphQL.Transport.OperationMessage"/> and <see cref="T:GraphQL.Instrumentation.ApolloTrace"/>.
+            </summary>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.GraphQLSerializer.WriteAsync``1(System.IO.Stream,``0,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.GraphQLSerializer.Write``1(System.IO.TextWriter,``0)">
+            <summary>
+            Serializes <paramref name="value"/> to the specified <see cref="T:System.IO.TextWriter"/>.
+            </summary>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.GraphQLSerializer.Serialize``1(``0)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.GraphQLSerializer.ReadAsync``1(System.IO.Stream,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.GraphQLSerializer.Read``1(System.IO.TextReader)">
+            <summary>
+            Deserializes from the specified <see cref="T:System.IO.TextReader"/> to the specified object type.
+            </summary>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.GraphQLSerializer.Deserialize``1(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.GraphQLSerializer.ReadNode``1(Newtonsoft.Json.Linq.JObject)">
+            <summary>
+            Converts the <see cref="T:Newtonsoft.Json.Linq.JObject"/> representing a single JSON value into a <typeparamref name="T"/>.
+            A <paramref name="jObject"/> of <see langword="null"/> returns <see langword="default"/>.
+            </summary>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.GraphQLSerializer.ReadNode``1(System.Object)">
+            <summary>
+            Converts the <see cref="T:Newtonsoft.Json.Linq.JObject"/> representing a single JSON value into a <typeparamref name="T"/>.
+            A <paramref name="value"/> of <see langword="null"/> returns <see langword="default"/>.
+            Throws a <see cref="T:System.InvalidCastException"/> if <paramref name="value"/> is not a <see cref="T:Newtonsoft.Json.Linq.JObject"/>.
+            </summary>
+        </member>
+        <member name="P:GraphQL.NewtonsoftJson.GraphQLSerializer.IsNativelyAsync">
+            <inheritdoc/>
+        </member>
+        <member name="T:GraphQL.NewtonsoftJson.HttpResponseStreamWriter">
+            <summary>
+            Writes to the <see cref="T:System.IO.Stream"/> using the supplied <see cref="P:GraphQL.NewtonsoftJson.HttpResponseStreamWriter.Encoding"/>.
+            It does not write the BOM and also does not close the stream.
+            </summary>
+        </member>
+        <member name="T:GraphQL.NewtonsoftJson.InputsJsonConverter">
+            <summary>
+            A custom JsonConverter for reading an <see cref="T:GraphQL.Inputs"/> object.
+            Doesn't support writing, but since <see cref="T:GraphQL.Inputs"/> implements
+            <see cref="T:System.Collections.Generic.IReadOnlyDictionary`2">IReadOnlyDictionary&lt;string, object&gt;</see>,
+            serialization of <see cref="T:GraphQL.Inputs"/> is supported directly by Newtonsoft.Json.
+            </summary>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.InputsJsonConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.InputsJsonConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <summary>
+            This JSON converter does not support writing.
+            </summary>
+        </member>
+        <member name="P:GraphQL.NewtonsoftJson.InputsJsonConverter.CanWrite">
+            <inheritdoc/>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.InputsJsonConverter.CanConvert(System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="T:GraphQL.NewtonsoftJson.JsonSerializerSettings">
+            <inheritdoc cref="T:Newtonsoft.Json.JsonSerializerSettings"/>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.JsonSerializerSettings.#ctor">
+            <inheritdoc cref="M:Newtonsoft.Json.JsonSerializerSettings.#ctor"/>
+        </member>
+        <member name="T:GraphQL.NewtonsoftJson.OperationMessageJsonConverter">
+            <summary>
+            A custom JsonConverter for reading or writing a <see cref="T:GraphQL.Transport.OperationMessage"/> object.
+            </summary>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.OperationMessageJsonConverter.CanConvert(System.Type)">
+            <inheritdoc/>
+        </member>
+        <member name="P:GraphQL.NewtonsoftJson.OperationMessageJsonConverter.CanRead">
+            <inheritdoc/>
+        </member>
+        <member name="P:GraphQL.NewtonsoftJson.OperationMessageJsonConverter.CanWrite">
+            <inheritdoc/>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.OperationMessageJsonConverter.WriteJson(Newtonsoft.Json.JsonWriter,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.OperationMessageJsonConverter.ReadJson(Newtonsoft.Json.JsonReader,System.Type,System.Object,Newtonsoft.Json.JsonSerializer)">
+            <inheritdoc/>
+        </member>
+        <member name="T:GraphQL.NewtonsoftJson.SchemaExtensions">
+            <summary>
+            Provides extension methods for executing a document against a schema and returning a json-formatted response.
+            </summary>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJson.SchemaExtensions.ExecuteAsync(GraphQL.Types.ISchema,System.Action{GraphQL.ExecutionOptions})">
+            <summary>
+            Configures an <see cref="T:GraphQL.ExecutionOptions"/> using the given <paramref name="configure"/> action
+            then executes those options using the <paramref name="schema"/> and a <see cref="T:GraphQL.NewtonsoftJson.GraphQLSerializer"/>
+            with indentation turned on.
+            </summary>
+            <param name="schema">A schema to use.</param>
+            <param name="configure">An action that configures something to execute.</param>
+            <returns>The JSON result as a string.</returns>
+            <remarks>
+            Useful for quickly executing something and "getting started".
+            Part of the public API and should not be removed even if it has no references.
+            </remarks>
+        </member>
+        <member name="T:GraphQL.NewtonsoftJsonGraphQLBuilderExtensions">
+            <inheritdoc cref="T:GraphQL.GraphQLBuilderExtensions"/>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJsonGraphQLBuilderExtensions.AddNewtonsoftJson(GraphQL.DI.IGraphQLBuilder,System.Action{GraphQL.NewtonsoftJson.JsonSerializerSettings})">
+            <summary>
+            Registers the Newtonsoft.Json <see cref="T:GraphQL.NewtonsoftJson.GraphQLSerializer"/> as singletons of types
+            <see cref="T:GraphQL.IGraphQLSerializer"/> and <see cref="T:GraphQL.IGraphQLTextSerializer"/> within the
+            dependency injection framework and configures it with the specified configuration delegate.
+            </summary>
+        </member>
+        <member name="M:GraphQL.NewtonsoftJsonGraphQLBuilderExtensions.AddNewtonsoftJson(GraphQL.DI.IGraphQLBuilder,System.Action{GraphQL.NewtonsoftJson.JsonSerializerSettings,System.IServiceProvider})">
+            <inheritdoc cref="M:GraphQL.NewtonsoftJsonGraphQLBuilderExtensions.AddNewtonsoftJson(GraphQL.DI.IGraphQLBuilder,System.Action{GraphQL.NewtonsoftJson.JsonSerializerSettings})"/>
+        </member>
+    </members>
+</doc>

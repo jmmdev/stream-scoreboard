@@ -1,0 +1,566 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GraphQL.MicrosoftDI</name>
+    </assembly>
+    <members>
+        <member name="T:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2">
+            <summary>
+            A builder for connection field resolvers with no extra service types.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.#ctor(GraphQL.Builders.ConnectionBuilder{`0,`1},System.Boolean)">
+            <summary>
+            Initializes a new instance with the specified properties.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.WithService``1">
+            <summary>
+            Specifies a type that is to be resolved via dependency injection during the resolver's execution.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.WithServices``2">
+            <summary>
+            Specifies types that are to be resolved via dependency injection during the resolver's execution.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.WithServices``3">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.WithServices``2"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.WithServices``4">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.WithServices``2"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.WithServices``5">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.WithServices``2"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.WithScope">
+            <summary>
+            Specifies that the resolver should run within its own dependency injection scope.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.Resolve(System.Func{GraphQL.Builders.IResolveConnectionContext{`0},`1})">
+            <summary>
+            Specifies the delegate to execute when the field is being resolved.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.ResolveAsync(System.Func{GraphQL.Builders.IResolveConnectionContext{`0},System.Threading.Tasks.Task{`1}})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.Resolve(System.Func{GraphQL.Builders.IResolveConnectionContext{`0},`1})"/>
+        </member>
+        <member name="T:GraphQL.MicrosoftDI.ConnectionResolverBuilder`3">
+            <summary>
+            A builder for connection field resolvers with 1 extra service type.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`3.#ctor(GraphQL.Builders.ConnectionBuilder{`0,`1},System.Boolean)">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.#ctor(GraphQL.Builders.ConnectionBuilder{`0,`1},System.Boolean)"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`3.WithService``1">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.WithService``1"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`3.WithScope">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.WithScope"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`3.Resolve(System.Func{GraphQL.Builders.IResolveConnectionContext{`0},`2,`1})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.Resolve(System.Func{GraphQL.Builders.IResolveConnectionContext{`0},`1})"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`3.ResolveAsync(System.Func{GraphQL.Builders.IResolveConnectionContext{`0},`2,System.Threading.Tasks.Task{`1}})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.ResolveAsync(System.Func{GraphQL.Builders.IResolveConnectionContext{`0},System.Threading.Tasks.Task{`1}})"/>
+        </member>
+        <member name="T:GraphQL.MicrosoftDI.ConnectionResolverBuilder`4">
+            <summary>
+            A builder for connection field resolvers with 2 extra service types.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`4.#ctor(GraphQL.Builders.ConnectionBuilder{`0,`1},System.Boolean)">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.#ctor(GraphQL.Builders.ConnectionBuilder{`0,`1},System.Boolean)"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`4.WithService``1">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.WithService``1"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`4.WithScope">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.WithScope"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`4.Resolve(System.Func{GraphQL.Builders.IResolveConnectionContext{`0},`2,`3,`1})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.Resolve(System.Func{GraphQL.Builders.IResolveConnectionContext{`0},`1})"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`4.ResolveAsync(System.Func{GraphQL.Builders.IResolveConnectionContext{`0},`2,`3,System.Threading.Tasks.Task{`1}})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.ResolveAsync(System.Func{GraphQL.Builders.IResolveConnectionContext{`0},System.Threading.Tasks.Task{`1}})"/>
+        </member>
+        <member name="T:GraphQL.MicrosoftDI.ConnectionResolverBuilder`5">
+            <summary>
+            A builder for connection field resolvers with 3 extra service types.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`5.#ctor(GraphQL.Builders.ConnectionBuilder{`0,`1},System.Boolean)">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.#ctor(GraphQL.Builders.ConnectionBuilder{`0,`1},System.Boolean)"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`5.WithService``1">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.WithService``1"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`5.WithScope">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.WithScope"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`5.Resolve(System.Func{GraphQL.Builders.IResolveConnectionContext{`0},`2,`3,`4,`1})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.Resolve(System.Func{GraphQL.Builders.IResolveConnectionContext{`0},`1})"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`5.ResolveAsync(System.Func{GraphQL.Builders.IResolveConnectionContext{`0},`2,`3,`4,System.Threading.Tasks.Task{`1}})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.ResolveAsync(System.Func{GraphQL.Builders.IResolveConnectionContext{`0},System.Threading.Tasks.Task{`1}})"/>
+        </member>
+        <member name="T:GraphQL.MicrosoftDI.ConnectionResolverBuilder`6">
+            <summary>
+            A builder for connection field resolvers with 4 extra service types.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`6.#ctor(GraphQL.Builders.ConnectionBuilder{`0,`1},System.Boolean)">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.#ctor(GraphQL.Builders.ConnectionBuilder{`0,`1},System.Boolean)"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`6.WithService``1">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.WithService``1"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`6.WithScope">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.WithScope"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`6.Resolve(System.Func{GraphQL.Builders.IResolveConnectionContext{`0},`2,`3,`4,`5,`1})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.Resolve(System.Func{GraphQL.Builders.IResolveConnectionContext{`0},`1})"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`6.ResolveAsync(System.Func{GraphQL.Builders.IResolveConnectionContext{`0},`2,`3,`4,`5,System.Threading.Tasks.Task{`1}})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.ResolveAsync(System.Func{GraphQL.Builders.IResolveConnectionContext{`0},System.Threading.Tasks.Task{`1}})"/>
+        </member>
+        <member name="T:GraphQL.MicrosoftDI.ConnectionResolverBuilder`7">
+            <summary>
+            A builder for connection field resolvers with 5 extra service types.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`7.#ctor(GraphQL.Builders.ConnectionBuilder{`0,`1},System.Boolean)">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.#ctor(GraphQL.Builders.ConnectionBuilder{`0,`1},System.Boolean)"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`7.WithScope">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.WithScope"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`7.Resolve(System.Func{GraphQL.Builders.IResolveConnectionContext{`0},`2,`3,`4,`5,`6,`1})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.Resolve(System.Func{GraphQL.Builders.IResolveConnectionContext{`0},`1})"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`7.ResolveAsync(System.Func{GraphQL.Builders.IResolveConnectionContext{`0},`2,`3,`4,`5,`6,System.Threading.Tasks.Task{`1}})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ConnectionResolverBuilder`2.ResolveAsync(System.Func{GraphQL.Builders.IResolveConnectionContext{`0},System.Threading.Tasks.Task{`1}})"/>
+        </member>
+        <member name="T:GraphQL.MicrosoftDI.DynamicScopedFieldResolver">
+            <summary>
+            When resolving a field, this implementation calls
+            <see cref="P:GraphQL.IResolveFieldContext.RequestServices"/>.<see cref="M:Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.CreateScope(System.IServiceProvider)">CreateScope</see>
+            to create a dependency injection scope. Then it calls the specified <see cref="T:GraphQL.Resolvers.IFieldResolver"/>, passing the scoped service provider
+            within <see cref="P:GraphQL.IResolveFieldContext.RequestServices"/>, and returns the result.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.DynamicScopedFieldResolver.#ctor(GraphQL.Resolvers.IFieldResolver)">
+            <summary>
+            Initializes a new instance that creates a service scope and runs the specified delegate when resolving a field.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.DynamicScopedFieldResolver.ResolveAsync(GraphQL.IResolveFieldContext)">
+            <inheritdoc/>
+        </member>
+        <member name="T:GraphQL.MicrosoftDI.DynamicScopedSourceStreamResolver">
+            <summary>
+            When resolving a field, this implementation calls
+            <see cref="P:GraphQL.IResolveFieldContext.RequestServices"/>.<see cref="M:Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.CreateScope(System.IServiceProvider)">CreateScope</see>
+            to create a dependency injection scope. Then it calls the specified <see cref="T:GraphQL.Resolvers.ISourceStreamResolver"/>, passing the scoped service provider
+            within <see cref="P:GraphQL.IResolveFieldContext.RequestServices"/>, and returns the result.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.DynamicScopedSourceStreamResolver.#ctor(GraphQL.Resolvers.ISourceStreamResolver)">
+            <summary>
+            Initializes a new instance that creates a service scope and runs the specified delegate when resolving a field.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.DynamicScopedSourceStreamResolver.ResolveAsync(GraphQL.IResolveFieldContext)">
+            <inheritdoc/>
+        </member>
+        <member name="T:GraphQL.MicrosoftDI.GraphQLBuilder">
+            <summary>
+            An implementation of <see cref="T:GraphQL.DI.IGraphQLBuilder"/> which uses the Microsoft dependency injection framework
+            to register services and configure options.
+            </summary>
+        </member>
+        <member name="P:GraphQL.MicrosoftDI.GraphQLBuilder.Services">
+            <inheritdoc />
+        </member>
+        <member name="P:GraphQL.MicrosoftDI.GraphQLBuilder.ServiceCollection">
+            <summary>
+            Returns the underlying <see cref="T:Microsoft.Extensions.DependencyInjection.IServiceCollection"/> of this builder.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.GraphQLBuilder.#ctor(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{GraphQL.DI.IGraphQLBuilder})">
+            <summary>
+            Initializes a new instance for the specified service collection.
+            </summary>
+            <remarks>
+            Registers various default services via <see cref="M:GraphQL.DI.GraphQLBuilderBase.RegisterDefaultServices"/>
+            after executing the configuration delegate.
+            </remarks>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.GraphQLBuilder.RegisterDefaultServices">
+            <inheritdoc/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.GraphQLBuilder.Configure``1(System.Action{``0,System.IServiceProvider})">
+            <inheritdoc/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.GraphQLBuilder.Register(System.Type,System.Func{System.IServiceProvider,System.Object},GraphQL.DI.ServiceLifetime,System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.GraphQLBuilder.Register(System.Type,System.Type,GraphQL.DI.ServiceLifetime,System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.GraphQLBuilder.Register(System.Type,System.Object,System.Boolean)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.GraphQLBuilder.TryRegister(System.Type,System.Func{System.IServiceProvider,System.Object},GraphQL.DI.ServiceLifetime,GraphQL.DI.RegistrationCompareMode)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.GraphQLBuilder.TryRegister(System.Type,System.Type,GraphQL.DI.ServiceLifetime,GraphQL.DI.RegistrationCompareMode)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.GraphQLBuilder.TryRegister(System.Type,System.Object,GraphQL.DI.RegistrationCompareMode)">
+            <inheritdoc/>
+        </member>
+        <member name="T:GraphQL.MicrosoftDI.ResolverBuilder`2">
+            <summary>
+            A builder for field resolvers with no extra service types.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`2.#ctor(GraphQL.Builders.FieldBuilder{`0,`1},System.Boolean)">
+            <summary>
+            Initializes a new instance with the specified properties.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`2.WithService``1">
+            <summary>
+            Specifies a type that is to be resolved via dependency injection during the resolver's execution.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`2.WithServices``2">
+            <summary>
+            Specifies types that are to be resolved via dependency injection during the resolver's execution.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`2.WithServices``3">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ResolverBuilder`2.WithServices``2"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`2.WithServices``4">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ResolverBuilder`2.WithServices``2"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`2.WithServices``5">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ResolverBuilder`2.WithServices``2"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`2.WithScope">
+            <summary>
+            Specifies that the resolver should run within its own dependency injection scope.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`2.Resolve(System.Func{GraphQL.IResolveFieldContext{`0},`1})">
+            <summary>
+            Specifies the delegate to execute when the field is being resolved.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`2.ResolveAsync(System.Func{GraphQL.IResolveFieldContext{`0},System.Threading.Tasks.Task{`1}})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ResolverBuilder`2.Resolve(System.Func{GraphQL.IResolveFieldContext{`0},`1})"/>
+        </member>
+        <member name="T:GraphQL.MicrosoftDI.ResolverBuilder`3">
+            <summary>
+            A builder for field resolvers with 1 extra service type.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`3.#ctor(GraphQL.Builders.FieldBuilder{`0,`1},System.Boolean)">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ResolverBuilder`2.#ctor(GraphQL.Builders.FieldBuilder{`0,`1},System.Boolean)"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`3.WithService``1">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ResolverBuilder`2.WithService``1"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`3.WithScope">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ResolverBuilder`2.WithScope"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`3.Resolve(System.Func{GraphQL.IResolveFieldContext{`0},`2,`1})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ResolverBuilder`2.Resolve(System.Func{GraphQL.IResolveFieldContext{`0},`1})"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`3.ResolveAsync(System.Func{GraphQL.IResolveFieldContext{`0},`2,System.Threading.Tasks.Task{`1}})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ResolverBuilder`2.ResolveAsync(System.Func{GraphQL.IResolveFieldContext{`0},System.Threading.Tasks.Task{`1}})"/>
+        </member>
+        <member name="T:GraphQL.MicrosoftDI.ResolverBuilder`4">
+            <summary>
+            A builder for field resolvers with 2 extra service types.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`4.#ctor(GraphQL.Builders.FieldBuilder{`0,`1},System.Boolean)">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ResolverBuilder`2.#ctor(GraphQL.Builders.FieldBuilder{`0,`1},System.Boolean)"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`4.WithService``1">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ResolverBuilder`2.WithService``1"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`4.WithScope">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ResolverBuilder`2.WithScope"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`4.Resolve(System.Func{GraphQL.IResolveFieldContext{`0},`2,`3,`1})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ResolverBuilder`2.Resolve(System.Func{GraphQL.IResolveFieldContext{`0},`1})"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`4.ResolveAsync(System.Func{GraphQL.IResolveFieldContext{`0},`2,`3,System.Threading.Tasks.Task{`1}})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ResolverBuilder`2.ResolveAsync(System.Func{GraphQL.IResolveFieldContext{`0},System.Threading.Tasks.Task{`1}})"/>
+        </member>
+        <member name="T:GraphQL.MicrosoftDI.ResolverBuilder`5">
+            <summary>
+            A builder for field resolvers with 3 extra service types.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`5.#ctor(GraphQL.Builders.FieldBuilder{`0,`1},System.Boolean)">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ResolverBuilder`2.#ctor(GraphQL.Builders.FieldBuilder{`0,`1},System.Boolean)"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`5.WithService``1">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ResolverBuilder`2.WithService``1"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`5.WithScope">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ResolverBuilder`2.WithScope"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`5.Resolve(System.Func{GraphQL.IResolveFieldContext{`0},`2,`3,`4,`1})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ResolverBuilder`2.Resolve(System.Func{GraphQL.IResolveFieldContext{`0},`1})"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`5.ResolveAsync(System.Func{GraphQL.IResolveFieldContext{`0},`2,`3,`4,System.Threading.Tasks.Task{`1}})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ResolverBuilder`2.ResolveAsync(System.Func{GraphQL.IResolveFieldContext{`0},System.Threading.Tasks.Task{`1}})"/>
+        </member>
+        <member name="T:GraphQL.MicrosoftDI.ResolverBuilder`6">
+            <summary>
+            A builder for field resolvers with 4 extra service types.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`6.#ctor(GraphQL.Builders.FieldBuilder{`0,`1},System.Boolean)">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ResolverBuilder`2.#ctor(GraphQL.Builders.FieldBuilder{`0,`1},System.Boolean)"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`6.WithService``1">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ResolverBuilder`2.WithService``1"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`6.WithScope">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ResolverBuilder`2.WithScope"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`6.Resolve(System.Func{GraphQL.IResolveFieldContext{`0},`2,`3,`4,`5,`1})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ResolverBuilder`2.Resolve(System.Func{GraphQL.IResolveFieldContext{`0},`1})"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`6.ResolveAsync(System.Func{GraphQL.IResolveFieldContext{`0},`2,`3,`4,`5,System.Threading.Tasks.Task{`1}})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ResolverBuilder`2.ResolveAsync(System.Func{GraphQL.IResolveFieldContext{`0},System.Threading.Tasks.Task{`1}})"/>
+        </member>
+        <member name="T:GraphQL.MicrosoftDI.ResolverBuilder`7">
+            <summary>
+            A builder for field resolvers with 5 extra service types.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`7.#ctor(GraphQL.Builders.FieldBuilder{`0,`1},System.Boolean)">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ResolverBuilder`2.#ctor(GraphQL.Builders.FieldBuilder{`0,`1},System.Boolean)"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`7.WithScope">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ResolverBuilder`2.WithScope"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`7.Resolve(System.Func{GraphQL.IResolveFieldContext{`0},`2,`3,`4,`5,`6,`1})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ResolverBuilder`2.Resolve(System.Func{GraphQL.IResolveFieldContext{`0},`1})"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ResolverBuilder`7.ResolveAsync(System.Func{GraphQL.IResolveFieldContext{`0},`2,`3,`4,`5,`6,System.Threading.Tasks.Task{`1}})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ResolverBuilder`2.ResolveAsync(System.Func{GraphQL.IResolveFieldContext{`0},System.Threading.Tasks.Task{`1}})"/>
+        </member>
+        <member name="T:GraphQL.MicrosoftDI.ScopedConnectionBuilderExtensions">
+            <summary>
+            Extension methods for creating connection resolver builders.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ScopedConnectionBuilderExtensions.ResolveScoped``2(GraphQL.Builders.ConnectionBuilder{``0},System.Func{GraphQL.Builders.IResolveConnectionContext{``0},``1})">
+            <summary>
+            Sets the resolver for the connection field. A dependency injection scope is created for the duration of the resolver's execution
+            and the scoped service provider is passed within <see cref="P:GraphQL.IResolveFieldContext.RequestServices"/>. This method must be called after
+            <see cref="M:GraphQL.Builders.ConnectionBuilder`2.PageSize(System.Nullable{System.Int32})">PageSize</see> and/or
+            <see cref="M:GraphQL.Builders.ConnectionBuilder`2.Bidirectional">Bidirectional</see> have been called.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ScopedConnectionBuilderExtensions.ResolveScopedAsync``2(GraphQL.Builders.ConnectionBuilder{``0},System.Func{GraphQL.Builders.IResolveConnectionContext{``0},System.Threading.Tasks.Task{``1}})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ScopedConnectionBuilderExtensions.ResolveScoped``2(GraphQL.Builders.ConnectionBuilder{``0},System.Func{GraphQL.Builders.IResolveConnectionContext{``0},``1})"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ScopedConnectionBuilderExtensions.Resolve``1(GraphQL.Builders.ConnectionBuilder{``0})">
+            <summary>
+            Creates a resolve builder for the connection field. This method must be called after
+            <see cref="M:GraphQL.Builders.ConnectionBuilder`2.PageSize(System.Nullable{System.Int32})">PageSize</see> and/or
+            <see cref="M:GraphQL.Builders.ConnectionBuilder`2.Bidirectional">Bidirectional</see> have been called.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ScopedConnectionBuilderExtensions.ResolveScoped``2(GraphQL.Builders.ConnectionBuilder{``0,``1},System.Func{GraphQL.Builders.IResolveConnectionContext{``0},``1})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ScopedConnectionBuilderExtensions.ResolveScoped``2(GraphQL.Builders.ConnectionBuilder{``0},System.Func{GraphQL.Builders.IResolveConnectionContext{``0},``1})"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ScopedConnectionBuilderExtensions.ResolveScopedAsync``2(GraphQL.Builders.ConnectionBuilder{``0,``1},System.Func{GraphQL.Builders.IResolveConnectionContext{``0},System.Threading.Tasks.Task{``1}})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ScopedConnectionBuilderExtensions.ResolveScopedAsync``2(GraphQL.Builders.ConnectionBuilder{``0},System.Func{GraphQL.Builders.IResolveConnectionContext{``0},System.Threading.Tasks.Task{``1}})"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ScopedConnectionBuilderExtensions.Resolve``2(GraphQL.Builders.ConnectionBuilder{``0,``1})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ScopedConnectionBuilderExtensions.Resolve``1(GraphQL.Builders.ConnectionBuilder{``0})"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ScopedConnectionBuilderExtensions.RequestServicesOrThrow(GraphQL.IResolveFieldContext)">
+            <summary>
+            Returns <see cref="P:GraphQL.IResolveFieldContext.RequestServices"/> if specified or throws <see cref="T:GraphQL.MissingRequestServicesException"/>.
+            </summary>
+        </member>
+        <member name="T:GraphQL.MicrosoftDI.ScopedFieldBuilderExtensions">
+            <summary>
+            Extension methods for creating resolver builders.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ScopedFieldBuilderExtensions.ResolveScoped``2(GraphQL.Builders.FieldBuilder{``0,``1},System.Func{GraphQL.IResolveFieldContext{``0},``1})">
+            <summary>
+            Sets the resolver for the field. A dependency injection scope is created for the duration of the resolver's execution
+            and the scoped service provider is passed within <see cref="P:GraphQL.IResolveFieldContext.RequestServices"/>.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ScopedFieldBuilderExtensions.ResolveScopedAsync``2(GraphQL.Builders.FieldBuilder{``0,``1},System.Func{GraphQL.IResolveFieldContext{``0},System.Threading.Tasks.Task{``1}})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ScopedFieldBuilderExtensions.ResolveScoped``2(GraphQL.Builders.FieldBuilder{``0,``1},System.Func{GraphQL.IResolveFieldContext{``0},``1})"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ScopedFieldBuilderExtensions.Resolve``2(GraphQL.Builders.FieldBuilder{``0,``1})">
+            <summary>
+            Creates a resolve builder for the field.
+            </summary>
+        </member>
+        <member name="T:GraphQL.MicrosoftDI.ScopedFieldResolver`1">
+            <summary>
+            When resolving a field, this implementation calls
+            <see cref="P:GraphQL.IResolveFieldContext.RequestServices"/>.<see cref="M:Microsoft.Extensions.DependencyInjection.ServiceProviderServiceExtensions.CreateScope(System.IServiceProvider)">CreateScope</see>
+            to create a dependency injection scope. Then it calls a predefined <see cref="T:System.Func`2"/>, passing the scoped service provider
+            within <see cref="P:GraphQL.IResolveFieldContext.RequestServices"/>, and returns the result.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ScopedFieldResolver`1.#ctor(System.Func{GraphQL.IResolveFieldContext,`0})">
+            <summary>
+            Initializes a new instance that creates a service scope and runs the specified delegate when resolving a field.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ScopedFieldResolver`1.#ctor(System.Func{GraphQL.IResolveFieldContext,System.Threading.Tasks.ValueTask{`0}})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ScopedFieldResolver`1.#ctor(System.Func{GraphQL.IResolveFieldContext,`0})"/>
+        </member>
+        <member name="T:GraphQL.MicrosoftDI.ScopedFieldResolver`2">
+            <inheritdoc cref="T:GraphQL.MicrosoftDI.ScopedFieldResolver`1"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ScopedFieldResolver`2.#ctor(System.Func{GraphQL.IResolveFieldContext{`0},`1})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ScopedFieldResolver`1.#ctor(System.Func{GraphQL.IResolveFieldContext,`0})"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ScopedFieldResolver`2.#ctor(System.Func{GraphQL.IResolveFieldContext{`0},System.Threading.Tasks.ValueTask{`1}})">
+            <inheritdoc cref="M:GraphQL.MicrosoftDI.ScopedFieldResolver`2.#ctor(System.Func{GraphQL.IResolveFieldContext{`0},`1})" />
+        </member>
+        <member name="T:GraphQL.MicrosoftDI.ScopedSubscriptionExecutionStrategy">
+            <summary>
+            Executes a subscription request. During the execution of subsequent
+            data events, a dedicated service scope created and provided to
+            the execution strategy. As scoped services are typically not
+            designed to be multi-threaded, a serial execution strategy is
+            default, although any execution strategy can be specified.
+            <br/><br/>
+            Note that it is still required to execute the initial request via the
+            <see cref="T:GraphQL.DocumentExecuter"/> with a scoped service provider.
+            Once the <see cref="T:GraphQL.ExecutionResult"/> is returned, references
+            to the scoped service provider will have been released and
+            it can be safely disposed of.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ScopedSubscriptionExecutionStrategy.#ctor(Microsoft.Extensions.DependencyInjection.IServiceScopeFactory)">
+            <summary>
+            Initializes a new instance with a serial execution strategy.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ScopedSubscriptionExecutionStrategy.#ctor(Microsoft.Extensions.DependencyInjection.IServiceScopeFactory,GraphQL.Execution.IExecutionStrategy)">
+            <summary>
+            Initializes a new instance with the specified execution strategy for child nodes.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ScopedSubscriptionExecutionStrategy.CloneExecutionContext(GraphQL.Execution.ExecutionContext,System.Threading.CancellationToken)">
+            <inheritdoc/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ScopedSubscriptionExecutionStrategy.ProcessDataAsync(GraphQL.Execution.ExecutionContext,GraphQL.Execution.ExecutionNode,System.Object)">
+            <summary>
+            Processes data from the source stream via <see cref="M:System.IObserver`1.OnNext(`0)"/> and
+            returns an <see cref="T:GraphQL.ExecutionResult"/>.
+            <br/><br/>
+            Executes with a scoped service provider in <see cref="P:GraphQL.Execution.ExecutionContext.RequestServices"/>
+            which is disposed once this method completes.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.ScopedSubscriptionExecutionStrategy.ProcessErrorAsync(GraphQL.Execution.ExecutionContext,GraphQL.Execution.ExecutionNode,System.Exception)">
+            <summary>
+            Encapsulates an error within an <see cref="T:GraphQL.ExecutionResult"/> for errors generated
+            by the event stream via <see cref="M:System.IObserver`1.OnError(System.Exception)"/>.
+            <br/><br/>
+            Executes with a scoped service provider in <see cref="P:GraphQL.Execution.ExecutionContext.RequestServices"/>
+            which is disposed once this method completes.
+            </summary>
+        </member>
+        <member name="T:GraphQL.MicrosoftDI.SelfActivatingServiceProvider">
+            <summary>
+            An <see cref="T:System.IServiceProvider"/> wrapper which instantiates classes that are unregistered in the
+            underlying service provider. Intended to be passed to the <see cref="T:GraphQL.Types.Schema"/> constructor so that
+            all of the graph types do not individually need to be registered within your DI container.
+            <br/><br/>
+            To use this, simply register the <see cref="T:GraphQL.Types.ISchema"/> itself as follows:
+            <br/><br/>
+            <code>services.AddSingleton&lt;ISchema, MySchema&gt;(services => new MySchema(new SelfActivatingServiceProvider(services)));</code>
+            <br/><br/>
+            Within your <see cref="T:GraphQL.Types.Schema"/> constructor, you may need to set your <see cref="P:GraphQL.Types.Schema.Query"/>, <see cref="P:GraphQL.Types.Schema.Mutation"/> and
+            <see cref="P:GraphQL.Types.Schema.Subscription"/> fields to pull from the <see cref="T:GraphQL.MicrosoftDI.SelfActivatingServiceProvider"/>:
+            <br/><br/>
+            <code>Query = services.GetRequiredService&lt;MyQuery&gt;();</code>
+            <br/><br/>
+            None of the graph types will need to be registered. Note that if any of the graph types implement
+            <see cref="T:System.IDisposable"/>, be sure to register those types with your dependency injection provider,
+            or their <see cref="M:System.IDisposable.Dispose"/> methods will not be called. Any dependencies of graph types
+            that implement <see cref="T:System.IDisposable"/> will be disposed of properly, regardless of whether the graph
+            type is registered within the service provider.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.SelfActivatingServiceProvider.#ctor(System.IServiceProvider)">
+            <summary>
+            Creates a new instance with the specified underlying service provider.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDI.SelfActivatingServiceProvider.GetService(System.Type)">
+            <inheritdoc cref="M:Microsoft.Extensions.DependencyInjection.ActivatorUtilities.GetServiceOrCreateInstance(System.IServiceProvider,System.Type)"/>
+        </member>
+        <member name="T:GraphQL.MicrosoftDIGraphQLBuilderExtensions">
+            <inheritdoc cref="T:GraphQL.GraphQLBuilderExtensions"/>
+        </member>
+        <member name="M:GraphQL.MicrosoftDIGraphQLBuilderExtensions.AddGraphQL(Microsoft.Extensions.DependencyInjection.IServiceCollection,System.Action{GraphQL.DI.IGraphQLBuilder})">
+            <summary>
+            Configures a GraphQL pipeline using the configuration delegate passed into
+            <paramref name="configure"/> for the specified service collection and
+            registers a default set of services required by GraphQL if they have not already been registered.
+            <br/><br/>
+            Does not include <see cref="T:GraphQL.IGraphQLSerializer"/>, and the default <see cref="T:GraphQL.IDocumentExecuter"/>
+            implementation does not support subscriptions.
+            </summary>
+        </member>
+        <member name="M:GraphQL.MicrosoftDIGraphQLBuilderExtensions.AddSelfActivatingSchema``1(GraphQL.DI.IGraphQLBuilder,GraphQL.DI.ServiceLifetime)">
+            <summary>
+            Registers <typeparamref name="TSchema"/> within the dependency injection framework. <see cref="T:GraphQL.Types.ISchema"/> is also
+            registered if it is not already registered within the dependency injection framework. Services required by
+            <typeparamref name="TSchema"/> are instantiated directly if not registered within the dependency injection framework.
+            This can eliminate the need to register each of the graph types with the dependency injection framework, either
+            manually or via <see cref="M:GraphQL.GraphQLBuilderExtensions.AddGraphTypes(GraphQL.DI.IGraphQLBuilder)"/>. Singleton and scoped
+            lifetimes are supported.
+            </summary>
+            <remarks>
+            Schemas that implement <see cref="T:System.IDisposable"/> of a transient lifetime are not supported, as this will cause a
+            memory leak if requested from the root service provider.
+            </remarks>
+        </member>
+        <member name="M:GraphQL.MicrosoftDIGraphQLBuilderExtensions.AddScopedSubscriptionExecutionStrategy(GraphQL.DI.IGraphQLBuilder,System.Boolean)">
+            <summary>
+            Registers a <see cref="T:GraphQL.MicrosoftDI.ScopedSubscriptionExecutionStrategy"/> for use with subscription operations,
+            which will create a dedicated service scope during execution of data events after (but not including)
+            the initial subscription request execution. Be sure to also execute the initial subscription request via
+            the <see cref="T:GraphQL.IDocumentExecuter"/> with a dedicated service scope for proper execution with the common
+            WebSockets protocols, as multiple subscriptions may execute concurrently over a single HTTP context.
+            </summary>
+        </member>
+        <member name="T:GraphQL.ScopedAttribute">
+            <summary>
+            Creates a dedicated service scope during the field resolver's execution.
+            </summary>
+        </member>
+        <member name="M:GraphQL.ScopedAttribute.Modify(GraphQL.Types.FieldType,System.Boolean)">
+            <inheritdoc/>
+        </member>
+    </members>
+</doc>

@@ -1,0 +1,19 @@
+﻿<ResourceDictionary xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <SolidColorBrush x:Key="StandardButtonIdle">#9147ff</SolidColorBrush>
+    <SolidColorBrush x:Key="StandardButtonMouseOver">#7127df</SolidColorBrush>
+    <SolidColorBrush x:Key="StandardButtonPressed">#b167ff</SolidColorBrush>
+
+    <SolidColorBrush x:Key="ButtonIdleText">#ffffff</SolidColorBrush>
+    <SolidColorBrush x:Key="ButtonMouseOverText">#cccccc</SolidColorBrush>
+
+    <SolidColorBrush x:Key="FieldIdle">#4c4c4f</SolidColorBrush>
+    <SolidColorBrush x:Key="FieldHighlight">#000000</SolidColorBrush>
+    <SolidColorBrush x:Key="Background">#0e0e10</SolidColorBrush>
+    <SolidColorBrush x:Key="TabBackground">#010105</SolidColorBrush>
+
+    <SolidColorBrush x:Key="PlainText">#ebedee</SolidColorBrush>
+    <SolidColorBrush x:Key="FieldText">#ebedee</SolidColorBrush>
+
+    <SolidColorBrush x:Key="LinkColor">#ffa137</SolidColorBrush>
+</ResourceDictionary>

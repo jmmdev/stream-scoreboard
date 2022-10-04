@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>GraphQL.SystemReactive</name>
+    </assembly>
+    <members>
+        <member name="P:GraphQL.Execution.SubscriptionExecutionStrategy.Instance">
+            <summary>
+            Gets a static instance of <see cref="T:GraphQL.Execution.SubscriptionExecutionStrategy"/> strategy.
+            </summary>
+        </member>
+        <member name="M:GraphQL.Execution.SubscriptionExecutionStrategy.BuildSubscriptionExecutionNode(GraphQL.Execution.ExecutionNode,GraphQL.Types.IGraphType,GraphQL.Language.AST.Field,GraphQL.Types.FieldType,System.Nullable{System.Int32},System.Object)">
+            <summary>
+            Builds an execution node with the specified parameters.
+            </summary>
+        </member>
+        <member name="T:GraphQL.SystemReactive.GraphQLBuilderExtensions">
+            <inheritdoc cref="T:GraphQL.GraphQLBuilderExtensions"/>
+        </member>
+        <member name="M:GraphQL.SystemReactive.GraphQLBuilderExtensions.AddSubscriptionDocumentExecuter(GraphQL.DI.IGraphQLBuilder)">
+            <summary>
+            Registers <see cref="T:GraphQL.SubscriptionDocumentExecuter"/> as a singleton of type
+            <see cref="T:GraphQL.IDocumentExecuter"/> within the dependency injection framework.
+            </summary>
+        </member>
+    </members>
+</doc>
