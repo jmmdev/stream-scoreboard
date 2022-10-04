@@ -1,3 +1,5 @@
+![logo-500](https://user-images.githubusercontent.com/100143610/193881093-a45bb6d2-acd9-439b-996d-f64ee961fddb.png)
+
 Stream Scoreboard is a desktop application equipped with the standard functions of a general scoreboard for OBS and fighting games but adding the ability to input keyboard shortcuts directly into OBS itself and connecting to start.gg tournaments, making looking for bracket matches information easier.
 
 First of all we have the main screen
