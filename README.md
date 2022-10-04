@@ -18,9 +18,11 @@ If a tournament is already over it won't be able for selection and the applicati
 
 Lightening start.gg API requests size is crucial to minimize errors, that's why we're getting information about the tournament in small bits. Selecting field values will unlock more fields to select until we can check the sets field. Here we can select a set and it will complete the information just as if we did it manually
 
-Note: if a set is complete or invalid in some form (say it's missing a player because they're still playing the previous set or the bracket hasn't been updated) it won't be able for selection
-
 ![screen4](https://user-images.githubusercontent.com/100143610/193870488-a0dfe7b6-8943-4adf-81ff-83dab3c5df26.png)
+
+![setunlocked](https://user-images.githubusercontent.com/100143610/193874708-9a12c5b0-d9e8-4df8-89e0-f1e3fe0fbb61.png)
+
+Note: if a set is complete or invalid in some form (say it's missing a player because they're still playing the previous set or the bracket hasn't been updated) it won't be able for selection. That's why there's a refresh button right next to the set selection, it can be clicked and it will update all the sets available
 
 Pretty straightforward right? Let's get to the tabs part. First we have the "Extra" tab where we can enter caster names and some miscellaneous information or message to be displayed on screen
 
