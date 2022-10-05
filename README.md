@@ -28,13 +28,13 @@ Note: if a set is complete or invalid in some form (say it's missing a player be
 
 Pretty straightforward right? Let's get to the tabs part. First we have the "Extra" tab where we can enter caster names and some miscellaneous information or message to be displayed on screen
 
-![screen5](https://user-images.githubusercontent.com/100143610/193870663-792349ad-bfb6-472c-ba41-e67d295f2b10.png)
+![casters](https://user-images.githubusercontent.com/100143610/194168203-0e6b1209-8d20-45b3-82a1-8fc1dfc62164.png)
 
-Right after that it's the "OBS Tools" tab. Here we can save keyboard shortcuts (using key sequences) and input them directly into OBS so we don't have to remember every single one of them. This feature uses the websocket plugin for OBS so make sure it's installed beforehand
+Right after that it's the "OBS Tools" tab. Here we can save keyboard shortcuts (using key sequences) and input them directly into OBS so we don't have to remember every single one of them. This feature uses the websocket plugin for OBS so make sure it's installed beforehand (already included with OBS v28.0.0+)
 
-![screen6](https://user-images.githubusercontent.com/100143610/193870795-019b6684-8885-4984-9f39-a6eff90ca9fc.png)
+![socket1](https://user-images.githubusercontent.com/100143610/194168221-ffda28c6-0798-4c6e-94fa-8d11a568ea47.png)
 
-![screen7](https://user-images.githubusercontent.com/100143610/193870797-caaac651-a778-4092-99fb-86b9a9da03b9.png)
+![socket2](https://user-images.githubusercontent.com/100143610/194168229-a847e2f8-7ae6-47a4-8eb3-c41794d4f442.png)
 
 The final tab "Settings" is pretty intuitive. Here you can change the application theme and choose your outputa directory of preference. It should point to the folder containing the text files OBS is using to show names, scores and such
 
