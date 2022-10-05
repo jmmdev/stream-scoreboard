@@ -675,6 +675,8 @@ namespace Scoreboard
             string json = JsonConvert.SerializeObject(commands.ToArray());
             File.WriteAllText("commands.json", json);
 
+            keys.Clear();
+
             LoadCommands();
         }
 
