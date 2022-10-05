@@ -240,7 +240,7 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="check-circle.png" />
-    <Resource Include="info-circle.png" />
+    <EmbeddedResource Include="info-circle.png" />
     <Resource Include="x-circle.png" />
   </ItemGroup>
   <ItemGroup>

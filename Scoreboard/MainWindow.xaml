@@ -243,6 +243,12 @@
                     </ControlTemplate>
                 </Setter.Value>
             </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsEnabled" Value="False">
+                    <Setter Property="Opacity" Value="0.5" />
+                    <Setter Property="Cursor" Value="Arrow" />
+                </Trigger>
+            </Style.Triggers>
         </Style>
 
         <Style  TargetType="{x:Type TabControl}">
@@ -1027,8 +1033,8 @@
             </TabItem>
             <TabItem Name="extraTab" Header="Extra" FontSize="14">
                 <Grid>
-                    <Grid Height="155" VerticalAlignment="Top" Margin="16 16 16 0" Cursor="Arrow">
-                        <Label Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Casters info" Padding="0" FontSize="14" FontWeight="Bold" VerticalContentAlignment="Center"/>
+                    <Grid Height="155" VerticalAlignment="Top" Margin="16 8 16 0" Cursor="Arrow">
+                        <Label Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Content="Casters info" Opacity="0.5" Padding="0" FontSize="14" FontWeight="Bold" VerticalContentAlignment="Center"/>
                         <Label Width="180" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0 32 0 0" Content="Caster 1" Padding="0" VerticalContentAlignment="Center" FontSize="14" />
                         <TextBox Name="tbCaster1" Width="180" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0,56,0,0" FontSize="14" VerticalContentAlignment="Center" TextChanged="CheckSaveCasters"/>
 
@@ -1041,7 +1047,7 @@
                     </Grid>
                     <Border Height="1" Margin="16 179 16 0" VerticalAlignment="Top" BorderThickness="1" BorderBrush="{DynamicResource FieldIdle}" />
                     <Grid Margin="16 195 16 0" Height="88" VerticalAlignment="Top" >
-                        <Label Height="24" Margin="0 16 0 0" Padding="0" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="14" FontWeight="Bold" Content="Additional info / scrolling message" HorizontalAlignment="Left"/>
+                        <Label Height="24" Margin="0 16 0 0" Opacity="0.5" Padding="0" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="14" FontWeight="Bold" Content="Additional info / scrolling message" HorizontalAlignment="Left"/>
                         <TextBox Width="481" Name="tbInfo" Margin="0 40 0 0" Padding="0" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" TextChanged="TbInfo_TextChanged"/>
                         <Button Style="{StaticResource StandardButton}" Name="btnSaveInfo" Width="48" Height="24" Content="Save" FontSize="14" Margin="0 40 0 0" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="Hand" Click="BtnSaveInfo_Click" IsEnabled="false"/>
                     </Grid>
@@ -1049,16 +1055,32 @@
             </TabItem>
             <TabItem Name="obsTab" Header="OBS Tools" FontSize="14">
                 <Grid Cursor="Arrow">
-                    <Grid Name="gridConnection" Width="360" Height="72" Margin=" 0 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Top" >
-                        <Label Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16 16" Content="OBS Websocket" Padding="0" VerticalContentAlignment="Center" FontSize="14" FontWeight="Bold"/>
-                        <Label Height="24" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="16 0 0 0" Content="Port" Padding="0" VerticalContentAlignment="Center" FontSize="14" />
-                        <TextBox Name="tbPort" Width="55" Height="24" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="55 0 0 0" FontSize="14" VerticalContentAlignment="Center" TextChanged="CheckSaveCasters" />
-                        <Label Height="24" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="132 0 0 0" Content="Password" Padding="0" VerticalContentAlignment="Center" FontSize="14" />
-                        <PasswordBox Name="pbPassword" Width="140" Height="24" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="210 0 0 0" FontSize="14" VerticalContentAlignment="Center"/>
+                    <Label Height="24" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="8 0" Opacity="0.5" Content="OBS Websocket" Padding="0" VerticalContentAlignment="Center" FontSize="14" FontWeight="Bold"/>
+                    <Grid Name="gridConnection" Height="56" Margin="16" HorizontalAlignment="Left" VerticalAlignment="Top" >
+                        <Label Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="0 0 0 0" Content="IP" Padding="0" VerticalContentAlignment="Center" FontSize="14" />
+                        <TextBox Name="tbIp1" Width="33" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Center" Margin="20 0 0 0" FontSize="14" VerticalContentAlignment="Center" MaxLength="3" PreviewTextInput="tbOnlyNumbers_PreviewTextInput" PreviewKeyDown="tbOnlyNumbers_PreviewKeyDown" DataObject.Pasting="tbOnlyNumbers_Pasting" TextChanged="tbIp_TextChanged"/>
+                        <Label Content="." Width="3" Padding="0" Height="24" Margin="57 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Bottom"/>
+                        <TextBox Name="tbIp2" Width="33" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Center" Margin="64 0 0 0" FontSize="14" VerticalContentAlignment="Center" MaxLength="3" PreviewTextInput="tbOnlyNumbers_PreviewTextInput" PreviewKeyDown="tbOnlyNumbers_PreviewKeyDown" DataObject.Pasting="tbOnlyNumbers_Pasting" TextChanged="tbIp_TextChanged"/>
+                        <Label Content="." Width="3" Padding="0" Height="24" Margin="101 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Bottom"/>
+                        <TextBox Name="tbIp3" Width="33" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Center" Margin="108 0 0 0" FontSize="14" VerticalContentAlignment="Center" MaxLength="3" PreviewTextInput="tbOnlyNumbers_PreviewTextInput" PreviewKeyDown="tbOnlyNumbers_PreviewKeyDown" DataObject.Pasting="tbOnlyNumbers_Pasting" TextChanged="tbIp_TextChanged"/>
+                        <Label Content="." Width="3" Padding="0" Height="24" Margin="145 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Bottom"/>
+                        <TextBox Name="tbIp4" Width="33" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Center" Margin="152 0 0 0" FontSize="14" VerticalContentAlignment="Center" MaxLength="3" PreviewTextInput="tbOnlyNumbers_PreviewTextInput" PreviewKeyDown="tbOnlyNumbers_PreviewKeyDown" DataObject.Pasting="tbOnlyNumbers_Pasting" TextChanged="tbIp_TextChanged"/>
+                        <Label Content=":" Width="3" Padding="0" Height="24" Margin="189 0 0 0" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center"/>
+                        <TextBox Name="tbPort" Width="44" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Center" Margin="196 0 0 0" FontSize="14" VerticalContentAlignment="Center" MaxLength="4" PreviewTextInput="tbOnlyNumbers_PreviewTextInput" PreviewKeyDown="tbOnlyNumbers_PreviewKeyDown" DataObject.Pasting="tbOnlyNumbers_Pasting" TextChanged="tbIp_TextChanged"/>
+                        
+                        <Label Height="24" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="0" Content="Password" Padding="0" VerticalContentAlignment="Center" FontSize="14" />
+                        <PasswordBox Name="pbPassword" Width="170" Height="24" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="70 0 0 0" FontSize="14" VerticalContentAlignment="Center" PasswordChanged="pbPassword_PasswordChanged"/>
                     </Grid>
 
-                    <Button Style="{StaticResource StandardButton}" Name="btnObsConnection" Width="80" Height="32" Content="Connect" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 44 118 0" Cursor="Hand" Click="BtnObsConnection_Click" IsDefault="True"/>
-                    <Label Name="lblConnection" Height="24" Width="90" Margin="0 48 16 0 " HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Content="Disconnected" Foreground="Red"/>
+                    <Button Style="{StaticResource StandardButton}" Name="btnObsConnection" Width="80" Height="32" Content="Connect" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="272 16 0 0" Cursor="Hand" Click="BtnObsConnection_Click" IsDefault="True" IsEnabled="false"/>
+                    <Label Name="lblConnection" Height="24" Width="90" Margin="267 52 0 0" HorizontalAlignment="Left" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Padding="0" Content="Disconnected" Foreground="Red"/>
+
+                    <TextBlock Width="170" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="8 39" Padding="0" FontSize="12" TextWrapping="Wrap" TextAlignment="Right" Opacity="0.5" >
+                        <TextBlock.Text>
+                            192.168.X.XXX OBS 28.0.0+
+                            127.0.0.1 OBS older than 28.0.0
+                        </TextBlock.Text>
+                    </TextBlock>
 
                     <Grid Name="gridOptions" IsEnabled="false" Height="220" VerticalAlignment="Bottom" Cursor="Arrow">
                         <Label Height="24" Width="552" Margin="16 8 0 0" Content="OBS shortcuts" HorizontalAlignment="Left" VerticalAlignment="Top" FontWeight="Bold" Padding="0" FontSize="14" VerticalContentAlignment="Center" BorderBrush="#80ffffff" BorderThickness="0 0 0 1" />

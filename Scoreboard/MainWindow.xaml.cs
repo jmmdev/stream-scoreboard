@@ -42,16 +42,13 @@ namespace Scoreboard
         private bool roundNum = true;
         private bool obsIsConnected = false;
 
-        private readonly string url = "ws://192.168.1.116:";
-        private string port;
-        private string password;
-
         private List<Command> commands = new List<Command>();
         private List<string> keys = new List<string>();
 
         private bool isEditing = false;
 
         private bool showUrl = false;
+        private string lastIp;
 
         public MainWindow()
         {
@@ -80,6 +77,9 @@ namespace Scoreboard
                 btnObsConnection.Content = "Disconnect";
 
                 obsIsConnected = true;
+
+                lastIp = tbIp1.Text + "." + tbIp2.Text + "." + tbIp3.Text + "." + tbIp4.Text + ":" + tbPort.Text;
+                SaveSettingsFunc();
             });
 
             Action dispatcherDisconnect = new Action(() =>
@@ -104,7 +104,6 @@ namespace Scoreboard
             void OnDisconnect(object sender, ObsDisconnectionInfo e)
             {
                 Dispatcher.Invoke(dispatcherDisconnect, DispatcherPriority.Normal);
-
             }
 
             obs.Connected += OnConnect;
@@ -546,15 +545,41 @@ namespace Scoreboard
 
                 string theme = settings.theme;
                 cbThemes.SelectedValue = theme;
+
+                string obsIp = settings.obsIp;
+
+                if (!string.IsNullOrEmpty(obsIp) && !string.IsNullOrWhiteSpace(obsIp))
+                {
+                    string[] formattedIp = obsIp.Split(':');
+                    string port = formattedIp[1];
+                    string[] ipFields = formattedIp[0].Split('.');
+
+                    tbIp1.Text = ipFields[0];
+                    tbIp2.Text = ipFields[1];
+                    tbIp3.Text = ipFields[2];
+                    tbIp4.Text = ipFields[3];
+
+                    tbPort.Text = port;
+                }
             }
         }
 
         private void SaveSettings(object sender, RoutedEventArgs e)
         {
+            SaveSettingsFunc();
+
+            ((App)System.Windows.Application.Current).ChangeSkin(cbThemes.SelectedValue.ToString());
+
+            EnableUpdateButton(btnSaveSettings, false);
+        }
+
+        private void SaveSettingsFunc()
+        {
             Settings newSettings = new Settings
             {
                 outputPath = tbOutputFolder.Text,
-                theme = cbThemes.SelectedValue.ToString()
+                theme = cbThemes.SelectedValue.ToString(),
+                obsIp = lastIp
             };
 
             string json = JsonConvert.SerializeObject(newSettings);
@@ -562,9 +587,7 @@ namespace Scoreboard
 
             outputDir = newSettings.outputPath + "\\";
 
-            ((App)System.Windows.Application.Current).ChangeSkin(cbThemes.SelectedValue.ToString());
-
-            EnableUpdateButton(btnSaveSettings, false);
+            Console.WriteLine("Guardado mano");
         }
 
         private void SettingsTextChanged(object sender, TextChangedEventArgs e)
@@ -601,8 +624,10 @@ namespace Scoreboard
 
         private void ObsConnect()
         {
-            port = tbPort.Text;
-            password = pbPassword.Password;
+            string ip = tbIp1.Text + "." + tbIp2.Text + "." + tbIp3.Text + "." + tbIp4.Text + ":";
+            string url = "ws://" + ip;
+            string port = tbPort.Text;
+            string password = pbPassword.Password;
 
             try
             {
@@ -735,7 +760,7 @@ namespace Scoreboard
 
         private void TbInfo_TextChanged(object sender, TextChangedEventArgs e)
         {
-            HighlightInfoButton(!string.IsNullOrEmpty(tbInfo.Text) && !string.IsNullOrWhiteSpace(tbInfo.Text)) ;
+            HighlightInfoButton(!string.IsNullOrEmpty(tbInfo.Text) && !string.IsNullOrWhiteSpace(tbInfo.Text));
         }
 
         private void BtnSaveInfo_Click(object sender, RoutedEventArgs e)
@@ -865,7 +890,7 @@ namespace Scoreboard
 
                 if (response.Data.Tournament.events != null)
                 {
-                    if(response.Data.Tournament.state < 1 && response.Data.Tournament.state > 4 || response.Data.Tournament.state == 3)
+                    if (response.Data.Tournament.state < 1 && response.Data.Tournament.state > 4 || response.Data.Tournament.state == 3)
                     {
                         Window message = DisplayMessage(response.Data.Tournament.name + " is unavailable or already over. Please check your tournament information.", "info", "ok");
                         message.ShowDialog();
@@ -1572,6 +1597,58 @@ namespace Scoreboard
             {
                 cbThemes.Items.Add(Path.GetFileName(t).Replace(".xaml", ""));
             }
+        }
+
+        private void tbOnlyNumbers_PreviewTextInput(object sender, TextCompositionEventArgs e)
+        {
+            int result;
+            e.Handled = !int.TryParse(e.Text, out result);
+        }
+
+        private void tbOnlyNumbers_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if(e.Key == Key.Space)
+            {
+                e.Handled = true;
+            }
+            base.OnPreviewKeyDown(e);
+        }
+
+        private void tbOnlyNumbers_Pasting(object sender, DataObjectPastingEventArgs e)
+        {
+            int result;
+            if (e.DataObject.GetDataPresent(typeof(string)))
+            {
+                string text = (string)e.DataObject.GetData(typeof(string));
+                if (!int.TryParse(text, out result))
+                {
+                    e.CancelCommand();
+                }
+            }
+            else
+            {
+                e.CancelCommand();
+            }
+        }
+
+        private void checkConnectionInfo()
+        {
+            btnObsConnection.IsEnabled = !string.IsNullOrEmpty(tbIp1.Text) && !string.IsNullOrWhiteSpace(tbIp1.Text) &&
+                                            !string.IsNullOrEmpty(tbIp2.Text) && !string.IsNullOrWhiteSpace(tbIp2.Text) &&
+                                            !string.IsNullOrEmpty(tbIp3.Text) && !string.IsNullOrWhiteSpace(tbIp3.Text) &&
+                                            !string.IsNullOrEmpty(tbIp4.Text) && !string.IsNullOrWhiteSpace(tbIp4.Text) &&
+                                            !string.IsNullOrEmpty(tbPort.Text) && !string.IsNullOrWhiteSpace(tbPort.Text) &&
+                                            !string.IsNullOrEmpty(pbPassword.Password) && !string.IsNullOrWhiteSpace(pbPassword.Password);
+        }
+
+        private void tbIp_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            checkConnectionInfo();
+        }
+
+        private void pbPassword_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            checkConnectionInfo();
         }
     }
 }

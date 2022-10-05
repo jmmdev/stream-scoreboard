@@ -5,5 +5,7 @@
         public string outputPath { get; set; }
 
         public string theme { get; set; }
+
+        public string obsIp { get; set; }
     }
 }
