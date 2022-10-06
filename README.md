@@ -36,7 +36,7 @@ Right after that it's the "OBS Tools" tab. Here we can save keyboard shortcuts (
 
 ![socket2](https://user-images.githubusercontent.com/100143610/194168229-a847e2f8-7ae6-47a4-8eb3-c41794d4f442.png)
 
-The final tab "Settings" is pretty intuitive. Here you can change the application theme and choose your outputa directory of preference. It should point to the folder containing the text files OBS is using to show names, scores and such
+The final tab "Settings" is pretty intuitive. Here you can change the application theme and choose your output directory of preference. It should point to the folder containing the text files OBS is using to show names, scores and such
 
 ![3](https://user-images.githubusercontent.com/100143610/194208391-384494d9-9e3e-4af0-b079-4d322d9876be.png)
 
