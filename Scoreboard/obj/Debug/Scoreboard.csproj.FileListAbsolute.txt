@@ -277,8 +277,8 @@ D:\Projects\stream-scoreboard\Scoreboard\bin\Debug\System.Threading.Channels.dll
 D:\Projects\stream-scoreboard\Scoreboard\bin\Debug\Websocket.Client.dll
 D:\Projects\stream-scoreboard\Scoreboard\bin\Debug\System.Threading.Channels.xml
 D:\Projects\stream-scoreboard\Scoreboard\bin\Debug\Websocket.Client.xml
-D:\Projects\stream-scoreboard\Scoreboard\obj\Debug\App.baml
 D:\Projects\stream-scoreboard\Scoreboard\obj\Debug\Skins\Default.baml
 D:\Projects\stream-scoreboard\Scoreboard\bin\Debug\GraphQLParser.dll
 D:\Projects\stream-scoreboard\Scoreboard\bin\Debug\GraphQLParser.xml
 D:\Projects\stream-scoreboard\Scoreboard\obj\Debug\Skins\Witch.baml
+D:\Projects\stream-scoreboard\Scoreboard\obj\Debug\App.baml

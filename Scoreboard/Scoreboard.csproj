@@ -168,6 +168,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="TournamentConnection.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="Entrant.cs" />
     <Compile Include="Event.cs" />

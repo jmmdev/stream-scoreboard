@@ -27,6 +27,9 @@ namespace Scoreboard
         private GraphQLHttpClient client = new GraphQLHttpClient("https://api.smash.gg/gql/alpha", new NewtonsoftJsonSerializer());
         private const string token = "ceffaeed94948ae90d5c11287386b979";
 
+        private List<Tournament> searchedTournaments = new List<Tournament>();
+        private List<string> searchedTournamentsNames = new List<string>();
+
         private List<TournamentItem> localTournaments = new List<TournamentItem>();
         private List<Event> localEvents = new List<Event>();
         private List<Phase> localPhases = new List<Phase>();
@@ -49,6 +52,8 @@ namespace Scoreboard
 
         private bool showUrl = false;
         private string lastIp;
+
+        private bool search = true;
 
         public MainWindow()
         {
@@ -180,7 +185,7 @@ namespace Scoreboard
             roundGrid.Margin = margin;
         }
 
-        private void InitializeSmashGG()
+        private void InitializeSmashGG(string slug)
         {
             ClearFields();
 
@@ -197,32 +202,132 @@ namespace Scoreboard
             chkLosers1.IsEnabled = false;
             chkLosers2.IsEnabled = false;
 
-            string[] separators = { "/" };
-            string[] urlFields = tbUrl.Text.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-
-            string slug = urlFields[urlFields.Length - 1];
-
             cbEvent.IsEnabled = false;
 
             System.Windows.Forms.Application.UseWaitCursor = true;
             LoadTournament(slug);
         }
 
-        private void TbUrl_TextChanged(object sender, TextChangedEventArgs e)
+        private void tbSearch_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            btnSubmitUrl.IsEnabled = !string.IsNullOrEmpty(tbUrl.Text) && !string.IsNullOrWhiteSpace(tbUrl.Text);
-
-            if (tbUrl.IsFocused)
-                cbTournaments.SelectedIndex = 0;
+            if (tbSearch.Text.Length < 4)
+            {
+                searchedTournaments.Clear();
+                searchedTournamentsNames.Clear();
+                listTournaments.ItemsSource = null;
+                listTournaments.Visibility = Visibility.Hidden;
+                listTournaments.IsDropDownOpen = false;
+            }
         }
+
+        private void tbSearch_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (tbSearch.Text.Length < 4)
+            {
+                searchedTournaments.Clear();
+                searchedTournamentsNames.Clear();
+                listTournaments.ItemsSource = null;
+                listTournaments.Visibility = Visibility.Hidden;
+                listTournaments.IsDropDownOpen = false;
+            }
+            else if(e.Key == Key.Enter && search) {
+                SearchTournament(tbSearch.Text);
+            }
+        }
+
+        private void TbSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            btnSubmitUrl.IsEnabled = false;
+            
+
+            if (!string.IsNullOrEmpty(tbSearch.Text) && !string.IsNullOrWhiteSpace(tbSearch.Text))
+            {
+                cbTournaments.SelectedIndex = 0;
+
+                if (tbSearch.Text.Length >= 4 && search)
+                    SearchTournament(tbSearch.Text);
+            }
+        }
+
+        private async void SearchTournament(string name)
+        {
+            try
+            {
+                GraphQLRequest request = new GraphQLRequest
+                {
+                    Query = @"
+                        query TournamentsByName($name: String!) {
+                            tournaments(query: {
+                              filter: {
+                                name: $name,
+                                upcoming: true
+                              }
+                            }) {
+                            nodes {
+                              name
+                              slug
+                            }
+                          }
+                        }",
+                    Variables = new
+                    {
+                        name = name
+                    }
+                };
+
+                var response = await client.SendQueryAsync(request, () => new { Tournaments = new TournamentConnection() });
+
+                if (response.Data.Tournaments.nodes != null)
+                {
+                    searchedTournaments.Clear();
+                    searchedTournamentsNames.Clear();
+                    listTournaments.ItemsSource = null;
+                    listTournaments.Visibility = Visibility.Hidden;
+
+                    if (response.Data.Tournaments.nodes.Count > 0)
+                    {
+
+                        foreach (Tournament t in response.Data.Tournaments.nodes)
+                        {
+                            searchedTournaments.Add(t);
+                            searchedTournamentsNames.Add(t.name);
+                        }
+
+                        searchedTournaments.Sort((p, q) => p.name.CompareTo(q.name));
+                        searchedTournamentsNames.Sort();
+
+                        listTournaments.ItemsSource = searchedTournamentsNames;
+
+                        listTournaments.IsDropDownOpen = true;
+                        listTournaments.Visibility = Visibility.Visible;
+                    }
+                    else
+                        listTournaments.IsDropDownOpen = false;
+                }
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+
 
         private void BtnSubmitUrl_Click(object sender, RoutedEventArgs e)
         {
-            if (!string.IsNullOrEmpty(tbUrl.Text) && !string.IsNullOrWhiteSpace(tbUrl.Text))
+            string slug = "";
+
+            if (!string.IsNullOrEmpty(tbSearch.Text) && !string.IsNullOrWhiteSpace(tbSearch.Text))
             {
+                slug = searchedTournaments[searchedTournamentsNames.IndexOf(tbSearch.Text)].slug;
                 btnSubmitUrl.IsEnabled = false;
-                InitializeSmashGG();
+                
             }
+            else if(cbTournaments.SelectedIndex >= 1)
+            {
+                slug = localTournaments[cbTournaments.SelectedIndex].slug;
+            }
+
+            InitializeSmashGG(slug);
         }
 
         private void CbEvent_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -808,6 +913,9 @@ namespace Scoreboard
 
         private void DoShowUrl()
         {
+            listTournaments.IsDropDownOpen = false;
+            tbSearch.Text = "";
+
             showUrl = !showUrl;
             Thickness margin = gridStart.Margin;
 
@@ -852,7 +960,7 @@ namespace Scoreboard
 
                 LoadTournamentFile();
                 cbTournaments.SelectedIndex = 0;
-                tbUrl.Text = "";
+                tbSearch.Text = "";
 
                 if (isSmashgg)
                     Title = "Stream Scoreboard";
@@ -924,7 +1032,7 @@ namespace Scoreboard
                     }
 
                     cbEvent.SelectedIndex = 0;
-                    tbUrl.Text = "";
+                    tbSearch.Text = "";
                     DoShowUrl();
 
                     return;
@@ -1496,8 +1604,10 @@ namespace Scoreboard
         {
             if (cbTournaments.SelectedIndex >= 1)
             {
-                tbUrl.Text = localTournaments[cbTournaments.SelectedIndex].slug;
+                tbSearch.Text = "";
             }
+
+            btnSubmitUrl.IsEnabled = true;
         }
 
         private int TournamentExists(string slug)
@@ -1527,7 +1637,7 @@ namespace Scoreboard
                 if (cbTournaments.SelectedIndex == index)
                 {
                     cbTournaments.SelectedIndex = 0;
-                    tbUrl.Text = "";
+                    tbSearch.Text = "";
                 }
 
                 cbTournaments.Items.RemoveAt(index);
@@ -1609,7 +1719,7 @@ namespace Scoreboard
 
         private void tbOnlyNumbers_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
-            if(e.Key == Key.Space)
+            if (e.Key == Key.Space)
             {
                 e.Handled = true;
             }
@@ -1651,6 +1761,35 @@ namespace Scoreboard
         private void pbPassword_PasswordChanged(object sender, RoutedEventArgs e)
         {
             checkConnectionInfo();
+        }
+
+        private void Window_TouchMove(object sender, TouchEventArgs e)
+        {
+            listTournaments.IsDropDownOpen = false;
+        }
+
+        private void Window_Deactivated(object sender, EventArgs e)
+        {
+            listTournaments.IsDropDownOpen = false;
+
+        }
+
+        private void listTournaments_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (listTournaments.Items.Count > 0)
+            {
+                search = false;
+                tbSearch.Text = listTournaments.SelectedValue.ToString();
+
+                btnSubmitUrl.IsEnabled = true;
+                listTournaments.ItemsSource = null;
+                search = true;
+            }
+        }
+
+        private void Window_LocationChanged(object sender, EventArgs e)
+        {
+            listTournaments.IsDropDownOpen = false;
         }
     }
 }
