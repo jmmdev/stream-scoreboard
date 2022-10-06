@@ -10,13 +10,13 @@ Here we could opt to use the manual interface where we input all the information
 
 ![screen2](https://user-images.githubusercontent.com/100143610/193869099-eeeaf518-9222-4c91-86f3-cb9c1aaf6433.png)
 
-Did you see those tabs up there? We'll talk about them later. First let's have a look at connecting to start.gg. We're using The Big House 10 as an example. Once we input the tournament url or slug (ex: https://start.gg/tournament/this-is-the-slug) it will be saved on recent tournaments for easier access 
+Did you see those tabs up there? We'll talk about them later. First let's have a look at connecting to start.gg. We're using The Big House 10 as an example. Once we search the name of the tournament we can select it from a list. It will also be saved on a recent tournaments list for easier access 
 
-![screen3](https://user-images.githubusercontent.com/100143610/193869631-27e2fee3-0e14-41a1-b9d6-6ec092f27827.png)
+![1](https://user-images.githubusercontent.com/100143610/194208732-22de75c6-60e9-42b6-ac97-1762867d3ce1.png)
 
 If a tournament is already over it won't be able for selection and the application will raise an alert (like Genesis 8, for instance)
 
-![screen4-2](https://user-images.githubusercontent.com/100143610/193872122-e7f53c5b-6ac3-4e59-943b-bcd608f61a1d.png)
+![2](https://user-images.githubusercontent.com/100143610/194208087-d3ff39b5-1775-4a3e-b308-82ed3e935284.png)
 
 Lightening start.gg API requests size is crucial to minimize errors, that's why we're getting information about the tournament in small bits. Selecting field values will unlock more fields to select until we can check the sets field. Here we can select a set and it will complete the information just as if we did it manually
 
@@ -38,6 +38,6 @@ Right after that it's the "OBS Tools" tab. Here we can save keyboard shortcuts (
 
 The final tab "Settings" is pretty intuitive. Here you can change the application theme and choose your outputa directory of preference. It should point to the folder containing the text files OBS is using to show names, scores and such
 
-![screen8](https://user-images.githubusercontent.com/100143610/193871132-4a01647c-08eb-4a33-84cd-7df740ac7fce.png)
+![3](https://user-images.githubusercontent.com/100143610/194208391-384494d9-9e3e-4af0-b079-4d322d9876be.png)
 
-![screen9](https://user-images.githubusercontent.com/100143610/193871256-7bd761ec-2722-451c-9932-cbb049dcc4a4.png)
+![4](https://user-images.githubusercontent.com/100143610/194208392-aca1498e-93e1-4a3c-9a28-b5d21709d1bf.png)
