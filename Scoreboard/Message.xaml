@@ -6,13 +6,13 @@
         xmlns:local="clr-namespace:Scoreboard"
         mc:Ignorable="d"
         ResizeMode="NoResize"
-        Icon="icon1.ico"
+        Icon="Assets/icon1.ico"
         Background="{DynamicResource Background}"
         BorderBrush="Black"
         BorderThickness="1"
         WindowStyle="None"
         WindowStartupLocation="CenterOwner"
-        Title="" Height="180" Width="300">
+        Title="" Height="140" Width="300">
 
     <Window.Resources>
         <Style x:Key="StandardButton" TargetType="Button">
@@ -53,12 +53,11 @@
         </Style>
     </Window.Resources>
     <Grid>
-        <Image Name="iconImg" Width="40" Height="40" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="16 44" RenderOptions.BitmapScalingMode="HighQuality"/>
-        <Border Width="210"  Height="96" Margin="16" VerticalAlignment="Top" HorizontalAlignment="Right">
-            <TextBlock Name="lbText" TextWrapping="Wrap" Foreground="White" FontSize="14" IsEnabled="False" VerticalAlignment="Center" />
-        </Border>
-        <Button Name="btnOk" Style="{DynamicResource StandardButton}" Width="108" Height="28" HorizontalAlignment="Center" VerticalAlignment="Bottom" Margin="16" Background="{DynamicResource StandardButtonIdle}" Foreground="{DynamicResource ButtonIdleText}" Content="OK" Click="btnOk_Click" />
-        <Button Name="btnYes" Style="{DynamicResource StandardButton}" Width="108" Height="28" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="16" Background="{DynamicResource StandardButtonIdle}" Foreground="{DynamicResource ButtonIdleText}" Content="Yes" Visibility="Collapsed" Click="btnYes_Click" />
-        <Button Name="btnNo" Style="{DynamicResource StandardButton}" Width="108" Height="28" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="16" Background="{DynamicResource StandardButtonIdle}" Foreground="{DynamicResource ButtonIdleText}" Content="No" Visibility="Collapsed" Click="btnNo_Click" />
+        <Grid Name="textGrid" Height="80" Margin="16 12" VerticalAlignment="Top">
+            <TextBlock Name="lbText" TextWrapping="Wrap" Foreground="White" FontSize="14" IsEnabled="False" TextAlignment="Center" VerticalAlignment="Center" />
+        </Grid>
+        <Button Name="btnOk" Style="{DynamicResource StandardButton}" Width="108" Height="28" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 100 0 0" Background="{DynamicResource StandardButtonIdle}" Foreground="{DynamicResource ButtonIdleText}" Content="OK" Click="btnOk_Click" FontWeight="Bold" />
+        <Button Name="btnYes" Style="{DynamicResource StandardButton}" Width="108" Height="28" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30 100 0 0" Background="{DynamicResource StandardButtonIdle}" Foreground="{DynamicResource ButtonIdleText}" Content="Yes" Visibility="Hidden" Click="btnYes_Click" FontWeight="Bold" />
+        <Button Name="btnNo" Style="{DynamicResource StandardButton}" Width="108" Height="28" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 100 30 0" Background="{DynamicResource StandardButtonIdle}" Foreground="{DynamicResource ButtonIdleText}" Content="No" Visibility="Hidden" Click="btnNo_Click" FontWeight="Bold" />
     </Grid>
 </Window>

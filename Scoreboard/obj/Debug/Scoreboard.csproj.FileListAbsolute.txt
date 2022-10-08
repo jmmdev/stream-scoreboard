@@ -281,4 +281,3 @@ D:\Projects\stream-scoreboard\Scoreboard\obj\Debug\Skins\Default.baml
 D:\Projects\stream-scoreboard\Scoreboard\bin\Debug\GraphQLParser.dll
 D:\Projects\stream-scoreboard\Scoreboard\bin\Debug\GraphQLParser.xml
 D:\Projects\stream-scoreboard\Scoreboard\obj\Debug\Skins\Witch.baml
-D:\Projects\stream-scoreboard\Scoreboard\obj\Debug\App.baml

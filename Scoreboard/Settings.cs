@@ -7,5 +7,7 @@
         public string theme { get; set; }
 
         public string obsIp { get; set; }
+
+        public string token { get; set; }
     }
 }

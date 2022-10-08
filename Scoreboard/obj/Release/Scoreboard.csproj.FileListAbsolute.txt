@@ -235,7 +235,6 @@ D:\Projects\stream-scoreboard\Scoreboard\obj\Release\Message.g.cs
 D:\Projects\stream-scoreboard\Scoreboard\obj\Release\App.g.cs
 D:\Projects\stream-scoreboard\Scoreboard\obj\Release\Scoreboard_MarkupCompile.cache
 D:\Projects\stream-scoreboard\Scoreboard\obj\Release\Scoreboard_MarkupCompile.lref
-D:\Projects\stream-scoreboard\Scoreboard\obj\Release\App.baml
 D:\Projects\stream-scoreboard\Scoreboard\obj\Release\MainWindow.baml
 D:\Projects\stream-scoreboard\Scoreboard\obj\Release\Message.baml
 D:\Projects\stream-scoreboard\Scoreboard\obj\Release\Scoreboard.g.resources

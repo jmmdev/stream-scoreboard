@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Scoreboard
 {
-    class Set
+    public class Set
     {
         public string fullRoundText { get; set; }
         public List<Slot> slots { get; set; }

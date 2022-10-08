@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Scoreboard
 {
-    class Slot
+    public class Slot
     {
         public Entrant entrant { get; set; }
     }

@@ -168,6 +168,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Image.cs" />
     <Compile Include="TournamentConnection.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="Entrant.cs" />
@@ -237,15 +238,18 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="startGGLogo.png" />
+    <Resource Include="Assets\startGGLogo.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="check-circle.png" />
-    <EmbeddedResource Include="info-circle.png" />
-    <Resource Include="x-circle.png" />
+    <Resource Include="Assets\check-circle.png" />
+    <EmbeddedResource Include="Assets\info-circle.png" />
+    <Resource Include="Assets\x-circle.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="icon1.ico" />
+    <Resource Include="Assets\icon1.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Assets\no-profile.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\System.Text.Json.6.0.6\build\System.Text.Json.targets" Condition="Exists('..\packages\System.Text.Json.6.0.6\build\System.Text.Json.targets')" />

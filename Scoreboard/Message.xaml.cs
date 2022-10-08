@@ -8,12 +8,11 @@ namespace Scoreboard
     public partial class Message : Window
     {
 
-        public Message(string text, string messageType, string windowType)
+        public Message(string text, string windowType)
         {
             InitializeComponent();
 
             setText(text);
-            setMessageType(messageType);
             setWindowType(windowType);
         }
 
@@ -22,31 +21,33 @@ namespace Scoreboard
             lbText.Text = text;
         }
 
-        public void setMessageType(string type)
-        {
-            Image myImage = new Image();
-            BitmapImage bi = new BitmapImage();
-            bi.BeginInit();
-            bi.UriSource = new System.Uri(type + "-circle.png", System.UriKind.Relative);
-            bi.EndInit();
-            myImage.Stretch = Stretch.Fill;
-            iconImg.Source = bi;
-        }
-
         public void setWindowType(string type)
         {
-            if(type == "yesno")
+            if (type == "wait")
             {
-                btnYes.Visibility = Visibility.Visible;
-                btnNo.Visibility = Visibility.Visible;
-                btnOk.Visibility = Visibility.Collapsed;
-            }
+                textGrid.Height = 116;
 
-            if(type == "ok")
-            {
                 btnYes.Visibility = Visibility.Collapsed;
                 btnNo.Visibility = Visibility.Collapsed;
-                btnOk.Visibility = Visibility.Visible;
+                btnOk.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                textGrid.Height = 80;
+
+                if (type == "yesno")
+                {
+                    btnYes.Visibility = Visibility.Visible;
+                    btnNo.Visibility = Visibility.Visible;
+                    btnOk.Visibility = Visibility.Collapsed;
+                }
+
+                if (type == "ok")
+                {
+                    btnYes.Visibility = Visibility.Collapsed;
+                    btnNo.Visibility = Visibility.Collapsed;
+                    btnOk.Visibility = Visibility.Visible;
+                }
             }
         }
 

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Scoreboard
 {
-    class PhaseGroupConnection
+    public class PhaseGroupConnection
     {
         public List<PhaseGroup> nodes { get; set; }
     }

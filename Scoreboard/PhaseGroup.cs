@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Scoreboard
 {
-    class PhaseGroup
+    public class PhaseGroup
     {
         public string id { get; set; }
         public string displayIdentifier { get; set; }

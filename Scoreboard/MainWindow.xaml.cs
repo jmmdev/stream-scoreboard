@@ -17,6 +17,7 @@ using System.Windows.Controls;
 using System.Windows.Forms;
 using System.Windows.Input;
 using System.Windows.Media;
+using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Threading;
 
@@ -25,7 +26,7 @@ namespace Scoreboard
     public partial class MainWindow : Window
     {
         private GraphQLHttpClient client = new GraphQLHttpClient("https://api.smash.gg/gql/alpha", new NewtonsoftJsonSerializer());
-        private const string token = "ceffaeed94948ae90d5c11287386b979";
+        private string myToken = "";
 
         private List<Tournament> searchedTournaments = new List<Tournament>();
         private List<string> searchedTournamentsNames = new List<string>();
@@ -35,6 +36,8 @@ namespace Scoreboard
         private List<Phase> localPhases = new List<Phase>();
         private List<PhaseGroup> localGroups = new List<PhaseGroup>();
         private List<Set> localSets = new List<Set>();
+
+        private List<Tournament> finalResult = new List<Tournament>();
 
         protected OBSWebsocket obs;
 
@@ -51,21 +54,25 @@ namespace Scoreboard
         private bool isEditing = false;
 
         private bool showUrl = false;
-        private string lastIp;
+        private string lastIp = "";
 
         private bool search = true;
+        private bool showToken = false;
+        private string lastSearch = "";
+
+        // Component and needed starting values initialization
 
         public MainWindow()
         {
             InitializeComponent();
-
-            client.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-
             LoadTournamentFile();
 
             cbTournaments.SelectedIndex = 0;
 
             LoadSettings();
+
+            client.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", myToken);
+
             LoadCommands();
 
             EnableUpdateButton(btnSaveSettings, false);
@@ -115,28 +122,123 @@ namespace Scoreboard
             obs.Disconnected += OnDisconnect;
 
 
-            initializeThemes();
+            InitializeThemes();
             btnSaveSettings.IsEnabled = false;
         }
 
-        private void ClearFields()
+        private void LoadTournamentFile()
         {
-            cbEvent.Items.Clear();
-            localEvents.Clear();
+            string tournamentFile = "tournaments.json";
 
-            cbPhase.Items.Clear();
-            localPhases.Clear();
+            if (File.Exists(tournamentFile))
+            {
+                string tournamentsString = File.ReadAllText(tournamentFile);
+                TournamentItem[] tournamentItems = JsonConvert.DeserializeObject<TournamentItem[]>(tournamentsString);
 
-            cbRound.Items.Clear();
+                localTournaments.Clear();
+                cbTournaments.Items.Clear();
 
-            tbPlayer1.Text = "";
-            tbPlayer2.Text = "";
-            tbPlayer3.Text = "";
-            tbPlayer4.Text = "";
+                for (int i = 0; i < tournamentItems.Length; i++)
+                {
+                    TournamentItem t = tournamentItems[i];
 
-            lbScore1.Content = "0";
-            lbScore2.Content = "0";
+                    ComboBoxItem item = new ComboBoxItem();
+                    item.Content = t.name;
+                    item.Tag = i + 1;
+                    localTournaments.Add(t);
+                    cbTournaments.Items.Add(item);
+                }
+
+            }
+
+            ComboBoxItem firstItem = new ComboBoxItem();
+
+            if (cbTournaments.Items.Count > 0 && !cbTournaments.Items[0].ToString().Contains("recent"))
+            {
+                firstItem.Content = "Select a tournament...";
+                firstItem.Tag = "0";
+                cbTournaments.Items.Insert(0, firstItem);
+                cbTournaments.IsEnabled = true;
+            }
+            else
+            {
+                firstItem.Content = "No recent tournaments";
+                firstItem.Tag = "0";
+                cbTournaments.Items.Add(firstItem);
+            }
+
+            localTournaments.Insert(0, null);
         }
+
+        private void LoadSettings()
+        {
+            if (File.Exists("settings.json"))
+            {
+                string settingsString = File.ReadAllText("settings.json");
+                Settings settings = JsonConvert.DeserializeObject<Settings>(settingsString);
+
+                string outputPath = settings.outputPath;
+                tbOutputFolder.Text = outputPath;
+                outputDir = outputPath + "\\";
+
+                string theme = settings.theme;
+                cbThemes.SelectedValue = theme;
+
+                string apiToken = settings.token;
+                myToken = apiToken;
+                pbToken.Password = apiToken;
+                tbToken.Text = pbToken.Password;
+
+                string obsIp = settings.obsIp;
+
+                if (!string.IsNullOrEmpty(obsIp) && !string.IsNullOrWhiteSpace(obsIp))
+                {
+                    string[] formattedIp = obsIp.Split(':');
+                    string port = formattedIp[1];
+                    string[] ipFields = formattedIp[0].Split('.');
+
+                    tbIp1.Text = ipFields[0];
+                    tbIp2.Text = ipFields[1];
+                    tbIp3.Text = ipFields[2];
+                    tbIp4.Text = ipFields[3];
+
+                    tbPort.Text = port;
+                }
+            }
+        }
+
+        private void LoadCommands()
+        {
+            if (File.Exists("commands.json"))
+            {
+                string commandsString = File.ReadAllText("commands.json");
+                commands = JsonConvert.DeserializeObject<Command[]>(commandsString).ToList();
+                listCommand.Items.Clear();
+                foreach (Command c in commands)
+                {
+                    listCommand.Items.Add(c.name);
+                }
+            }
+        }
+
+        private void InitializeThemes()
+        {
+            string[] themes = Directory.GetFiles(@"../../Skins/");
+            foreach (string t in themes)
+            {
+                cbThemes.Items.Add(Path.GetFileName(t).Replace(".xaml", ""));
+            }
+        }
+
+        //Starting screen functionality
+        private void BtnManual_Click(object sender, RoutedEventArgs e)
+        {
+            InitializeManual();
+            gridStart.Visibility = Visibility.Hidden;
+            tabControl.Visibility = Visibility.Visible;
+        }
+
+        //Manual mode functionality
 
         private void InitializeManual()
         {
@@ -185,7 +287,314 @@ namespace Scoreboard
             roundGrid.Margin = margin;
         }
 
-        private void InitializeSmashGG(string slug)
+        //Search tournament functionality
+
+        private void cbTournaments_DropDownOpened(object sender, EventArgs e)
+        {
+            listTournaments.IsDropDownOpen = false;
+        }
+
+
+
+        private void tbSearch_GotFocus(object sender, RoutedEventArgs e)
+        {
+            btnSearch.Visibility = Visibility.Visible;
+        }
+
+        bool listTournamentsFocused = false;
+
+        
+        private void BtnSmashGG_Click(object sender, RoutedEventArgs e)
+        {
+            DoShowUrl();
+        }
+
+        private void cbTournaments_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cbTournaments.SelectedIndex >= 1)
+            {
+                tbSearch.Text = "";
+                btnSubmitUrl.IsEnabled = true;
+            }
+            else
+                btnSubmitUrl.IsEnabled = false;
+        }
+
+        private void DoShowUrl()
+        {
+            listTournaments.IsDropDownOpen = false;
+            tbSearch.Text = "";
+
+            showUrl = !showUrl;
+            Thickness margin = gridTournament.Margin;
+
+            if (showUrl)
+            {
+                gridTournament.Height = 216;
+                gridUrl.Visibility = Visibility.Visible;
+                btnSmashGG.Content = Resources["smashGGButtonCancel"];
+                btnSmashGG.Width = 32;
+                btnManual.Visibility = Visibility.Hidden;
+            }
+            else
+            {
+                gridTournament.Height = 32;
+                gridUrl.Visibility = Visibility.Hidden;
+                btnSmashGG.Content = Resources["smashGGButtonConnect"];
+                btnSmashGG.Width = 190;
+                btnManual.Visibility = Visibility.Visible;
+            }
+
+            gridTournament.Margin = margin;
+
+            margin = roundGrid.Margin;
+            margin.Top = 56;
+            roundGrid.Margin = margin;
+        }
+
+        private void TbSearch_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            btnSubmitUrl.IsEnabled = false;
+
+
+            if (!string.IsNullOrEmpty(tbSearch.Text) && !string.IsNullOrWhiteSpace(tbSearch.Text))
+            {
+                cbTournaments.SelectedIndex = 0;
+            }
+        }
+
+        private void tbSearch_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter && !string.IsNullOrEmpty(tbSearch.Text) && !string.IsNullOrWhiteSpace(tbSearch.Text) && search)
+            {
+                SearchTournament();
+            }
+        }
+
+        private void tbSearch_LostFocus(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrEmpty(tbSearch.Text) || string.IsNullOrEmpty(tbSearch.Text))
+                btnSearch.Visibility = Visibility.Hidden;
+
+            if (!listTournamentsFocused)
+            {
+                listTournaments.IsDropDownOpen = false;
+            }
+
+            listTournamentsFocused = false;
+        }
+
+        private void listTournaments_PreviewMouseDown(object sender, MouseButtonEventArgs e)
+        {
+            listTournamentsFocused = true;
+        }
+
+        private void listTournaments_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (listTournaments.Items.Count > 0)
+            {
+                search = false;
+
+                StackPanel sp = (StackPanel)listTournaments.SelectedValue;
+                foreach (object o in sp.Children)
+                {
+                    if (o is TextBlock)
+                        tbSearch.Text = ((TextBlock)o).Text;
+                }
+
+                btnSubmitUrl.IsEnabled = true;
+                search = true;
+            }
+        }
+
+        private void btnSearch_Click(object sender, RoutedEventArgs e)
+        {
+            SearchTournament();
+        }
+
+        private async void SearchTournament()
+        {
+            if (string.IsNullOrEmpty(myToken) || string.IsNullOrWhiteSpace(myToken))
+                DisplayMessage("You don't have a valid authentication token to make start.gg requests. Please set it in the settings menu.", "ok").ShowDialog();
+            else
+            {
+                finalResult.Clear();
+                listTournaments.ItemsSource = null;
+
+                string search = RemoveExtraWhiteSpace(tbSearch.Text).Trim();
+
+                if (lastSearch != search || !listTournaments.IsDropDownOpen)
+                {
+                    Window message = DisplayMessage("Please wait...", "wait");
+                    message.Show();
+
+                    lastSearch = search;
+
+                    string[] keywords = search.Split(' ');
+
+                    foreach (string k in keywords)
+                    {
+                        try
+                        {
+                            GraphQLRequest request = new GraphQLRequest
+                            {
+                                Query = @"
+                        query TournamentsByName($name: String!) {
+                            tournaments(query: {
+                              perPage: 500,
+                              filter: {
+                                name: $name,
+                                upcoming: true
+                              }
+                            }) {
+                            nodes {
+                              id
+                              name
+                              images(type: " + "\"profile\"" + @"){
+                                url
+                              }
+                            }
+                          }
+                        }",
+                                Variables = new
+                                {
+                                    name = k
+                                }
+                            };
+
+                            var response = await client.SendQueryAsync(request, () => new { Tournaments = new TournamentConnection() });
+
+                            if (response.Data.Tournaments.nodes != null)
+                            {
+                                if (!(finalResult.Count > 0))
+                                {
+                                    finalResult = response.Data.Tournaments.nodes;
+                                }
+                                else
+                                {
+                                    finalResult = response.Data.Tournaments.nodes.Intersect(finalResult).ToList();
+                                }
+                            }
+
+                        }
+                        catch (Exception)
+                        {
+                        }
+                    }
+
+                    searchedTournaments.Clear();
+                    searchedTournamentsNames.Clear();
+                    listTournaments.ItemsSource = null;
+                    listTournaments.Visibility = Visibility.Hidden;
+
+                    if (finalResult.Count > 0)
+                    {
+                        if (finalResult.Count > 50)
+                        {
+                            message.Close();
+                            DisplayMessage("Too many tournaments found (" + finalResult.Count + " results). Please refine your search", "ok").ShowDialog();
+                        }
+
+                        else
+                        {
+                            finalResult.Sort((p, q) => p.name.CompareTo(q.name));
+
+                            listTournaments.ItemsSource = PopulateTournamentNames(finalResult);
+
+                            listTournaments.IsDropDownOpen = true;
+                            listTournaments.Visibility = Visibility.Visible;
+
+                            foreach (Tournament t in finalResult)
+                            {
+                                searchedTournaments.Add(t);
+                            }
+
+                            message.Close();
+                        }
+                    }
+                    else
+                    {
+                        message.Close();
+                        DisplayMessage("No tournaments found", "ok").ShowDialog();
+                        listTournaments.IsDropDownOpen = false;
+                    }
+                }
+            }
+        }
+
+        public List<StackPanel> PopulateTournamentNames(List<Tournament> finalResult)
+        {
+            List<StackPanel> tournamentData = new List<StackPanel>();
+
+            bool end = false;
+            for (int i = 0; i < 50 && !end; i++)
+            {
+                Tournament t = finalResult[i];
+
+                StackPanel sp = new StackPanel
+                {
+                    Orientation = System.Windows.Controls.Orientation.Horizontal
+                };
+
+                System.Windows.Controls.Image img = new System.Windows.Controls.Image
+                {
+                    MaxWidth = 32,
+                    MaxHeight = 32,
+                };
+
+                List<Image> tournamentImages = t.images;
+
+                BitmapImage bmp = new BitmapImage();
+                bmp.BeginInit();
+                bmp.CacheOption = BitmapCacheOption.OnLoad;
+
+                if (tournamentImages.Count > 0)
+                    bmp.UriSource = new Uri(t.images[0].url, UriKind.Absolute);
+                else
+                    bmp.UriSource = new Uri("../../Assets/no-profile.png", UriKind.Relative);
+
+                bmp.DecodePixelWidth = 1920;
+                bmp.EndInit();
+                img.Source = bmp;
+
+                TextBlock nameBlock = new TextBlock
+                {
+                    Margin = new Thickness(6, 0, 0, 0),
+                    Padding = new Thickness(0, 0, 0, 0),
+                    Text = t.name
+                };
+
+                sp.Children.Add(img);
+                sp.Children.Add(nameBlock);
+                tournamentData.Add(sp);
+
+                end = i == finalResult.Count - 1;
+            }
+
+            return tournamentData;
+        }
+
+        //start.gg mode functionality
+
+        private void BtnSubmitUrl_Click(object sender, RoutedEventArgs e)
+        {
+            string id = "";
+
+            if (!string.IsNullOrEmpty(tbSearch.Text) && !string.IsNullOrWhiteSpace(tbSearch.Text))
+            {
+                id = finalResult[listTournaments.SelectedIndex].id;
+                btnSubmitUrl.IsEnabled = false;
+
+            }
+            else if (cbTournaments.SelectedIndex >= 1)
+            {
+                id = localTournaments[cbTournaments.SelectedIndex].id;
+            }
+
+            InitializeSmashGG(id);
+        }
+
+        private void InitializeSmashGG(string id)
         {
             ClearFields();
 
@@ -205,130 +614,313 @@ namespace Scoreboard
             cbEvent.IsEnabled = false;
 
             System.Windows.Forms.Application.UseWaitCursor = true;
-            LoadTournament(slug);
+            LoadTournament(id);
         }
 
-        private void tbSearch_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if (tbSearch.Text.Length < 4)
-            {
-                searchedTournaments.Clear();
-                searchedTournamentsNames.Clear();
-                listTournaments.ItemsSource = null;
-                listTournaments.Visibility = Visibility.Hidden;
-                listTournaments.IsDropDownOpen = false;
-            }
-        }
-
-        private void tbSearch_KeyUp(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if (tbSearch.Text.Length < 4)
-            {
-                searchedTournaments.Clear();
-                searchedTournamentsNames.Clear();
-                listTournaments.ItemsSource = null;
-                listTournaments.Visibility = Visibility.Hidden;
-                listTournaments.IsDropDownOpen = false;
-            }
-            else if(e.Key == Key.Enter && search) {
-                SearchTournament(tbSearch.Text);
-            }
-        }
-
-        private void TbSearch_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            btnSubmitUrl.IsEnabled = false;
-            
-
-            if (!string.IsNullOrEmpty(tbSearch.Text) && !string.IsNullOrWhiteSpace(tbSearch.Text))
-            {
-                cbTournaments.SelectedIndex = 0;
-
-                if (tbSearch.Text.Length >= 4 && search)
-                    SearchTournament(tbSearch.Text);
-            }
-        }
-
-        private async void SearchTournament(string name)
+        private async void LoadTournament(string id)
         {
             try
             {
                 GraphQLRequest request = new GraphQLRequest
                 {
                     Query = @"
-                        query TournamentsByName($name: String!) {
-                            tournaments(query: {
-                              filter: {
-                                name: $name,
-                                upcoming: true
-                              }
-                            }) {
-                            nodes {
-                              name
-                              slug
-                            }
-                          }
-                        }",
+                        query TournamentQuery($id: ID!) {
+		                    tournament(id: $id){
+                                name
+                                state
+			                    events {
+				                    id
+				                    name
+			                    }
+		                    }
+	                    }",
                     Variables = new
                     {
-                        name = name
+                        id = id
                     }
                 };
 
-                var response = await client.SendQueryAsync(request, () => new { Tournaments = new TournamentConnection() });
+                var response = await client.SendQueryAsync(request, () => new { Tournament = new Tournament() });
 
-                if (response.Data.Tournaments.nodes != null)
+                if (response.Data.Tournament == null)
                 {
-                    searchedTournaments.Clear();
-                    searchedTournamentsNames.Clear();
-                    listTournaments.ItemsSource = null;
-                    listTournaments.Visibility = Visibility.Hidden;
-
-                    if (response.Data.Tournaments.nodes.Count > 0)
-                    {
-
-                        foreach (Tournament t in response.Data.Tournaments.nodes)
-                        {
-                            searchedTournaments.Add(t);
-                            searchedTournamentsNames.Add(t.name);
-                        }
-
-                        searchedTournaments.Sort((p, q) => p.name.CompareTo(q.name));
-                        searchedTournamentsNames.Sort();
-
-                        listTournaments.ItemsSource = searchedTournamentsNames;
-
-                        listTournaments.IsDropDownOpen = true;
-                        listTournaments.Visibility = Visibility.Visible;
-                    }
-                    else
-                        listTournaments.IsDropDownOpen = false;
+                    DisplayMessage("Tournament not found. Check the url and try again", "ok");
+                    return;
                 }
+
+                if (response.Data.Tournament.events != null)
+                {
+                    if (response.Data.Tournament.state < 1 && response.Data.Tournament.state > 4 || response.Data.Tournament.state == 3)
+                    {
+                        Window message = DisplayMessage(response.Data.Tournament.name + " is unavailable or already over. Please check your tournament information.", "ok");
+                        message.ShowDialog();
+                        return;
+                    }
+
+                    localEvents.Clear();
+                    cbEvent.Items.Clear();
+
+                    Title = "Stream Scoreboard - " + response.Data.Tournament.name;
+
+                    foreach (Event ev in response.Data.Tournament.events)
+                    {
+                        localEvents.Add(ev);
+                        cbEvent.Items.Add(ev.name);
+                    }
+
+                    gridStart.Visibility = Visibility.Hidden;
+                    tabControl.Visibility = Visibility.Visible;
+                    gridSmashGG.Visibility = Visibility.Visible;
+
+                    AddTournamentToFile(id, response.Data.Tournament.name);
+
+                    if (localEvents.Count > 1)
+                    {
+                        localEvents.Insert(0, null);
+                        cbEvent.Items.Insert(0, "Select an event...");
+                        cbEvent.IsEnabled = true;
+                    }
+
+                    cbEvent.SelectedIndex = 0;
+                    tbSearch.Text = "";
+                    DoShowUrl();
+
+                    return;
+                }
+
+                DisplayMessage("An error ocurred while getting the tournament events. Please try again", "ok");
             }
             catch (Exception)
             {
             }
         }
 
-
-
-        private void BtnSubmitUrl_Click(object sender, RoutedEventArgs e)
+        private void AddTournamentToFile(string id, string name)
         {
-            string slug = "";
-
-            if (!string.IsNullOrEmpty(tbSearch.Text) && !string.IsNullOrWhiteSpace(tbSearch.Text))
+            TournamentItem t = new TournamentItem()
             {
-                slug = searchedTournaments[searchedTournamentsNames.IndexOf(tbSearch.Text)].slug;
-                btnSubmitUrl.IsEnabled = false;
-                
-            }
-            else if(cbTournaments.SelectedIndex >= 1)
+                name = name,
+                id = id
+            };
+
+            if (localTournaments.Count == 1)
             {
-                slug = localTournaments[cbTournaments.SelectedIndex].slug;
+                cbTournaments.Items.RemoveAt(0);
+                cbTournaments.Items.Add("Select a tournament...");
             }
 
-            InitializeSmashGG(slug);
+            int index = TournamentExists(id);
+
+            if (index < 1)
+            {
+                localTournaments.Insert(1, t);
+                cbTournaments.Items.Insert(1, t.name);
+            }
+            else
+            {
+                localTournaments.RemoveAt(index);
+                localTournaments.Insert(1, t);
+
+                cbTournaments.Items.RemoveAt(index);
+                cbTournaments.Items.Insert(1, t.name);
+            }
+
+            TournamentItem[] actualTournaments = new ArraySegment<TournamentItem>(localTournaments.ToArray(), 1, localTournaments.Count - 1).ToArray();
+            string json = JsonConvert.SerializeObject(actualTournaments);
+            File.WriteAllText("tournaments.json", json);
         }
+
+        private int TournamentExists(string id)
+        {
+            for (int i = 1; i < localTournaments.Count; i++)
+            {
+                TournamentItem t = localTournaments[i];
+                if (t != null && t.id == id)
+                    return i;
+            }
+
+            return -1;
+        }
+
+        private void DeleteTournamentButton_Click(object sender, RoutedEventArgs e)
+        {
+            DependencyObject parent = FindParent(sender as DependencyObject);
+
+            int index = int.Parse(((ComboBoxItem)parent).Tag.ToString());
+
+            Window message = DisplayMessage("Delete tournament \"" + ((ComboBoxItem)cbTournaments.Items[index]).Content + "\"?", "yesno");
+            bool dialogResult = (bool)message.ShowDialog();
+
+            if (dialogResult)
+            {
+
+                if (cbTournaments.SelectedIndex == index)
+                {
+                    cbTournaments.SelectedIndex = 0;
+                    tbSearch.Text = "";
+                }
+
+                cbTournaments.Items.RemoveAt(index);
+                localTournaments.RemoveAt(index);
+
+                UpdateTournamentTags();
+
+                if (localTournaments.Count < 2)
+                {
+                    cbTournaments.Items[0] = "No recent tournaments";
+                    cbTournaments.SelectedIndex = 0;
+                    cbTournaments.IsEnabled = false;
+                }
+
+                TournamentItem[] actualTournaments = new ArraySegment<TournamentItem>(localTournaments.ToArray(), 1, localTournaments.Count - 1).ToArray();
+                string json = JsonConvert.SerializeObject(actualTournaments);
+                File.WriteAllText("tournaments.json", json);
+            }
+        }
+
+        private void UpdateTournamentTags()
+        {
+            for (int i = 1; i < cbTournaments.Items.Count; i++)
+                ((ComboBoxItem)cbTournaments.Items[i]).Tag = i;
+        }
+
+        //Settings functionality
+
+        private void btnSettings_Click(object sender, RoutedEventArgs e)
+        {
+            gridStart.Visibility = Visibility.Hidden;
+            gridSettings.Visibility = Visibility.Visible;
+        }
+
+        private void SettingsTextChanged(object sender, TextChangedEventArgs e)
+        {
+            EnableUpdateButton(btnSaveSettings, true);
+        }
+
+        private void BrowseOutput(object sender, RoutedEventArgs e)
+        {
+            FolderBrowserDialog folder = new FolderBrowserDialog();
+            folder.ShowDialog();
+
+            if (!string.IsNullOrEmpty(folder.SelectedPath))
+            {
+                string path = folder.SelectedPath;
+
+                tbOutputFolder.Text = path;
+            }
+        }
+
+        private void cbThemes_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            EnableUpdateButton(btnSaveSettings, true);
+        }
+
+        private void pbToken_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            if (pbToken.Visibility == Visibility.Visible)
+            {
+                tbToken.Text = pbToken.Password;
+
+                if (!string.IsNullOrEmpty(pbToken.Password) && !string.IsNullOrWhiteSpace(pbToken.Password))
+                    btnShowToken.Visibility = Visibility.Visible;
+                else
+                    btnShowToken.Visibility = Visibility.Hidden;
+            }
+            EnableUpdateButton(btnSaveSettings, true);
+        }
+
+        private void tbToken_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            if (tbToken.Visibility == Visibility.Visible)
+                pbToken.Password = tbToken.Text;
+
+            if (!string.IsNullOrEmpty(tbToken.Text) && !string.IsNullOrWhiteSpace(tbToken.Text))
+                btnShowToken.Visibility = Visibility.Visible;
+            else
+                btnShowToken.Visibility = Visibility.Hidden;
+
+            EnableUpdateButton(btnSaveSettings, true);
+        }
+
+        private void btnShowToken_Click(object sender, RoutedEventArgs e)
+        {
+            showToken = !showToken;
+            string property;
+
+            if (showToken)
+            {
+                property = "showButtonContent";
+                pbToken.Visibility = Visibility.Hidden;
+                tbToken.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                property = "hideButtonContent";
+                tbToken.Visibility = Visibility.Hidden;
+                pbToken.Visibility = Visibility.Visible;
+            }
+            btnShowToken.SetResourceReference(ContentProperty, property);
+        }
+
+        private void SaveSettings(object sender, RoutedEventArgs e)
+        {
+            SaveSettingsFunc();
+
+            ((App)System.Windows.Application.Current).ChangeSkin(cbThemes.SelectedValue.ToString());
+
+            EnableUpdateButton(btnSaveSettings, false);
+        }
+
+        private void SaveSettingsFunc()
+        {
+            myToken = pbToken.Password;
+            Settings newSettings = new Settings
+            {
+                outputPath = tbOutputFolder.Text,
+                theme = cbThemes.SelectedValue.ToString(),
+                obsIp = lastIp,
+                token = myToken
+            };
+
+            string json = JsonConvert.SerializeObject(newSettings);
+            File.WriteAllText("settings.json", json);
+
+            outputDir = newSettings.outputPath + "\\";
+        }
+
+        private void btnCloseSettings_Click(object sender, RoutedEventArgs e)
+        {
+            if (!btnSaveSettings.IsEnabled)
+            {
+                gridStart.Visibility = Visibility.Visible;
+                gridSettings.Visibility = Visibility.Hidden;
+
+                tbToken.Visibility = Visibility.Hidden;
+                pbToken.Visibility = Visibility.Visible;
+                showToken = false;
+                btnShowToken.SetResourceReference(ContentProperty, "hideButtonContent");
+            }
+            else
+            {
+                Window message = DisplayMessage("You have unsaved settings, do you want to leave?", "yesno");
+                bool dialogResult = (bool)message.ShowDialog();
+
+                if (dialogResult)
+                {
+                    gridStart.Visibility = Visibility.Visible;
+                    gridSettings.Visibility = Visibility.Hidden;
+                    LoadSettings();
+                    btnSaveSettings.IsEnabled = false;
+
+                    tbToken.Visibility = Visibility.Hidden;
+                    pbToken.Visibility = Visibility.Visible;
+                    showToken = false;
+                    btnShowToken.SetResourceReference(ContentProperty, "hideButtonContent");
+                }
+            }
+        }
+
+        //Scoreboard functionality
 
         private void CbEvent_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -376,672 +968,6 @@ namespace Scoreboard
                     CheckSaveState();
                 else
                     LoadEvent();
-            }
-        }
-
-        private void CbRound_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (cbRound.SelectedIndex >= 0)
-            {
-                chkLosers1.IsChecked = false;
-                chkLosers2.IsChecked = false;
-
-                Thickness roundMargin = cbRound.Margin;
-                if (cbRound.SelectedValue.ToString().ToLower().Contains("round"))
-                {
-                    tbRoundNum.Visibility = Visibility.Visible;
-                    cbRound.Width = 152;
-                    roundMargin.Right = 28;
-                    roundNum = true;
-                }
-                else
-                {
-                    tbRoundNum.Visibility = Visibility.Collapsed;
-                    cbRound.Width = 180;
-                    roundMargin.Right = 0;
-                    roundNum = false;
-                }
-
-                if (cbRound.SelectedValue.ToString().ToLower().Contains("grand"))
-                {
-                    chkLosers1.Visibility = Visibility.Visible;
-                    chkLosers2.Visibility = Visibility.Visible;
-
-                    if (isSmashgg)
-                    {
-                        chkLosers2.IsChecked = true;
-                    }
-
-                    else
-                    {
-                        chkLosers1.IsEnabled = true;
-                        chkLosers2.IsEnabled = true;
-                    }
-
-                    if (cbRound.SelectedValue.ToString().ToLower().Contains("reset"))
-                    {
-                        chkLosers1.IsChecked = true;
-                        chkLosers2.IsChecked = true;
-
-                        if (!isSmashgg)
-                        {
-                            chkLosers1.IsEnabled = false;
-                            chkLosers2.IsEnabled = false;
-                        }
-                    }
-                }
-                else
-                {
-                    chkLosers1.Visibility = Visibility.Hidden;
-                    chkLosers2.Visibility = Visibility.Hidden;
-                }
-
-                cbRound.Margin = roundMargin;
-
-                CheckSaveState();
-            }
-            else
-            {
-                chkLosers1.Visibility = Visibility.Hidden;
-                chkLosers2.Visibility = Visibility.Hidden;
-            }
-        }
-
-        private void P1ScoreUp(object sender, RoutedEventArgs e)
-        {
-            int score1 = int.Parse(lbScore1.Content.ToString());
-
-            if (score1 < 99)
-            {
-                score1++;
-                lbScore1.Content = score1;
-
-                CheckSaveState();
-            }
-        }
-        private void P1ScoreDown(object sender, RoutedEventArgs e)
-        {
-            int score1 = int.Parse(lbScore1.Content.ToString());
-
-            if (score1 > 0)
-            {
-                score1--;
-                lbScore1.Content = score1;
-
-                CheckSaveState();
-            }
-        }
-        private void P2ScoreUp(object sender, RoutedEventArgs e)
-        {
-            int score2 = int.Parse(lbScore2.Content.ToString());
-
-            if (score2 < 99)
-            {
-                score2++;
-                lbScore2.Content = score2;
-
-                CheckSaveState();
-            }
-        }
-        private void P2ScoreDown(object sender, RoutedEventArgs e)
-        {
-            int score2 = int.Parse(lbScore2.Content.ToString());
-
-            if (score2 > 0)
-            {
-                score2--;
-                lbScore2.Content = score2;
-
-                CheckSaveState();
-            }
-        }
-
-
-        private void SwapPlayers(object sender, RoutedEventArgs e)
-        {
-            string auxPlayer = tbPlayer1.Text;
-            tbPlayer1.Text = tbPlayer2.Text;
-            tbPlayer2.Text = auxPlayer;
-
-            if (isDoubles)
-            {
-                string auxTeammate = tbPlayer3.Text;
-                tbPlayer3.Text = tbPlayer4.Text;
-                tbPlayer4.Text = auxTeammate;
-            }
-
-            string auxScore = lbScore1.Content.ToString();
-            lbScore1.Content = lbScore2.Content.ToString();
-            lbScore2.Content = auxScore;
-
-            bool auxChk = chkLosers1.IsChecked.Value;
-            chkLosers1.IsChecked = chkLosers2.IsChecked;
-            chkLosers2.IsChecked = auxChk;
-        }
-
-        private void SwapCasters(object sender, RoutedEventArgs e)
-        {
-            string aux = tbCaster1.Text;
-            tbCaster1.Text = tbCaster2.Text;
-            tbCaster2.Text = aux;
-
-            CheckCasters();
-        }
-
-        private void CheckTextboxes(object sender, TextChangedEventArgs e)
-        {
-            CheckSaveState();
-        }
-
-        private void CheckSaveState()
-        {
-            bool enabled;
-
-            enabled = !string.IsNullOrEmpty(tbPlayer1.Text) && !string.IsNullOrWhiteSpace(tbPlayer1.Text) &&
-                !string.IsNullOrEmpty(tbPlayer2.Text) && !string.IsNullOrWhiteSpace(tbPlayer2.Text);
-
-            if (isDoubles)
-            {
-                enabled &= !string.IsNullOrEmpty(tbPlayer3.Text) && !string.IsNullOrWhiteSpace(tbPlayer3.Text) &&
-                    !string.IsNullOrEmpty(tbPlayer4.Text) && !string.IsNullOrWhiteSpace(tbPlayer4.Text);
-            }
-
-            if (cbRound.SelectedValue != null && cbRound.SelectedValue.ToString().ToLower().Contains("grand"))
-            {
-                if (cbRound.SelectedValue != null && cbRound.SelectedValue.ToString().ToLower().Contains("reset"))
-                    enabled &= chkLosers1.IsChecked.Value && chkLosers2.IsChecked.Value;
-                else
-                    enabled &= chkLosers1.IsChecked.Value || chkLosers2.IsChecked.Value;
-            }
-
-            EnableUpdateButton(btnSave, enabled);
-        }
-
-        private void CheckSaveCasters(object sender, TextChangedEventArgs e)
-        {
-            CheckCasters();
-        }
-
-        private void CheckCasters()
-        {
-            bool c1 = !string.IsNullOrEmpty(tbCaster1.Text) && !string.IsNullOrWhiteSpace(tbCaster1.Text);
-            bool c2 = !string.IsNullOrEmpty(tbCaster2.Text) && !string.IsNullOrWhiteSpace(tbCaster2.Text);
-
-            gridSecondCaster.IsEnabled = c1;
-            EnableUpdateButton(btnSaveCasters, c1);
-            btnSwapCasters.IsEnabled = c2;
-        }
-
-        private void SaveChanges(object sender, RoutedEventArgs e)
-        {
-            File.WriteAllText(outputDir + "event.txt", cbEvent.Text);
-
-            string round = cbRound.SelectedValue.ToString();
-
-            if (roundNum)
-                round += " " + tbRoundNum.Text;
-
-            File.WriteAllText(outputDir + "round.txt", round);
-
-            string p1 = tbPlayer1.Text;
-            string p2 = tbPlayer2.Text;
-
-            if (isDoubles)
-            {
-                p1 += " & " + tbPlayer3.Text;
-                p2 += " & " + tbPlayer4.Text;
-            }
-
-            if (chkLosers1.IsChecked.Value)
-                p1 += " [L]";
-
-            if (chkLosers2.IsChecked.Value)
-                p2 += " [L]";
-
-            File.WriteAllText(outputDir + "player1.txt", p1);
-            File.WriteAllText(outputDir + "player2.txt", p2);
-            File.WriteAllText(outputDir + "match.txt", p1 + " vs " + p2);
-
-            string score1 = lbScore1.Content.ToString();
-            string score2 = lbScore2.Content.ToString();
-
-            File.WriteAllText(outputDir + "score1.txt", score1);
-            File.WriteAllText(outputDir + "score2.txt", score2);
-
-            EnableUpdateButton(btnSave, false);
-        }
-
-        private void SaveCasters(object sender, RoutedEventArgs e)
-        {
-            string c1 = tbCaster1.Text;
-            string c2 = tbCaster2.Text;
-
-            File.WriteAllText(outputDir + "caster1.txt", c1);
-
-            if (!string.IsNullOrEmpty(c2) && !string.IsNullOrWhiteSpace(c2))
-                File.WriteAllText(outputDir + "caster2.txt", c2);
-
-            EnableUpdateButton(btnSaveCasters, false);
-        }
-
-        private void BrowseOutput(object sender, RoutedEventArgs e)
-        {
-            FolderBrowserDialog folder = new FolderBrowserDialog();
-            folder.ShowDialog();
-
-            if (!string.IsNullOrEmpty(folder.SelectedPath))
-            {
-                string path = folder.SelectedPath;
-
-                tbOutputFolder.Text = path;
-            }
-        }
-
-        private void LoadSettings()
-        {
-            if (File.Exists("settings.json"))
-            {
-                string settingsString = File.ReadAllText("settings.json");
-                Settings settings = JsonConvert.DeserializeObject<Settings>(settingsString);
-
-                string outputPath = settings.outputPath;
-                tbOutputFolder.Text = outputPath;
-                outputDir = outputPath + "\\";
-
-                string theme = settings.theme;
-                cbThemes.SelectedValue = theme;
-
-                string obsIp = settings.obsIp;
-
-                if (!string.IsNullOrEmpty(obsIp) && !string.IsNullOrWhiteSpace(obsIp))
-                {
-                    string[] formattedIp = obsIp.Split(':');
-                    string port = formattedIp[1];
-                    string[] ipFields = formattedIp[0].Split('.');
-
-                    tbIp1.Text = ipFields[0];
-                    tbIp2.Text = ipFields[1];
-                    tbIp3.Text = ipFields[2];
-                    tbIp4.Text = ipFields[3];
-
-                    tbPort.Text = port;
-                }
-            }
-        }
-
-        private void SaveSettings(object sender, RoutedEventArgs e)
-        {
-            SaveSettingsFunc();
-
-            ((App)System.Windows.Application.Current).ChangeSkin(cbThemes.SelectedValue.ToString());
-
-            EnableUpdateButton(btnSaveSettings, false);
-        }
-
-        private void SaveSettingsFunc()
-        {
-            Settings newSettings = new Settings
-            {
-                outputPath = tbOutputFolder.Text,
-                theme = cbThemes.SelectedValue.ToString(),
-                obsIp = lastIp
-            };
-
-            string json = JsonConvert.SerializeObject(newSettings);
-            File.WriteAllText("settings.json", json);
-
-            outputDir = newSettings.outputPath + "\\";
-
-            Console.WriteLine("Guardado mano");
-        }
-
-        private void SettingsTextChanged(object sender, TextChangedEventArgs e)
-        {
-            EnableUpdateButton(btnSaveSettings, true);
-        }
-
-        private void cbThemes_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            EnableUpdateButton(btnSaveSettings, true);
-        }
-
-        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            isEditing = false;
-            tbCommandName.Text = "";
-            tbCommandValue.Text = "";
-            btnSaveCommand.Content = "Add";
-        }
-
-        private void EnableBtnApply(object sender, EventArgs e)
-        {
-            btnApplyCommand.IsEnabled = true;
-        }
-
-        private void BtnObsConnection_Click(object sender, RoutedEventArgs e)
-        {
-            btnObsConnection.IsEnabled = false;
-            tabControl.IsEnabled = false;
-            ObsConnect();
-            tabControl.IsEnabled = true;
-            btnObsConnection.IsEnabled = true;
-        }
-
-        private void ObsConnect()
-        {
-            string ip = tbIp1.Text + "." + tbIp2.Text + "." + tbIp3.Text + "." + tbIp4.Text + ":";
-            string url = "ws://" + ip;
-            string port = tbPort.Text;
-            string password = pbPassword.Password;
-
-            try
-            {
-                if (!obsIsConnected)
-                    obs.ConnectAsync(url + port, password);
-                else
-                    obs.Disconnect();
-            }
-            catch (Exception)
-            {
-            }
-        }
-
-        private void SuccessfulConnection()
-        {
-            lblConnection.Content = "Connected";
-            lblConnection.Foreground = new SolidColorBrush(Color.FromRgb(0x00, 0xff, 0x00));
-        }
-
-        private void EditCommand(object sender, RoutedEventArgs e)
-        {
-            EditCommandValues(commands[listCommand.SelectedIndex].name, commands[listCommand.SelectedIndex].value);
-            isEditing = true;
-        }
-
-        private void SaveCommand(string name, string value, bool isEditing)
-        {
-            if (!isEditing)
-            {
-                Command command = new Command
-                {
-                    name = name,
-                    value = value
-                };
-
-                commands.Add(command);
-            }
-            else
-            {
-                Command command = commands[listCommand.SelectedIndex];
-                command.name = name;
-                command.value = value;
-                commands[listCommand.SelectedIndex] = command;
-            }
-            string json = JsonConvert.SerializeObject(commands.ToArray());
-            File.WriteAllText("commands.json", json);
-
-            keys.Clear();
-
-            LoadCommands();
-        }
-
-        private void LoadCommands()
-        {
-            if (File.Exists("commands.json"))
-            {
-                string commandsString = File.ReadAllText("commands.json");
-                commands = JsonConvert.DeserializeObject<Command[]>(commandsString).ToList();
-                listCommand.Items.Clear();
-                foreach (Command c in commands)
-                {
-                    listCommand.Items.Add(c.name);
-                }
-            }
-        }
-
-        private void RemoveCommand(object sender, RoutedEventArgs e)
-        {
-
-            Window message = DisplayMessage("Delete command \"" + listCommand.SelectedValue + "\"?", "check", "yesno");
-            bool dialogResult = (bool)message.ShowDialog();
-
-            if (dialogResult)
-            {
-                commands.Remove(commands[listCommand.SelectedIndex]);
-
-                string json = JsonConvert.SerializeObject(commands.ToArray());
-                File.WriteAllText("commands.json", json);
-                LoadCommands();
-            }
-        }
-
-        private void ListCommand_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            bool enabled = listCommand.SelectedIndex >= 0 && listCommand.Items.Count > 0;
-
-            btnRemoveCommand.IsEnabled = enabled;
-            btnEditCommand.IsEnabled = enabled;
-            btnApplyCommand.IsEnabled = enabled;
-
-            isEditing = false;
-        }
-
-        private void BtnApplyCommand_Click(object sender, RoutedEventArgs e)
-        {
-            char[] separators = { ' ', '+' };
-            string[] keys = commands[listCommand.SelectedIndex].value.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-            string[] modTypes = { "alt", "shift", "control" };
-            bool isModifier;
-
-            JObject o;
-            List<JObject> modifiers = new List<JObject>();
-
-            foreach (string k in keys)
-            {
-                isModifier = false;
-                foreach (string type in modTypes)
-                {
-                    if (k.ToLower().Contains(type))
-                    {
-                        isModifier = true;
-                        JObject m = new JObject();
-                        m.Add(type, true);
-                        modifiers.Add(m);
-                    }
-                }
-
-                if (!isModifier)
-                {
-                    o = new JObject();
-                    o.Add("keyId", "OBS_KEY_" + k);
-                    foreach (JObject mod in modifiers)
-                    {
-                        o.Add("keyModifiers", mod);
-                    }
-                    modifiers.Clear();
-
-                    obs.SendRequest("TriggerHotkeyByKeySequence", o);
-                }
-            }
-        }
-
-        private void TbInfo_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            HighlightInfoButton(!string.IsNullOrEmpty(tbInfo.Text) && !string.IsNullOrWhiteSpace(tbInfo.Text));
-        }
-
-        private void BtnSaveInfo_Click(object sender, RoutedEventArgs e)
-        {
-            File.WriteAllText(outputDir + "info.txt", tbInfo.Text);
-            HighlightInfoButton(false);
-        }
-
-        private void TabControl_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            if (e.ChangedButton == MouseButton.Left)
-                DragMove();
-        }
-
-        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
-        {
-            Window message = DisplayMessage("Close this program?", "check", "yesno");
-
-            e.Cancel = !(bool)message.ShowDialog();
-        }
-
-        private void EnableUpdateButton(System.Windows.Controls.Button target, bool enabled)
-        {
-            target.IsEnabled = enabled;
-        }
-
-        private void HighlightInfoButton(bool highlight)
-        {
-            btnSaveInfo.IsEnabled = highlight;
-        }
-
-        private void BtnManual_Click(object sender, RoutedEventArgs e)
-        {
-            InitializeManual();
-            gridStart.Visibility = Visibility.Hidden;
-            tabControl.Visibility = Visibility.Visible;
-        }
-
-        private void BtnSmashGG_Click(object sender, RoutedEventArgs e)
-        {
-            DoShowUrl();
-        }
-
-        private void DoShowUrl()
-        {
-            listTournaments.IsDropDownOpen = false;
-            tbSearch.Text = "";
-
-            showUrl = !showUrl;
-            Thickness margin = gridStart.Margin;
-
-            if (showUrl)
-            {
-                gridStart.Height = 216;
-                gridUrl.Visibility = Visibility.Visible;
-                btnSmashGG.Content = Resources["smashGGButtonCancel"];
-                btnSmashGG.Width = 32;
-                btnManual.Visibility = Visibility.Hidden;
-            }
-            else
-            {
-                gridStart.Height = 32;
-                gridUrl.Visibility = Visibility.Hidden;
-                btnSmashGG.Content = Resources["smashGGButtonConnect"];
-                btnSmashGG.Width = 190;
-                btnManual.Visibility = Visibility.Visible;
-            }
-
-            gridStart.Margin = margin;
-
-            margin = roundGrid.Margin;
-            margin.Top = 56;
-            roundGrid.Margin = margin;
-        }
-
-        private void BtnBack_Click(object sender, RoutedEventArgs e)
-        {
-            Window message = DisplayMessage("Go back to the main menu?", "check", "yesno");
-
-            bool dialogResult = (bool)message.ShowDialog();
-
-            if (dialogResult)
-            {
-                tabControl.Visibility = Visibility.Hidden;
-                gridStart.Visibility = Visibility.Visible;
-                btnRefresh.Visibility = Visibility.Hidden;
-
-                if (isSmashgg)
-                    ClearSelectiveFields("P");
-
-                LoadTournamentFile();
-                cbTournaments.SelectedIndex = 0;
-                tbSearch.Text = "";
-
-                if (isSmashgg)
-                    Title = "Stream Scoreboard";
-            }
-        }
-
-        private async void LoadTournament(string slug)
-        {
-            try
-            {
-                GraphQLRequest request = new GraphQLRequest
-                {
-                    Query = @"
-                        query TournamentQuery($slug: String) {
-		                    tournament(slug: $slug){
-                                name
-                                state
-			                    events {
-				                    id
-				                    name
-			                    }
-		                    }
-	                    }",
-                    Variables = new
-                    {
-                        slug = slug
-                    }
-                };
-
-                var response = await client.SendQueryAsync(request, () => new { Tournament = new Tournament() });
-
-                if (response.Data.Tournament == null)
-                {
-                    DisplayMessage("Tournament not found. Check the url and try again", "x", "ok");
-                    return;
-                }
-
-                if (response.Data.Tournament.events != null)
-                {
-                    if (response.Data.Tournament.state < 1 && response.Data.Tournament.state > 4 || response.Data.Tournament.state == 3)
-                    {
-                        Window message = DisplayMessage(response.Data.Tournament.name + " is unavailable or already over. Please check your tournament information.", "info", "ok");
-                        message.ShowDialog();
-                        return;
-                    }
-
-                    localEvents.Clear();
-                    cbEvent.Items.Clear();
-
-                    Title = "Stream Scoreboard - " + response.Data.Tournament.name;
-
-                    foreach (Event ev in response.Data.Tournament.events)
-                    {
-                        localEvents.Add(ev);
-                        cbEvent.Items.Add(ev.name);
-                    }
-
-                    gridStart.Visibility = Visibility.Hidden;
-                    tabControl.Visibility = Visibility.Visible;
-                    gridSmashGG.Visibility = Visibility.Visible;
-
-                    AddTournamentToFile(slug, response.Data.Tournament.name);
-
-                    if (localEvents.Count > 1)
-                    {
-                        localEvents.Insert(0, null);
-                        cbEvent.Items.Insert(0, "Select an event...");
-                        cbEvent.IsEnabled = true;
-                    }
-
-                    cbEvent.SelectedIndex = 0;
-                    tbSearch.Text = "";
-                    DoShowUrl();
-
-                    return;
-                }
-
-                DisplayMessage("An error ocurred while getting the tournament events. Please try again", "x", "ok");
-            }
-            catch (Exception)
-            {
             }
         }
 
@@ -1102,7 +1028,6 @@ namespace Scoreboard
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e);
                 }
             }
 
@@ -1175,71 +1100,6 @@ namespace Scoreboard
         private void CbPhaseGroup_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             LoadSets();
-        }
-
-        private void CbSet_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (cbSet.SelectedIndex >= 0 && !cbSet.SelectedValue.ToString().Contains("..."))
-            {
-                if (localSets.Count > 1 && cbSet.Items[0].ToString().Contains("..."))
-                {
-                    cbSet.Items.Remove(cbSet.Items[0]);
-                    localSets.RemoveAt(0);
-                }
-
-                cbRound.Items.Clear();
-                tbRoundNum.Text = "";
-
-                string[] setText = cbSet.SelectedValue.ToString().Split(new string[] { " vs " }, StringSplitOptions.None);
-                if (!isDoubles)
-                {
-                    tbPlayer1.Text = setText[0];
-                    tbPlayer2.Text = setText[1];
-
-                }
-                else
-                {
-                    string[] team1 = setText[0].Split(new string[] { " / " }, StringSplitOptions.None);
-                    string[] team2 = setText[1].Split(new string[] { " / " }, StringSplitOptions.None);
-
-                    tbPlayer1.Text = team1[0];
-                    tbPlayer2.Text = team2[0];
-                    tbPlayer3.Text = team1[1];
-                    tbPlayer4.Text = team2[1];
-                }
-
-                string round = localSets[cbSet.SelectedIndex].fullRoundText;
-
-                string[] roundWords = round.Split(' ');
-
-                int threshold = roundWords.Length;
-
-                if (int.TryParse(roundWords[roundWords.Length - 1], out int value))
-                {
-                    tbRoundNum.Text = value.ToString();
-                    threshold--;
-                }
-
-                string output = "";
-
-                for (int i = 0; i < threshold; i++)
-                {
-                    string s = roundWords[i];
-
-                    if (s.Contains("-Final"))
-                        output += s.Replace("-Final", "s");
-                    else if (s.Contains("Final"))
-                        output += s + "s";
-                    else
-                        output += s;
-
-                    if (i < threshold - 1)
-                        output += " ";
-                }
-
-                cbRound.Items.Add(output);
-                cbRound.SelectedIndex = 0;
-            }
         }
 
         private async void LoadSets()
@@ -1317,6 +1177,668 @@ namespace Scoreboard
             tabControl.IsEnabled = true;
         }
 
+        private void CbSet_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cbSet.SelectedIndex >= 0 && !cbSet.SelectedValue.ToString().Contains("..."))
+            {
+                if (localSets.Count > 1 && cbSet.Items[0].ToString().Contains("..."))
+                {
+                    cbSet.Items.Remove(cbSet.Items[0]);
+                    localSets.RemoveAt(0);
+                }
+
+                cbRound.Items.Clear();
+                tbRoundNum.Text = "";
+
+                string[] setText = cbSet.SelectedValue.ToString().Split(new string[] { " vs " }, StringSplitOptions.None);
+                if (!isDoubles)
+                {
+                    tbPlayer1.Text = setText[0];
+                    tbPlayer2.Text = setText[1];
+
+                }
+                else
+                {
+                    string[] team1 = setText[0].Split(new string[] { " / " }, StringSplitOptions.None);
+                    string[] team2 = setText[1].Split(new string[] { " / " }, StringSplitOptions.None);
+
+                    tbPlayer1.Text = team1[0];
+                    tbPlayer2.Text = team2[0];
+                    tbPlayer3.Text = team1[1];
+                    tbPlayer4.Text = team2[1];
+                }
+
+                string round = localSets[cbSet.SelectedIndex].fullRoundText;
+
+                string[] roundWords = round.Split(' ');
+
+                int threshold = roundWords.Length;
+
+                if (int.TryParse(roundWords[roundWords.Length - 1], out int value))
+                {
+                    tbRoundNum.Text = value.ToString();
+                    threshold--;
+                }
+
+                string output = "";
+
+                for (int i = 0; i < threshold; i++)
+                {
+                    string s = roundWords[i];
+
+                    if (s.Contains("-Final"))
+                        output += s.Replace("-Final", "s");
+                    else if (s.Contains("Final"))
+                        output += s + "s";
+                    else
+                        output += s;
+
+                    if (i < threshold - 1)
+                        output += " ";
+                }
+
+                cbRound.Items.Add(output);
+                cbRound.SelectedIndex = 0;
+            }
+        }
+
+        private void btnRefresh_Click(object sender, RoutedEventArgs e)
+        {
+            tabControl.IsEnabled = false;
+            LoadSets();
+        }
+
+        private void CbRound_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            if (cbRound.SelectedIndex >= 0)
+            {
+                chkLosers1.IsChecked = false;
+                chkLosers2.IsChecked = false;
+
+                Thickness roundMargin = cbRound.Margin;
+                if (cbRound.SelectedValue.ToString().ToLower().Contains("round"))
+                {
+                    tbRoundNum.Visibility = Visibility.Visible;
+                    cbRound.Width = 152;
+                    roundMargin.Right = 28;
+                    roundNum = true;
+                }
+                else
+                {
+                    tbRoundNum.Visibility = Visibility.Collapsed;
+                    cbRound.Width = 180;
+                    roundMargin.Right = 0;
+                    roundNum = false;
+                }
+
+                if (cbRound.SelectedValue.ToString().ToLower().Contains("grand"))
+                {
+                    chkLosers1.Visibility = Visibility.Visible;
+                    chkLosers2.Visibility = Visibility.Visible;
+
+                    if (isSmashgg)
+                    {
+                        chkLosers2.IsChecked = false;
+                        chkLosers2.IsChecked = true;
+                    }
+
+                    if (cbRound.SelectedValue.ToString().ToLower().Contains("reset"))
+                    {
+                        chkLosers1.IsChecked = true;
+                        chkLosers2.IsChecked = true;
+                    }
+
+                    chkLosers1.IsEnabled = !isSmashgg;
+                    chkLosers2.IsEnabled = !isSmashgg;
+                }
+                else
+                {
+                    chkLosers1.Visibility = Visibility.Hidden;
+                    chkLosers2.Visibility = Visibility.Hidden;
+                }
+
+                cbRound.Margin = roundMargin;
+
+                CheckSaveState();
+            }
+            else
+            {
+                chkLosers1.Visibility = Visibility.Hidden;
+                chkLosers2.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private void P1ScoreUp(object sender, RoutedEventArgs e)
+        {
+            int score1 = int.Parse(lbScore1.Content.ToString());
+
+            if (score1 < 99)
+            {
+                score1++;
+                lbScore1.Content = score1;
+
+                CheckSaveState();
+            }
+        }
+        private void P1ScoreDown(object sender, RoutedEventArgs e)
+        {
+            int score1 = int.Parse(lbScore1.Content.ToString());
+
+            if (score1 > 0)
+            {
+                score1--;
+                lbScore1.Content = score1;
+
+                CheckSaveState();
+            }
+        }
+        private void P2ScoreUp(object sender, RoutedEventArgs e)
+        {
+            int score2 = int.Parse(lbScore2.Content.ToString());
+
+            if (score2 < 99)
+            {
+                score2++;
+                lbScore2.Content = score2;
+
+                CheckSaveState();
+            }
+        }
+
+        private void P2ScoreDown(object sender, RoutedEventArgs e)
+        {
+            int score2 = int.Parse(lbScore2.Content.ToString());
+
+            if (score2 > 0)
+            {
+                score2--;
+                lbScore2.Content = score2;
+
+                CheckSaveState();
+            }
+        }
+
+        private void CheckTextboxes(object sender, TextChangedEventArgs e)
+        {
+            CheckSaveState();
+        }
+
+        private void chkLosers1_Checked(object sender, RoutedEventArgs e)
+        {
+            CheckSaveState();
+        }
+
+        private void chkLosers1_Unchecked(object sender, RoutedEventArgs e)
+        {
+            CheckSaveState();
+        }
+
+        private void chkLosers2_Checked(object sender, RoutedEventArgs e)
+        {
+            CheckSaveState();
+        }
+
+        private void chkLosers2_Unchecked(object sender, RoutedEventArgs e)
+        {
+            CheckSaveState();
+        }
+
+        private void CheckSaveState()
+        {
+            bool enabled;
+
+            enabled = !string.IsNullOrEmpty(tbPlayer1.Text) && !string.IsNullOrWhiteSpace(tbPlayer1.Text) &&
+                !string.IsNullOrEmpty(tbPlayer2.Text) && !string.IsNullOrWhiteSpace(tbPlayer2.Text);
+
+            if (isDoubles)
+            {
+                enabled &= !string.IsNullOrEmpty(tbPlayer3.Text) && !string.IsNullOrWhiteSpace(tbPlayer3.Text) &&
+                    !string.IsNullOrEmpty(tbPlayer4.Text) && !string.IsNullOrWhiteSpace(tbPlayer4.Text);
+            }
+
+            if (cbRound.SelectedValue != null && cbRound.SelectedValue.ToString().ToLower().Contains("grand"))
+            {
+                if (cbRound.SelectedValue != null && cbRound.SelectedValue.ToString().ToLower().Contains("reset"))
+                    enabled &= chkLosers1.IsChecked.Value && chkLosers2.IsChecked.Value;
+                else
+                    enabled &= chkLosers1.IsChecked.Value || chkLosers2.IsChecked.Value;
+            }
+
+            EnableUpdateButton(btnSave, enabled);
+        }
+
+        private void SwapPlayers(object sender, RoutedEventArgs e)
+        {
+            string auxPlayer = tbPlayer1.Text;
+            tbPlayer1.Text = tbPlayer2.Text;
+            tbPlayer2.Text = auxPlayer;
+
+            if (isDoubles)
+            {
+                string auxTeammate = tbPlayer3.Text;
+                tbPlayer3.Text = tbPlayer4.Text;
+                tbPlayer4.Text = auxTeammate;
+            }
+
+            string auxScore = lbScore1.Content.ToString();
+            lbScore1.Content = lbScore2.Content.ToString();
+            lbScore2.Content = auxScore;
+
+            bool auxChk = chkLosers1.IsChecked.Value;
+            chkLosers1.IsChecked = chkLosers2.IsChecked;
+            chkLosers2.IsChecked = auxChk;
+        }
+
+        private void SaveChanges(object sender, RoutedEventArgs e)
+        {
+            File.WriteAllText(outputDir + "event.txt", cbEvent.Text);
+
+            string round = cbRound.SelectedValue.ToString();
+
+            if (roundNum)
+                round += " " + tbRoundNum.Text;
+
+            File.WriteAllText(outputDir + "round.txt", round);
+
+            string p1 = tbPlayer1.Text;
+            string p2 = tbPlayer2.Text;
+
+            if (isDoubles)
+            {
+                p1 += " & " + tbPlayer3.Text;
+                p2 += " & " + tbPlayer4.Text;
+            }
+
+            if (chkLosers1.IsChecked.Value)
+                p1 += " [L]";
+
+            if (chkLosers2.IsChecked.Value)
+                p2 += " [L]";
+
+            File.WriteAllText(outputDir + "player1.txt", p1);
+            File.WriteAllText(outputDir + "player2.txt", p2);
+            File.WriteAllText(outputDir + "match.txt", p1 + " vs " + p2);
+
+            string score1 = lbScore1.Content.ToString();
+            string score2 = lbScore2.Content.ToString();
+
+            File.WriteAllText(outputDir + "score1.txt", score1);
+            File.WriteAllText(outputDir + "score2.txt", score2);
+
+            EnableUpdateButton(btnSave, false);
+        }
+
+        private void BtnBack_Click(object sender, RoutedEventArgs e)
+        {
+            Window message = DisplayMessage("Go back to the main menu?", "yesno");
+
+            bool dialogResult = (bool)message.ShowDialog();
+
+            if (dialogResult)
+            {
+                tabControl.Visibility = Visibility.Hidden;
+                gridStart.Visibility = Visibility.Visible;
+                btnRefresh.Visibility = Visibility.Hidden;
+
+                if (isSmashgg)
+                    ClearSelectiveFields("P");
+
+                LoadTournamentFile();
+                cbTournaments.SelectedIndex = 0;
+                tbSearch.Text = "";
+
+                if (isSmashgg)
+                    Title = "Stream Scoreboard";
+            }
+        }
+
+        //Extra functionality
+
+        private void SwapCasters(object sender, RoutedEventArgs e)
+        {
+            string aux = tbCaster1.Text;
+            tbCaster1.Text = tbCaster2.Text;
+            tbCaster2.Text = aux;
+
+            CheckCasters();
+        }
+
+        private void CheckSaveCasters(object sender, TextChangedEventArgs e)
+        {
+            CheckCasters();
+        }
+
+        private void CheckCasters()
+        {
+            bool c1 = !string.IsNullOrEmpty(tbCaster1.Text) && !string.IsNullOrWhiteSpace(tbCaster1.Text);
+            bool c2 = !string.IsNullOrEmpty(tbCaster2.Text) && !string.IsNullOrWhiteSpace(tbCaster2.Text);
+
+            gridSecondCaster.IsEnabled = c1;
+            EnableUpdateButton(btnSaveCasters, c1);
+            btnSwapCasters.IsEnabled = c2;
+        }
+
+
+        private void SaveCasters(object sender, RoutedEventArgs e)
+        {
+            string c1 = tbCaster1.Text;
+            string c2 = tbCaster2.Text;
+
+            File.WriteAllText(outputDir + "caster1.txt", c1);
+
+            if (!string.IsNullOrEmpty(c2) && !string.IsNullOrWhiteSpace(c2))
+                File.WriteAllText(outputDir + "caster2.txt", c2);
+
+            EnableUpdateButton(btnSaveCasters, false);
+        }
+
+        private void TbInfo_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            EnableUpdateButton(btnSaveInfo, !string.IsNullOrEmpty(tbInfo.Text) && !string.IsNullOrWhiteSpace(tbInfo.Text));
+        }
+
+        private void BtnSaveInfo_Click(object sender, RoutedEventArgs e)
+        {
+            File.WriteAllText(outputDir + "info.txt", tbInfo.Text);
+            EnableUpdateButton(btnSaveInfo, false);
+        }
+
+        //OBS Tools Functionality
+
+        private void tbIp_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            checkConnectionInfo();
+        }
+
+        private void pbPassword_PasswordChanged(object sender, RoutedEventArgs e)
+        {
+            checkConnectionInfo();
+        }
+
+        private void checkConnectionInfo()
+        {
+            btnObsConnection.IsEnabled = !string.IsNullOrEmpty(tbIp1.Text) && !string.IsNullOrWhiteSpace(tbIp1.Text) &&
+                                            !string.IsNullOrEmpty(tbIp2.Text) && !string.IsNullOrWhiteSpace(tbIp2.Text) &&
+                                            !string.IsNullOrEmpty(tbIp3.Text) && !string.IsNullOrWhiteSpace(tbIp3.Text) &&
+                                            !string.IsNullOrEmpty(tbIp4.Text) && !string.IsNullOrWhiteSpace(tbIp4.Text) &&
+                                            !string.IsNullOrEmpty(tbPort.Text) && !string.IsNullOrWhiteSpace(tbPort.Text) &&
+                                            !string.IsNullOrEmpty(pbPassword.Password) && !string.IsNullOrWhiteSpace(pbPassword.Password);
+        }
+        private void BtnObsConnection_Click(object sender, RoutedEventArgs e)
+        {
+            btnObsConnection.IsEnabled = false;
+            tabControl.IsEnabled = false;
+            ObsConnect();
+            tabControl.IsEnabled = true;
+            btnObsConnection.IsEnabled = true;
+        }
+
+        private void ObsConnect()
+        {
+            string ip = tbIp1.Text + "." + tbIp2.Text + "." + tbIp3.Text + "." + tbIp4.Text + ":";
+            string url = "ws://" + ip;
+            string port = tbPort.Text;
+            string password = pbPassword.Password;
+
+            try
+            {
+                if (!obsIsConnected)
+                    obs.ConnectAsync(url + port, password);
+                else
+                    obs.Disconnect();
+            }
+            catch (Exception)
+            {
+            }
+        }
+
+        private void SuccessfulConnection()
+        {
+            lblConnection.Content = "Connected";
+            lblConnection.Foreground = new SolidColorBrush(Color.FromRgb(0x00, 0xff, 0x00));
+        }
+
+        private void ListCommand_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            bool enabled = listCommand.SelectedIndex >= 0 && listCommand.Items.Count > 0;
+
+            btnRemoveCommand.IsEnabled = enabled;
+            btnEditCommand.IsEnabled = enabled;
+            btnApplyCommand.IsEnabled = enabled;
+
+            isEditing = false;
+        }
+
+        private void BtnApplyCommand_Click(object sender, RoutedEventArgs e)
+        {
+            char[] separators = { ' ', '+' };
+            string[] keys = commands[listCommand.SelectedIndex].value.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+            string[] modTypes = { "alt", "shift", "control" };
+            bool isModifier;
+
+            JObject o;
+            List<JObject> modifiers = new List<JObject>();
+
+            foreach (string k in keys)
+            {
+                isModifier = false;
+                foreach (string type in modTypes)
+                {
+                    if (k.ToLower().Contains(type))
+                    {
+                        isModifier = true;
+                        JObject m = new JObject();
+                        m.Add(type, true);
+                        modifiers.Add(m);
+                    }
+                }
+
+                if (!isModifier)
+                {
+                    o = new JObject();
+                    o.Add("keyId", "OBS_KEY_" + k);
+                    foreach (JObject mod in modifiers)
+                    {
+                        o.Add("keyModifiers", mod);
+                    }
+                    modifiers.Clear();
+
+                    obs.SendRequest("TriggerHotkeyByKeySequence", o);
+                }
+            }
+        }
+
+        private void EditCommand(object sender, RoutedEventArgs e)
+        {
+            EditCommandValues(commands[listCommand.SelectedIndex].name, commands[listCommand.SelectedIndex].value);
+            isEditing = true;
+        }
+
+        private void EditCommandValues(string name, string value)
+        {
+            tbCommandName.Text = name;
+            tbCommandValue.Text = value;
+
+            char[] separators = { ' ', '+' };
+            string[] values = value.Split(separators, StringSplitOptions.RemoveEmptyEntries);
+
+            foreach (string k in values)
+            {
+                keys.Add(k);
+            }
+
+            btnSaveCommand.Content = "Update";
+        }
+
+        private void RemoveCommand(object sender, RoutedEventArgs e)
+        {
+
+            Window message = DisplayMessage("Delete command \"" + listCommand.SelectedValue + "\"?", "yesno");
+            bool dialogResult = (bool)message.ShowDialog();
+
+            if (dialogResult)
+            {
+                commands.Remove(commands[listCommand.SelectedIndex]);
+
+                string json = JsonConvert.SerializeObject(commands.ToArray());
+                File.WriteAllText("commands.json", json);
+                LoadCommands();
+            }
+        }
+
+        private void tbCommandName_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            CheckTextboxes();
+        }
+
+        private void tbCommandValue_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            CheckTextboxes();
+        }
+
+        private void CheckTextboxes()
+        {
+            bool hasName = !string.IsNullOrEmpty(tbCommandName.Text) && !string.IsNullOrWhiteSpace(tbCommandName.Text);
+            bool hasValue = !string.IsNullOrEmpty(tbCommandValue.Text) && !string.IsNullOrWhiteSpace(tbCommandValue.Text);
+
+            btnSaveCommand.IsEnabled = hasName && hasValue;
+        }
+
+
+        private void tbCommandValue_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            if (!IsAcceptedKey(e.Key))
+
+                e.Handled = true;
+
+            else if (e.Key == Key.Back)
+            {
+                e.Handled = true;
+
+                if (keys.Count > 0)
+                    keys.Remove(keys[keys.Count - 1]);
+
+                UpdateCommandValue();
+            }
+        }
+
+        private bool IsAcceptedKey(Key key)
+        {
+            int code = (int)key;
+            return (code >= 34 && code <= 69) || (code >= 90 && code <= 101)
+                || (code >= 116 && code <= 119) || code == 156 || code == 2;
+        }
+
+        private bool ListContainsPrimaryKey()
+        {
+            foreach (string key in keys)
+            {
+                if (key != "Control" && key != "Alt" && key != "Shift")
+                    return true;
+            }
+
+            return false;
+        }
+
+        private bool IsModifier(string key)
+        {
+            return key == "Alt" || key == "Shift" || key == "Control";
+        }
+
+        private void UpdateCommandValue()
+        {
+            tbCommandValue.Text = "";
+
+            foreach (string key in keys)
+            {
+                tbCommandValue.Text += key;
+
+                if (keys.IndexOf(key) != keys.Count - 1)
+                    tbCommandValue.Text += " + ";
+            }
+
+            tbCommandValue.SelectionStart = tbCommandValue.Text.Length;
+        }
+
+        private void tbCommandValue_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        {
+            e.Handled = true;
+
+            string keyString;
+
+            if (IsAcceptedKey(e.Key))
+            {
+                string keyValue = e.Key.ToString();
+
+                if (keyValue.ToLower().Contains("system"))
+                    keyString = "Alt";
+                else if (keyValue.ToLower().Contains("ctrl"))
+                    keyString = "Control";
+                else if (keyValue.ToLower().Contains("shift"))
+                    keyString = "Shift";
+                else if (int.TryParse(keyValue.Replace("D", string.Empty), out int value))
+                {
+                    keyString = value.ToString();
+                }
+                else
+                    keyString = e.Key.ToString();
+
+
+                if (!ListContainsPrimaryKey())
+                {
+                    if (IsModifier(keyString))
+                    {
+                        if (keys.IndexOf(keyString) < 0)
+                            keys.Add(keyString);
+                    }
+                    else
+                    {
+                        keys.Add(keyString);
+                    }
+
+                    UpdateCommandValue();
+                }
+
+            }
+        }
+
+        private void SaveCommand(object sender, RoutedEventArgs e)
+        {
+            SaveCommand(tbCommandName.Text, tbCommandValue.Text, isEditing);
+            tbCommandName.Text = "";
+            tbCommandValue.Text = "";
+            btnSaveCommand.Content = "Add";
+        }
+
+        private void SaveCommand(string name, string value, bool isEditing)
+        {
+            if (!isEditing)
+            {
+                Command command = new Command
+                {
+                    name = name,
+                    value = value
+                };
+
+                commands.Add(command);
+            }
+            else
+            {
+                Command command = commands[listCommand.SelectedIndex];
+                command.name = name;
+                command.value = value;
+                commands[listCommand.SelectedIndex] = command;
+            }
+            string json = JsonConvert.SerializeObject(commands.ToArray());
+            File.WriteAllText("commands.json", json);
+
+            keys.Clear();
+
+            LoadCommands();
+        }
+
+        //Additional functions
+
         private void ClearSelectiveFields(string fieldsToChange)
         {
             cbRound.Items.Clear();
@@ -1370,300 +1892,62 @@ namespace Scoreboard
             }
         }
 
-        private void SaveCommand(object sender, RoutedEventArgs e)
+        private void ClearFields()
         {
-            SaveCommand(tbCommandName.Text, tbCommandValue.Text, isEditing);
-            tbCommandName.Text = "";
-            tbCommandValue.Text = "";
-            btnSaveCommand.Content = "Add";
+            cbEvent.Items.Clear();
+            localEvents.Clear();
+
+            cbPhase.Items.Clear();
+            localPhases.Clear();
+
+            cbRound.Items.Clear();
+
+            tbPlayer1.Text = "";
+            tbPlayer2.Text = "";
+            tbPlayer3.Text = "";
+            tbPlayer4.Text = "";
+
+            lbScore1.Content = "0";
+            lbScore2.Content = "0";
         }
 
-        private void tbCommandValue_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
+        private string RemoveExtraWhiteSpace(string entry)
         {
-            e.Handled = true;
+            string result = "";
+            List<char> chars = entry.ToCharArray().ToList();
+            bool isSpace = false;
 
-            string keyString;
-
-            if (IsAcceptedKey(e.Key))
+            foreach(char c in chars)
             {
-                string keyValue = e.Key.ToString();
-
-                if (keyValue.ToLower().Contains("system"))
-                    keyString = "Alt";
-                else if (keyValue.ToLower().Contains("ctrl"))
-                    keyString = "Control";
-                else if (keyValue.ToLower().Contains("shift"))
-                    keyString = "Shift";
-                else if (int.TryParse(keyValue.Replace("D", string.Empty), out int value))
+                if (c == ' ')
                 {
-                    keyString = value.ToString();
+                    if (!isSpace)
+                        result += c;
+
+                    isSpace = true;
                 }
                 else
-                    keyString = e.Key.ToString();
-
-
-                if (!ListContainsPrimaryKey())
                 {
-                    if (IsModifier(keyString))
-                    {
-                        if (keys.IndexOf(keyString) < 0)
-                            keys.Add(keyString);
-                    }
-                    else
-                    {
-                        keys.Add(keyString);
-                    }
-
-                    UpdateCommandValue();
+                    isSpace = false;
+                    result += c;
                 }
-
-            }
-        }
-
-        private void tbCommandValue_PreviewKeyDown(object sender, System.Windows.Input.KeyEventArgs e)
-        {
-            if (!IsAcceptedKey(e.Key))
-
-                e.Handled = true;
-
-            else if (e.Key == Key.Back)
-            {
-                e.Handled = true;
-
-                if (keys.Count > 0)
-                    keys.Remove(keys[keys.Count - 1]);
-
-                UpdateCommandValue();
-            }
-        }
-
-        private bool IsAcceptedKey(Key key)
-        {
-            int code = (int)key;
-            return (code >= 34 && code <= 69) || (code >= 90 && code <= 101)
-                || (code >= 116 && code <= 119) || code == 156 || code == 2;
-        }
-
-        private bool IsModifier(string key)
-        {
-            return key == "Alt" || key == "Shift" || key == "Control";
-        }
-
-        private bool ListContainsPrimaryKey()
-        {
-            foreach (string key in keys)
-            {
-                if (key != "Control" && key != "Alt" && key != "Shift")
-                    return true;
             }
 
-            return false;
+            return result;
         }
 
-        private void UpdateCommandValue()
+        private void EnableUpdateButton(System.Windows.Controls.Button target, bool enabled)
         {
-            tbCommandValue.Text = "";
-
-            foreach (string key in keys)
-            {
-                tbCommandValue.Text += key;
-
-                if (keys.IndexOf(key) != keys.Count - 1)
-                    tbCommandValue.Text += " + ";
-            }
-
-            tbCommandValue.SelectionStart = tbCommandValue.Text.Length;
+            target.IsEnabled = enabled;
         }
 
-        private void tbCommandName_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            CheckTextboxes();
-        }
-
-        private void tbCommandValue_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            CheckTextboxes();
-        }
-
-        private void CheckTextboxes()
-        {
-            bool hasName = !string.IsNullOrEmpty(tbCommandName.Text) && !string.IsNullOrWhiteSpace(tbCommandName.Text);
-            bool hasValue = !string.IsNullOrEmpty(tbCommandValue.Text) && !string.IsNullOrWhiteSpace(tbCommandValue.Text);
-
-            btnSaveCommand.IsEnabled = hasName && hasValue;
-        }
-
-        private void EditCommandValues(string name, string value)
-        {
-            tbCommandName.Text = name;
-            tbCommandValue.Text = value;
-
-            char[] separators = { ' ', '+' };
-            string[] values = value.Split(separators, StringSplitOptions.RemoveEmptyEntries);
-
-            foreach (string k in values)
-            {
-                keys.Add(k);
-            }
-
-            btnSaveCommand.Content = "Update";
-        }
-
-        private void btnRefresh_Click(object sender, RoutedEventArgs e)
-        {
-            tabControl.IsEnabled = false;
-            LoadSets();
-        }
 
         private void Hyperlink_RequestNavigate(object sender, RequestNavigateEventArgs e)
         {
             Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
             e.Handled = true;
         }
-
-        private void LoadTournamentFile()
-        {
-            string tournamentFile = "tournaments.json";
-
-            if (File.Exists(tournamentFile))
-            {
-                string tournamentsString = File.ReadAllText(tournamentFile);
-                TournamentItem[] tournamentItems = JsonConvert.DeserializeObject<TournamentItem[]>(tournamentsString);
-
-                localTournaments.Clear();
-                cbTournaments.Items.Clear();
-
-                for (int i = 0; i < tournamentItems.Length; i++)
-                {
-                    TournamentItem t = tournamentItems[i];
-
-                    ComboBoxItem item = new ComboBoxItem();
-                    item.Content = t.name;
-                    item.Tag = i + 1;
-                    localTournaments.Add(t);
-                    cbTournaments.Items.Add(item);
-                }
-
-            }
-
-            ComboBoxItem firstItem = new ComboBoxItem();
-
-            if (cbTournaments.Items.Count > 0 && !cbTournaments.Items[0].ToString().Contains("recent"))
-            {
-                firstItem.Content = "Select a tournament...";
-                firstItem.Tag = "0";
-                cbTournaments.Items.Insert(0, firstItem);
-                cbTournaments.IsEnabled = true;
-            }
-            else
-            {
-                firstItem.Content = "No recent tournaments";
-                firstItem.Tag = "0";
-                cbTournaments.Items.Add(firstItem);
-            }
-
-            localTournaments.Insert(0, null);
-        }
-
-        private void AddTournamentToFile(string slug, string name)
-        {
-            TournamentItem t = new TournamentItem()
-            {
-                name = name,
-                slug = slug
-            };
-
-            if (localTournaments.Count == 1)
-            {
-                cbTournaments.Items.RemoveAt(0);
-                cbTournaments.Items.Add("Select a tournament...");
-            }
-
-            int index = TournamentExists(slug);
-
-            if (index < 1)
-            {
-                localTournaments.Insert(1, t);
-                cbTournaments.Items.Insert(1, t.name);
-            }
-            else
-            {
-                localTournaments.RemoveAt(index);
-                localTournaments.Insert(1, t);
-
-                cbTournaments.Items.RemoveAt(index);
-                cbTournaments.Items.Insert(1, t.name);
-            }
-
-            TournamentItem[] actualTournaments = new ArraySegment<TournamentItem>(localTournaments.ToArray(), 1, localTournaments.Count - 1).ToArray();
-            string json = JsonConvert.SerializeObject(actualTournaments);
-            File.WriteAllText("tournaments.json", json);
-        }
-
-        private void cbTournaments_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (cbTournaments.SelectedIndex >= 1)
-            {
-                tbSearch.Text = "";
-            }
-
-            btnSubmitUrl.IsEnabled = true;
-        }
-
-        private int TournamentExists(string slug)
-        {
-            for (int i = 1; i < localTournaments.Count; i++)
-            {
-                TournamentItem t = localTournaments[i];
-                if (t != null && t.slug == slug)
-                    return i;
-            }
-
-            return -1;
-        }
-
-        private void DeleteTournamentButton_Click(object sender, RoutedEventArgs e)
-        {
-            DependencyObject parent = FindParent(sender as DependencyObject);
-
-            int index = int.Parse(((ComboBoxItem)parent).Tag.ToString());
-
-            Window message = DisplayMessage("Delete tournament \"" + ((ComboBoxItem)cbTournaments.Items[index]).Content + "\"?", "check", "yesno");
-            bool dialogResult = (bool)message.ShowDialog();
-
-            if (dialogResult)
-            {
-
-                if (cbTournaments.SelectedIndex == index)
-                {
-                    cbTournaments.SelectedIndex = 0;
-                    tbSearch.Text = "";
-                }
-
-                cbTournaments.Items.RemoveAt(index);
-                localTournaments.RemoveAt(index);
-
-                UpdateTournamentTags();
-
-                if (localTournaments.Count < 2)
-                {
-                    cbTournaments.Items[0] = "No recent tournaments";
-                    cbTournaments.SelectedIndex = 0;
-                    cbTournaments.IsEnabled = false;
-                }
-
-                TournamentItem[] actualTournaments = new ArraySegment<TournamentItem>(localTournaments.ToArray(), 1, localTournaments.Count - 1).ToArray();
-                string json = JsonConvert.SerializeObject(actualTournaments);
-                File.WriteAllText("tournaments.json", json);
-            }
-        }
-
-        private void UpdateTournamentTags()
-        {
-            for (int i = 1; i < cbTournaments.Items.Count; i++)
-                ((ComboBoxItem)cbTournaments.Items[i]).Tag = i;
-        }
-
+        
         private DependencyObject FindParent(DependencyObject child)
         {
             DependencyObject parent = VisualTreeHelper.GetParent(child);
@@ -1674,41 +1958,21 @@ namespace Scoreboard
                 return FindParent(parent);
         }
 
-        private void chkLosers1_Checked(object sender, RoutedEventArgs e)
+        
+        private Window DisplayMessage(string text, string windowType)
         {
-            CheckSaveState();
-        }
-
-        private void chkLosers1_Unchecked(object sender, RoutedEventArgs e)
-        {
-            CheckSaveState();
-        }
-
-        private void chkLosers2_Checked(object sender, RoutedEventArgs e)
-        {
-            CheckSaveState();
-        }
-
-        private void chkLosers2_Unchecked(object sender, RoutedEventArgs e)
-        {
-            CheckSaveState();
-        }
-
-        private Window DisplayMessage(string text, string messageType, string windowType)
-        {
-            Message message = new Message(text, messageType, windowType);
+            Message message = new Message(text, windowType);
             message.Owner = this;
 
             return message;
         }
 
-        private void initializeThemes()
+        private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            string[] themes = Directory.GetFiles(@"../../Skins/");
-            foreach (string t in themes)
-            {
-                cbThemes.Items.Add(Path.GetFileName(t).Replace(".xaml", ""));
-            }
+            isEditing = false;
+            tbCommandName.Text = "";
+            tbCommandValue.Text = "";
+            btnSaveCommand.Content = "Add";
         }
 
         private void tbOnlyNumbers_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -1743,53 +2007,25 @@ namespace Scoreboard
             }
         }
 
-        private void checkConnectionInfo()
-        {
-            btnObsConnection.IsEnabled = !string.IsNullOrEmpty(tbIp1.Text) && !string.IsNullOrWhiteSpace(tbIp1.Text) &&
-                                            !string.IsNullOrEmpty(tbIp2.Text) && !string.IsNullOrWhiteSpace(tbIp2.Text) &&
-                                            !string.IsNullOrEmpty(tbIp3.Text) && !string.IsNullOrWhiteSpace(tbIp3.Text) &&
-                                            !string.IsNullOrEmpty(tbIp4.Text) && !string.IsNullOrWhiteSpace(tbIp4.Text) &&
-                                            !string.IsNullOrEmpty(tbPort.Text) && !string.IsNullOrWhiteSpace(tbPort.Text) &&
-                                            !string.IsNullOrEmpty(pbPassword.Password) && !string.IsNullOrWhiteSpace(pbPassword.Password);
-        }
-
-        private void tbIp_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            checkConnectionInfo();
-        }
-
-        private void pbPassword_PasswordChanged(object sender, RoutedEventArgs e)
-        {
-            checkConnectionInfo();
-        }
-
-        private void Window_TouchMove(object sender, TouchEventArgs e)
-        {
-            listTournaments.IsDropDownOpen = false;
-        }
-
         private void Window_Deactivated(object sender, EventArgs e)
         {
             listTournaments.IsDropDownOpen = false;
 
         }
 
-        private void listTournaments_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if (listTournaments.Items.Count > 0)
-            {
-                search = false;
-                tbSearch.Text = listTournaments.SelectedValue.ToString();
-
-                btnSubmitUrl.IsEnabled = true;
-                listTournaments.ItemsSource = null;
-                search = true;
-            }
-        }
-
         private void Window_LocationChanged(object sender, EventArgs e)
         {
-            listTournaments.IsDropDownOpen = false;
+            if ((System.Windows.Forms.Control.MouseButtons & MouseButtons.Left) != 0)
+                listTournaments.IsDropDownOpen = false;
+            else
+                listTournaments.IsDropDownOpen = true;
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Window message = DisplayMessage("Close this program?", "yesno");
+
+            e.Cancel = !(bool)message.ShowDialog();
         }
     }
 }

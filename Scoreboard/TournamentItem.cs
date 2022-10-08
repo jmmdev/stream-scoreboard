@@ -8,7 +8,7 @@ namespace Scoreboard
 {
     class TournamentItem
     {
-        public string slug { get; set; }
+        public string id { get; set; }
         public string name { get; set; }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Scoreboard
 {
-    class SetConnection
+    public class SetConnection
     {
         public List<Set> nodes { get; set; }
     }
