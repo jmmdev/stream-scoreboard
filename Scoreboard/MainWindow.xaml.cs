@@ -70,12 +70,9 @@ namespace Scoreboard
             cbTournaments.SelectedIndex = 0;
 
             LoadSettings();
-
-            client.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", myToken);
-
             LoadCommands();
 
-            EnableUpdateButton(btnSaveSettings, false);
+            EnableUpdateButton(btnSaveExitSettings, false);
 
             obs = new OBSWebsocket();
 
@@ -123,32 +120,35 @@ namespace Scoreboard
 
 
             InitializeThemes();
-            btnSaveSettings.IsEnabled = false;
+
+            EnableUpdateButton(btnSaveExitSettings, false);
         }
 
         private void LoadTournamentFile()
         {
-            string tournamentFile = "tournaments.json";
+            string tournamentFile = AppDomain.CurrentDomain.BaseDirectory + "tournaments.json";
 
             if (File.Exists(tournamentFile))
             {
                 string tournamentsString = File.ReadAllText(tournamentFile);
                 TournamentItem[] tournamentItems = JsonConvert.DeserializeObject<TournamentItem[]>(tournamentsString);
 
-                localTournaments.Clear();
-                cbTournaments.Items.Clear();
-
-                for (int i = 0; i < tournamentItems.Length; i++)
+                if (tournamentItems.Length > 0)
                 {
-                    TournamentItem t = tournamentItems[i];
+                    localTournaments.Clear();
+                    cbTournaments.Items.Clear();
 
-                    ComboBoxItem item = new ComboBoxItem();
-                    item.Content = t.name;
-                    item.Tag = i + 1;
-                    localTournaments.Add(t);
-                    cbTournaments.Items.Add(item);
+                    for (int i = 0; i < tournamentItems.Length; i++)
+                    {
+                        TournamentItem t = tournamentItems[i];
+
+                        ComboBoxItem item = new ComboBoxItem();
+                        item.Content = t.name;
+                        item.Tag = i + 1;
+                        localTournaments.Add(t);
+                        cbTournaments.Items.Add(item);
+                    }
                 }
-
             }
 
             ComboBoxItem firstItem = new ComboBoxItem();
@@ -172,9 +172,9 @@ namespace Scoreboard
 
         private void LoadSettings()
         {
-            if (File.Exists("settings.json"))
+            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "settings.json"))
             {
-                string settingsString = File.ReadAllText("settings.json");
+                string settingsString = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "settings.json");
                 Settings settings = JsonConvert.DeserializeObject<Settings>(settingsString);
 
                 string outputPath = settings.outputPath;
@@ -188,6 +188,8 @@ namespace Scoreboard
                 myToken = apiToken;
                 pbToken.Password = apiToken;
                 tbToken.Text = pbToken.Password;
+
+                client.HttpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", myToken);
 
                 string obsIp = settings.obsIp;
 
@@ -205,13 +207,22 @@ namespace Scoreboard
                     tbPort.Text = port;
                 }
             }
+            else
+            {
+                string output = AppDomain.CurrentDomain.BaseDirectory + "Output";
+                tbOutputFolder.Text = output;
+                outputDir = output;
+
+                string theme = "Default";
+                cbThemes.SelectedValue = theme;
+            }
         }
 
         private void LoadCommands()
         {
-            if (File.Exists("commands.json"))
+            if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "commands.json"))
             {
-                string commandsString = File.ReadAllText("commands.json");
+                string commandsString = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "commands.json");
                 commands = JsonConvert.DeserializeObject<Command[]>(commandsString).ToList();
                 listCommand.Items.Clear();
                 foreach (Command c in commands)
@@ -223,7 +234,7 @@ namespace Scoreboard
 
         private void InitializeThemes()
         {
-            string[] themes = Directory.GetFiles(@"../../Skins/");
+            string[] themes = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + "Skins");
             foreach (string t in themes)
             {
                 cbThemes.Items.Add(Path.GetFileName(t).Replace(".xaml", ""));
@@ -294,8 +305,6 @@ namespace Scoreboard
             listTournaments.IsDropDownOpen = false;
         }
 
-
-
         private void tbSearch_GotFocus(object sender, RoutedEventArgs e)
         {
             btnSearch.Visibility = Visibility.Visible;
@@ -303,7 +312,6 @@ namespace Scoreboard
 
         bool listTournamentsFocused = false;
 
-        
         private void BtnSmashGG_Click(object sender, RoutedEventArgs e)
         {
             DoShowUrl();
@@ -444,7 +452,6 @@ namespace Scoreboard
                               perPage: 500,
                               filter: {
                                 name: $name,
-                                upcoming: true
                               }
                             }) {
                             nodes {
@@ -489,10 +496,10 @@ namespace Scoreboard
 
                     if (finalResult.Count > 0)
                     {
-                        if (finalResult.Count > 50)
+                        if (finalResult.Count > 10)
                         {
                             message.Close();
-                            DisplayMessage("Too many tournaments found (" + finalResult.Count + " results). Please refine your search", "ok").ShowDialog();
+                            DisplayMessage("Too many tournaments found. Please refine your search", "ok").ShowDialog();
                         }
 
                         else
@@ -551,7 +558,7 @@ namespace Scoreboard
                 if (tournamentImages.Count > 0)
                     bmp.UriSource = new Uri(t.images[0].url, UriKind.Absolute);
                 else
-                    bmp.UriSource = new Uri("../../Assets/no-profile.png", UriKind.Relative);
+                    bmp.UriSource = new Uri(AppDomain.CurrentDomain.BaseDirectory + "Assets\\no-profile.png", UriKind.Relative);
 
                 bmp.DecodePixelWidth = 1920;
                 bmp.EndInit();
@@ -561,7 +568,7 @@ namespace Scoreboard
                 {
                     Margin = new Thickness(6, 0, 0, 0),
                     Padding = new Thickness(0, 0, 0, 0),
-                    Text = t.name
+                    Text = t.name.Length > 40 ? t.name.Substring(0, 40) + "..." : t.name
                 };
 
                 sp.Children.Add(img);
@@ -697,7 +704,7 @@ namespace Scoreboard
 
         private void AddTournamentToFile(string id, string name)
         {
-            TournamentItem t = new TournamentItem()
+            TournamentItem t = new TournamentItem(id, name)
             {
                 name = name,
                 id = id
@@ -727,7 +734,7 @@ namespace Scoreboard
 
             TournamentItem[] actualTournaments = new ArraySegment<TournamentItem>(localTournaments.ToArray(), 1, localTournaments.Count - 1).ToArray();
             string json = JsonConvert.SerializeObject(actualTournaments);
-            File.WriteAllText("tournaments.json", json);
+            File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "tournaments.json", json);
         }
 
         private int TournamentExists(string id)
@@ -774,7 +781,7 @@ namespace Scoreboard
 
                 TournamentItem[] actualTournaments = new ArraySegment<TournamentItem>(localTournaments.ToArray(), 1, localTournaments.Count - 1).ToArray();
                 string json = JsonConvert.SerializeObject(actualTournaments);
-                File.WriteAllText("tournaments.json", json);
+                File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "tournaments.json", json);
             }
         }
 
@@ -794,7 +801,7 @@ namespace Scoreboard
 
         private void SettingsTextChanged(object sender, TextChangedEventArgs e)
         {
-            EnableUpdateButton(btnSaveSettings, true);
+            EnableUpdateButton(btnSaveExitSettings, true);
         }
 
         private void BrowseOutput(object sender, RoutedEventArgs e)
@@ -812,7 +819,7 @@ namespace Scoreboard
 
         private void cbThemes_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            EnableUpdateButton(btnSaveSettings, true);
+            EnableUpdateButton(btnSaveExitSettings, true);
         }
 
         private void pbToken_PasswordChanged(object sender, RoutedEventArgs e)
@@ -826,7 +833,7 @@ namespace Scoreboard
                 else
                     btnShowToken.Visibility = Visibility.Hidden;
             }
-            EnableUpdateButton(btnSaveSettings, true);
+            EnableUpdateButton(btnSaveExitSettings, true);
         }
 
         private void tbToken_TextChanged(object sender, TextChangedEventArgs e)
@@ -839,7 +846,12 @@ namespace Scoreboard
             else
                 btnShowToken.Visibility = Visibility.Hidden;
 
-            EnableUpdateButton(btnSaveSettings, true);
+            EnableUpdateButton(btnSaveExitSettings, true);
+        }
+
+        private void btnHelp_Click(object sender, RoutedEventArgs e)
+        {
+            Process.Start("https://developer.start.gg/docs/authentication/");
         }
 
         private void btnShowToken_Click(object sender, RoutedEventArgs e)
@@ -868,7 +880,18 @@ namespace Scoreboard
 
             ((App)System.Windows.Application.Current).ChangeSkin(cbThemes.SelectedValue.ToString());
 
-            EnableUpdateButton(btnSaveSettings, false);
+            EnableUpdateButton(btnSaveExitSettings, false);
+        }
+
+        private void SaveExitSettings(object sender, RoutedEventArgs e)
+        {
+            SaveSettingsFunc();
+
+            ((App)System.Windows.Application.Current).ChangeSkin(cbThemes.SelectedValue.ToString());
+
+            EnableUpdateButton(btnSaveExitSettings, false);
+            gridSettings.Visibility = Visibility.Hidden;
+            gridStart.Visibility = Visibility.Visible;
         }
 
         private void SaveSettingsFunc()
@@ -883,14 +906,16 @@ namespace Scoreboard
             };
 
             string json = JsonConvert.SerializeObject(newSettings);
-            File.WriteAllText("settings.json", json);
+            File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "settings.json", json);
+
+            LoadSettings();
 
             outputDir = newSettings.outputPath + "\\";
         }
 
         private void btnCloseSettings_Click(object sender, RoutedEventArgs e)
         {
-            if (!btnSaveSettings.IsEnabled)
+            if (!btnSaveExitSettings.IsEnabled)
             {
                 gridStart.Visibility = Visibility.Visible;
                 gridSettings.Visibility = Visibility.Hidden;
@@ -910,7 +935,7 @@ namespace Scoreboard
                     gridStart.Visibility = Visibility.Visible;
                     gridSettings.Visibility = Visibility.Hidden;
                     LoadSettings();
-                    btnSaveSettings.IsEnabled = false;
+                    EnableUpdateButton(btnSaveExitSettings, false);
 
                     tbToken.Visibility = Visibility.Hidden;
                     pbToken.Visibility = Visibility.Visible;
@@ -1026,7 +1051,7 @@ namespace Scoreboard
                         cbPhase.SelectedIndex = 0;
                     }
                 }
-                catch (Exception e)
+                catch (Exception)
                 {
                 }
             }
@@ -1681,7 +1706,7 @@ namespace Scoreboard
                 commands.Remove(commands[listCommand.SelectedIndex]);
 
                 string json = JsonConvert.SerializeObject(commands.ToArray());
-                File.WriteAllText("commands.json", json);
+                File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "commands.json", json);
                 LoadCommands();
             }
         }
@@ -1830,7 +1855,7 @@ namespace Scoreboard
                 commands[listCommand.SelectedIndex] = command;
             }
             string json = JsonConvert.SerializeObject(commands.ToArray());
-            File.WriteAllText("commands.json", json);
+            File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "commands.json", json);
 
             keys.Clear();
 
@@ -2017,8 +2042,6 @@ namespace Scoreboard
         {
             if ((System.Windows.Forms.Control.MouseButtons & MouseButtons.Left) != 0)
                 listTournaments.IsDropDownOpen = false;
-            else
-                listTournaments.IsDropDownOpen = true;
         }
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)

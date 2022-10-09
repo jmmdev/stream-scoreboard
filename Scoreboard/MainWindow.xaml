@@ -5,9 +5,9 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Scoreboard"
         mc:Ignorable="d"
-        ResizeMode="NoResize"
+        ResizeMode="CanMinimize"
         Closing="Window_Closing"
-        Icon="Assets/icon1.ico"
+        Icon="icon.ico"
         Background="{DynamicResource Background}"
         Title="Stream Scoreboard" Height="363" Width="600" Deactivated="Window_Deactivated" LocationChanged="Window_LocationChanged" >
 
@@ -674,6 +674,7 @@
                   MinWidth="{TemplateBinding ActualWidth}"
                   MaxHeight="{TemplateBinding MaxDropDownHeight}">
                                     <Border x:Name="DropDownBorder"
+                                            
                     BorderThickness="0 1 0 0"
                     BorderBrush="{DynamicResource Background}"
                     Background ="{DynamicResource FieldIdle}" >
@@ -966,7 +967,7 @@
         </Style>
 
         <StackPanel x:Key="smashGGButtonConnect" Orientation="Horizontal" >
-            <Image Source="Assets/startGGLogo.png" Height="22" Margin="0 0 3 0"></Image>
+            <Image Source="startGGLogo.png" Height="22" Margin="0 0 3 0"></Image>
             <TextBlock Height="32" FontSize="15" Margin="3">Connect to start.gg</TextBlock>
         </StackPanel>
 
@@ -1024,6 +1025,17 @@
             </Viewbox>
         </StackPanel>
 
+        <StackPanel x:Key="helpButtonContent" Orientation="Horizontal">
+            <Viewbox Stretch="Uniform">
+                <Canvas Height="22" Width="22">
+                    <Path Data="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14zm0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16z"
+                                  Fill="{DynamicResource PlainText}" />
+                    <Path Data="M5.255 5.786a.237.237 0 0 0 .241.247h.825c.138 0 .248-.113.266-.25.09-.656.54-1.134 1.342-1.134.686 0 1.314.343 1.314 1.168 0 .635-.374.927-.965 1.371-.673.489-1.206 1.06-1.168 1.987l.003.217a.25.25 0 0 0 .25.246h.811a.25.25 0 0 0 .25-.25v-.105c0-.718.273-.927 1.01-1.486.609-.463 1.244-.977 1.244-2.056 0-1.511-1.276-2.241-2.673-2.241-1.267 0-2.655.59-2.75 2.286zm1.557 5.763c0 .533.425.927 1.01.927.609 0 1.028-.394 1.028-.927 0-.552-.42-.94-1.029-.94-.584 0-1.009.388-1.009.94z"
+                          Fill="{DynamicResource PlainText}" />
+                </Canvas>
+            </Viewbox>
+        </StackPanel>
+
         <SolidColorBrush x:Key="SmashGGButtonIdle">#ff6694</SolidColorBrush>
         <SolidColorBrush x:Key="SmashGGButtonMouseOver">#ff4c82</SolidColorBrush>
         <SolidColorBrush x:Key="SmashGGButtonPressed">#ff80a6</SolidColorBrush>
@@ -1036,8 +1048,8 @@
                 <Button Style="{StaticResource SmashGGButton}" Name="btnSmashGG" Width="190" Height="32" HorizontalAlignment="Right" VerticalAlignment="Top" Content="{StaticResource smashGGButtonConnect}" FontSize="1" Click="BtnSmashGG_Click" Cursor="Hand" Foreground="#FFEEEBFF" />
                 <Grid Name="gridUrl" Height="170" Margin="0 64 0 0" Visibility="Hidden">
                     <Label Content="Recent tournaments" VerticalAlignment="Top" VerticalContentAlignment="Bottom" FontWeight="Bold" FontSize="14" Padding="0"/>
-                    <ComboBox Style="{StaticResource TournamentComboBox}" Name="cbTournaments" Height="24" VerticalAlignment="Top" VerticalContentAlignment="Center" Margin="0 24 0 0" IsEnabled="false" SelectionChanged="cbTournaments_SelectionChanged" DropDownOpened="cbTournaments_DropDownOpened"  FontSize="14" Foreground="White" Cursor="Hand" />
-                    <Label Content="Search tournament by name" VerticalAlignment="Top" VerticalContentAlignment="Bottom" Margin="0 56 0 0" FontWeight="Bold" FontSize="14" Padding="0"/>
+                    <ComboBox Style="{StaticResource TournamentComboBox}" Width="452" Name="cbTournaments" Height="24" VerticalAlignment="Top" VerticalContentAlignment="Center" Margin="0 24 0 0" IsEnabled="false" SelectionChanged="cbTournaments_SelectionChanged" DropDownOpened="cbTournaments_DropDownOpened"  FontSize="14" Foreground="White" Cursor="Hand" />
+                    <Label Content="Search tournament by name" VerticalAlignment="Top" VerticalContentAlignment="Bottom" Margin="0 56 0 0" FontWeight="Bold" FontSize="14" Padding="0" />
                     <Button Style="{StaticResource StandardButton}" Name="btnSubmitUrl" Content="Done" VerticalAlignment="Top" Margin="0 120 0 0" Width="100" Height="32" FontSize="16" Click="BtnSubmitUrl_Click" FontWeight="Bold" Cursor="Hand" IsEnabled="False" />
                     <ComboBox Name="listTournaments" Width="452" VerticalAlignment="Top" Margin="0 80 0 0" Visibility="Hidden" SelectionChanged="listTournaments_SelectionChanged" FontSize="14" ScrollViewer.HorizontalScrollBarVisibility="Disabled" PreviewMouseDown="listTournaments_PreviewMouseDown" />
                     <TextBox Name="tbSearch" Height="24" VerticalAlignment="Top" VerticalContentAlignment="Center" Margin="0 80 0 0" TextChanged="TbSearch_TextChanged" KeyUp="tbSearch_KeyUp" MaxLength="50" GotFocus="tbSearch_GotFocus" LostFocus="tbSearch_LostFocus"  />
@@ -1050,19 +1062,21 @@
         <Grid Name="gridSettings" Visibility="Hidden">
             <Grid Cursor="Arrow">
                 <Label Name="lbOutputFolder" Content="Output folder" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16" FontSize="14" Padding="0" VerticalContentAlignment="Center" FontWeight="Bold"/>
-                <TextBox Name="tbOutputFolder" IsEnabled="False" Width="230" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16 40" VerticalContentAlignment="Center" TextChanged="SettingsTextChanged"/>
+                <TextBox Name="tbOutputFolder" Width="230" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16 40" VerticalContentAlignment="Center" TextChanged="SettingsTextChanged"/>
                 <Button Style="{StaticResource StandardButton}" Name="btnOutputFolder" Width="30" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="250 40" Content="..." FontSize="14" VerticalContentAlignment="Center" Click="BrowseOutput" Cursor="Hand"/>
 
                 <Label Name="lbTheme" Content="Theme" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16 80" FontSize="14" Padding="0" VerticalContentAlignment="Center" FontWeight="Bold"/>
                 <ComboBox Name="cbThemes" HorizontalAlignment="Left" VerticalAlignment="Top" Width="264" Height="24" FontSize="14" Margin="16 104" SelectionChanged="cbThemes_SelectionChanged" Cursor="Hand" />
 
                 <Label Name="lbToken" Content="start.gg authentication token" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16 144" FontSize="14" Padding="0" VerticalContentAlignment="Center" FontWeight="Bold"/>
-                <TextBox Name="tbToken" Width="264" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16 168 0 0" FontSize="14" VerticalContentAlignment="Center" TextChanged="tbToken_TextChanged" Visibility="Hidden" />
-                <PasswordBox Name="pbToken" Width="264" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16 168 0 0" FontSize="14" VerticalContentAlignment="Center" PasswordChanged="pbToken_PasswordChanged" />
+                <Button Name="btnHelp" Style="{StaticResource SVGButton}" Content="{StaticResource helpButtonContent}"  Width="32" Height="32" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="What's this?" Margin="217 144 0 0" Click="btnHelp_Click" />
 
-                <Button Name="btnShowToken" Width="36" Height="36" Style="{StaticResource SVGButton}" Content="{StaticResource hideButtonContent}"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="296 168 0 0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="btnShowToken_Click" Visibility="Hidden" />
+                <TextBox Name="tbToken" Width="264" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16 178 0 0" FontSize="14" VerticalContentAlignment="Center" TextChanged="tbToken_TextChanged" Visibility="Hidden" />
+                <PasswordBox Name="pbToken" Width="264" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16 178 0 0" FontSize="14" VerticalContentAlignment="Center" PasswordChanged="pbToken_PasswordChanged" />
 
-                <Button Style="{StaticResource StandardButton}" Name="btnSaveSettings" Width="100" Height="32" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="16" Content="Save settings" FontSize="14" VerticalContentAlignment="Center" Click="SaveSettings" Cursor="Hand" />
+                <Button Name="btnShowToken" Width="36" Height="36" Style="{StaticResource SVGButton}" Content="{StaticResource hideButtonContent}"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="296 178 0 0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="btnShowToken_Click" Visibility="Hidden" />
+
+                <Button Style="{StaticResource StandardButton}" Name="btnSaveExitSettings" Width="90" Height="32" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="16" Content="Save &amp; exit" FontSize="14" VerticalContentAlignment="Center" Click="SaveExitSettings" Cursor="Hand" IsEnabled="false" />
                 <Button Name="btnCloseSettings" Height="32" Style="{StaticResource SVGButton}" Content="{StaticResource closeButtonContent}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="16" BorderThickness="0" Background="Transparent" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Cursor="Hand" Click="btnCloseSettings_Click"/>
             </Grid>
         </Grid>

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Scoreboard"
         mc:Ignorable="d"
         ResizeMode="NoResize"
-        Icon="Assets/icon1.ico"
+        Icon="icon.ico"
         Background="{DynamicResource Background}"
         BorderBrush="Black"
         BorderThickness="1"
