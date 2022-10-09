@@ -41,5 +41,3 @@ And finally there's the "OBS Tools" tab. Here we can add, edit and remove keyboa
 ![8](https://user-images.githubusercontent.com/100143610/194766345-19d96e0c-0fdc-4250-a6f0-80bad7702916.png)
 
 ![9](https://user-images.githubusercontent.com/100143610/194766358-3704948e-12c9-41e4-9ce1-8bfac06c1760.png)
-
-The final tab "Settings" is pretty intuitive. Here you can change the application theme and choose your output directory of preference. It should point to the folder containing the text files OBS is using to show names, scores and such
