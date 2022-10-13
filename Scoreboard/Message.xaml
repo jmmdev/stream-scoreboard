@@ -56,8 +56,8 @@
         <Grid Name="textGrid" Height="80" Margin="16 12" VerticalAlignment="Top">
             <TextBlock Name="lbText" TextWrapping="Wrap" Foreground="White" FontSize="14" IsEnabled="False" TextAlignment="Center" VerticalAlignment="Center" />
         </Grid>
-        <Button Name="btnOk" Style="{DynamicResource StandardButton}" Width="108" Height="28" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 100 0 0" Background="{DynamicResource StandardButtonIdle}" Foreground="{DynamicResource ButtonIdleText}" Content="OK" Click="btnOk_Click" FontWeight="Bold" />
-        <Button Name="btnYes" Style="{DynamicResource StandardButton}" Width="108" Height="28" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30 100 0 0" Background="{DynamicResource StandardButtonIdle}" Foreground="{DynamicResource ButtonIdleText}" Content="Yes" Visibility="Hidden" Click="btnYes_Click" FontWeight="Bold" />
-        <Button Name="btnNo" Style="{DynamicResource StandardButton}" Width="108" Height="28" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 100 30 0" Background="{DynamicResource StandardButtonIdle}" Foreground="{DynamicResource ButtonIdleText}" Content="No" Visibility="Hidden" Click="btnNo_Click" FontWeight="Bold" />
+        <Button Name="btnOk" Style="{DynamicResource StandardButton}" Width="108" Height="28" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 100 0 0" Background="{DynamicResource StandardButtonIdle}" Foreground="{DynamicResource ButtonIdleText}" Click="btnOk_Click" FontWeight="Bold" />
+        <Button Name="btnYes" Style="{DynamicResource StandardButton}" Width="108" Height="28" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="30 100 0 0" Background="{DynamicResource StandardButtonIdle}" Foreground="{DynamicResource ButtonIdleText}" Visibility="Hidden" Click="btnYes_Click" FontWeight="Bold" />
+        <Button Name="btnNo" Style="{DynamicResource StandardButton}" Width="108" Height="28" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="0 100 30 0" Background="{DynamicResource StandardButtonIdle}" Foreground="{DynamicResource ButtonIdleText}" Visibility="Hidden" Click="btnNo_Click" FontWeight="Bold" />
     </Grid>
 </Window>

@@ -2,6 +2,7 @@
 {
     class Settings
     {
+        public string language { get; set; }
         public string outputPath { get; set; }
 
         public string theme { get; set; }

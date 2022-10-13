@@ -1,19 +1,16 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
+﻿using System.Collections.Generic;
+using System.Windows;
 
 namespace Scoreboard
 {
     public partial class Message : Window
     {
-
-        public Message(string text, string windowType)
+        public Message(string text, string windowType, Dictionary<string, string> windowButtons)
         {
             InitializeComponent();
 
             setText(text);
-            setWindowType(windowType);
+            setWindowType(windowType, windowButtons);
         }
 
         public void setText(string text)
@@ -21,7 +18,7 @@ namespace Scoreboard
             lbText.Text = text;
         }
 
-        public void setWindowType(string type)
+        public void setWindowType(string type, Dictionary<string, string> windowButtons)
         {
             if (type == "wait")
             {
@@ -30,6 +27,7 @@ namespace Scoreboard
                 btnYes.Visibility = Visibility.Collapsed;
                 btnNo.Visibility = Visibility.Collapsed;
                 btnOk.Visibility = Visibility.Collapsed;
+
             }
             else
             {
@@ -40,6 +38,9 @@ namespace Scoreboard
                     btnYes.Visibility = Visibility.Visible;
                     btnNo.Visibility = Visibility.Visible;
                     btnOk.Visibility = Visibility.Collapsed;
+
+                    btnYes.Content = windowButtons["yesButton"];
+                    btnNo.Content = windowButtons["noButton"];
                 }
 
                 if (type == "ok")
@@ -47,6 +48,8 @@ namespace Scoreboard
                     btnYes.Visibility = Visibility.Collapsed;
                     btnNo.Visibility = Visibility.Collapsed;
                     btnOk.Visibility = Visibility.Visible;
+
+                    btnOk.Content = windowButtons["okButton"];
                 }
             }
         }

@@ -186,6 +186,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Image.cs" />
+    <Compile Include="Language.cs" />
     <Compile Include="TournamentConnection.cs" />
     <Compile Include="Command.cs" />
     <Compile Include="Entrant.cs" />

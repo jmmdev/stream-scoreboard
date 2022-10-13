@@ -60,16 +60,29 @@ namespace Scoreboard
         private bool showToken = false;
         private string lastSearch = "";
 
+        private string[] lbSide1Values = new string[2];
+        private string[] lbSide2Values = new string[2];
+        private string[] lbConnectionValues = new string[2];
+        private string[] lbInstructionsValues = new string[2];
+        private string[] btnSaveCommandValues = new string[2];
+        private string[] btnOBSConnectionValues = new string[2];
+
+        private string recentTournamentText = "";
+        private string selectTournamentText = "";
+
+        private Dictionary<string, string> windowMessages = new Dictionary<string, string>();
+        private Dictionary<string, string> windowButtons = new Dictionary<string, string>();
+
         // Component and needed starting values initialization
 
         public MainWindow()
         {
             InitializeComponent();
-            LoadTournamentFile();
+
+            LoadSettings();
 
             cbTournaments.SelectedIndex = 0;
 
-            LoadSettings();
             LoadCommands();
 
             EnableUpdateButton(btnSaveExitSettings, false);
@@ -82,8 +95,10 @@ namespace Scoreboard
                 gridOptions.IsEnabled = true;
                 btnObsConnection.IsDefault = false;
 
-                SuccessfulConnection();
-                btnObsConnection.Content = "Disconnect";
+                btnObsConnection.Content = btnOBSConnectionValues[1];
+
+                lbConnection.Content = lbConnectionValues[1];
+                lbConnection.Foreground = new SolidColorBrush(Color.FromRgb(0x00, 0xff, 0x00));
 
                 obsIsConnected = true;
 
@@ -97,10 +112,10 @@ namespace Scoreboard
                 gridOptions.IsEnabled = false;
                 btnObsConnection.IsDefault = true;
 
-                lblConnection.Content = "Disconnected";
-                lblConnection.Foreground = Brushes.Red;
+                btnObsConnection.Content = btnOBSConnectionValues[0];
 
-                btnObsConnection.Content = "Connect";
+                lbConnection.Content = lbConnectionValues[0];
+                lbConnection.Foreground = Brushes.Red;
 
                 obsIsConnected = false;
             });
@@ -118,7 +133,9 @@ namespace Scoreboard
             obs.Connected += OnConnect;
             obs.Disconnected += OnDisconnect;
 
+            btnObsConnection.Content = btnOBSConnectionValues[0];
 
+            InitializeLanguages();
             InitializeThemes();
 
             EnableUpdateButton(btnSaveExitSettings, false);
@@ -152,18 +169,17 @@ namespace Scoreboard
             }
 
             ComboBoxItem firstItem = new ComboBoxItem();
+            firstItem.Tag = "0";
 
-            if (cbTournaments.Items.Count > 0 && !cbTournaments.Items[0].ToString().Contains("recent"))
+            if (cbTournaments.Items.Count > 0 && !cbTournaments.Items[0].ToString().StartsWith("No"))
             {
-                firstItem.Content = "Select a tournament...";
-                firstItem.Tag = "0";
+                firstItem.Content = selectTournamentText;
                 cbTournaments.Items.Insert(0, firstItem);
                 cbTournaments.IsEnabled = true;
             }
             else
             {
-                firstItem.Content = "No recent tournaments";
-                firstItem.Tag = "0";
+                firstItem.Content = recentTournamentText;
                 cbTournaments.Items.Add(firstItem);
             }
 
@@ -176,6 +192,20 @@ namespace Scoreboard
             {
                 string settingsString = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "settings.json");
                 Settings settings = JsonConvert.DeserializeObject<Settings>(settingsString);
+
+                string language = settings.language;
+
+                if (string.IsNullOrEmpty(language) || string.IsNullOrWhiteSpace(language))
+                    language = "English";
+
+                cbLanguages.SelectedValue = language;
+
+                string languageFile = language + ".json";
+
+                if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "locale/" + languageFile))
+                {
+                    useLanguage(languageFile);
+                }
 
                 string outputPath = settings.outputPath;
                 tbOutputFolder.Text = outputPath;
@@ -216,6 +246,8 @@ namespace Scoreboard
                 string theme = "Default";
                 cbThemes.SelectedValue = theme;
             }
+
+            LoadTournamentFile();
         }
 
         private void LoadCommands()
@@ -238,6 +270,15 @@ namespace Scoreboard
             foreach (string t in themes)
             {
                 cbThemes.Items.Add(Path.GetFileName(t).Replace(".xaml", ""));
+            }
+        }
+
+        private void InitializeLanguages()
+        {
+            string[] languages = Directory.GetFiles(AppDomain.CurrentDomain.BaseDirectory + "locale");
+            foreach (string l in languages)
+            {
+                cbLanguages.Items.Add(Path.GetFileName(l).Replace(".json", ""));
             }
         }
 
@@ -340,17 +381,19 @@ namespace Scoreboard
             {
                 gridTournament.Height = 216;
                 gridUrl.Visibility = Visibility.Visible;
-                btnSmashGG.Content = Resources["smashGGButtonCancel"];
-                btnSmashGG.Width = 32;
                 btnManual.Visibility = Visibility.Hidden;
+
+                btnSmashGG.Visibility = Visibility.Hidden;
+                btnSmashGGCancel.Visibility = Visibility.Visible;
             }
             else
             {
                 gridTournament.Height = 32;
                 gridUrl.Visibility = Visibility.Hidden;
-                btnSmashGG.Content = Resources["smashGGButtonConnect"];
-                btnSmashGG.Width = 190;
                 btnManual.Visibility = Visibility.Visible;
+
+                btnSmashGG.Visibility = Visibility.Visible;
+                btnSmashGGCancel.Visibility = Visibility.Hidden;
             }
 
             gridTournament.Margin = margin;
@@ -423,7 +466,7 @@ namespace Scoreboard
         private async void SearchTournament()
         {
             if (string.IsNullOrEmpty(myToken) || string.IsNullOrWhiteSpace(myToken))
-                DisplayMessage("You don't have a valid authentication token to make start.gg requests. Please set it in the settings menu.", "ok").ShowDialog();
+                DisplayMessage(windowMessages["authenticationMessage"], "ok").ShowDialog();
             else
             {
                 finalResult.Clear();
@@ -433,7 +476,7 @@ namespace Scoreboard
 
                 if (lastSearch != search || !listTournaments.IsDropDownOpen)
                 {
-                    Window message = DisplayMessage("Please wait...", "wait");
+                    Window message = DisplayMessage(windowMessages["waitMessage"], "wait");
                     message.Show();
 
                     lastSearch = search;
@@ -499,7 +542,7 @@ namespace Scoreboard
                         if (finalResult.Count > 10)
                         {
                             message.Close();
-                            DisplayMessage("Too many tournaments found. Please refine your search", "ok").ShowDialog();
+                            DisplayMessage(windowMessages["tooManyTournamentsMessage"], "ok").ShowDialog();
                         }
 
                         else
@@ -522,7 +565,7 @@ namespace Scoreboard
                     else
                     {
                         message.Close();
-                        DisplayMessage("No tournaments found", "ok").ShowDialog();
+                        DisplayMessage(windowMessages["noTournamentsMessage"], "ok").ShowDialog();
                         listTournaments.IsDropDownOpen = false;
                     }
                 }
@@ -649,17 +692,11 @@ namespace Scoreboard
 
                 var response = await client.SendQueryAsync(request, () => new { Tournament = new Tournament() });
 
-                if (response.Data.Tournament == null)
-                {
-                    DisplayMessage("Tournament not found. Check the url and try again", "ok");
-                    return;
-                }
-
                 if (response.Data.Tournament.events != null)
                 {
                     if (response.Data.Tournament.state < 1 && response.Data.Tournament.state > 4 || response.Data.Tournament.state == 3)
                     {
-                        Window message = DisplayMessage(response.Data.Tournament.name + " is unavailable or already over. Please check your tournament information.", "ok");
+                        Window message = DisplayMessage(response.Data.Tournament.name + windowMessages["tournamentUnavailableMessage"] , "ok");
                         message.ShowDialog();
                         return;
                     }
@@ -695,7 +732,7 @@ namespace Scoreboard
                     return;
                 }
 
-                DisplayMessage("An error ocurred while getting the tournament events. Please try again", "ok");
+                DisplayMessage(windowMessages["eventsErrorMessage"], "ok");
             }
             catch (Exception)
             {
@@ -713,7 +750,7 @@ namespace Scoreboard
             if (localTournaments.Count == 1)
             {
                 cbTournaments.Items.RemoveAt(0);
-                cbTournaments.Items.Add("Select a tournament...");
+                cbTournaments.Items.Add(selectTournamentText);
             }
 
             int index = TournamentExists(id);
@@ -755,7 +792,7 @@ namespace Scoreboard
 
             int index = int.Parse(((ComboBoxItem)parent).Tag.ToString());
 
-            Window message = DisplayMessage("Delete tournament \"" + ((ComboBoxItem)cbTournaments.Items[index]).Content + "\"?", "yesno");
+            Window message = DisplayMessage(windowMessages["deleteTournamentMessage"] + "\"" + ((ComboBoxItem)cbTournaments.Items[index]).Content + "\"?", "yesno");
             bool dialogResult = (bool)message.ShowDialog();
 
             if (dialogResult)
@@ -774,7 +811,7 @@ namespace Scoreboard
 
                 if (localTournaments.Count < 2)
                 {
-                    cbTournaments.Items[0] = "No recent tournaments";
+                    cbTournaments.Items[0] = recentTournamentText;
                     cbTournaments.SelectedIndex = 0;
                     cbTournaments.IsEnabled = false;
                 }
@@ -902,7 +939,8 @@ namespace Scoreboard
                 outputPath = tbOutputFolder.Text,
                 theme = cbThemes.SelectedValue.ToString(),
                 obsIp = lastIp,
-                token = myToken
+                token = myToken,
+                language = cbLanguages.SelectedValue.ToString()
             };
 
             string json = JsonConvert.SerializeObject(newSettings);
@@ -927,7 +965,7 @@ namespace Scoreboard
             }
             else
             {
-                Window message = DisplayMessage("You have unsaved settings, do you want to leave?", "yesno");
+                Window message = DisplayMessage(windowMessages["unsavedChangesMessage"], "yesno");
                 bool dialogResult = (bool)message.ShowDialog();
 
                 if (dialogResult)
@@ -969,8 +1007,8 @@ namespace Scoreboard
                     swapMargin.Top = 158;
                     btnSwap.Margin = swapMargin;
 
-                    lbSide1.Content = "Team 1";
-                    lbSide2.Content = "Team 2";
+                    lbSide1.Content = lbSide1Values[1];
+                    lbSide2.Content = lbSide2Values[1];
                 }
                 else
                 {
@@ -984,9 +1022,8 @@ namespace Scoreboard
                     swapMargin.Top = 132;
                     btnSwap.Margin = swapMargin;
 
-
-                    lbSide1.Content = "Player 1";
-                    lbSide2.Content = "Player 2";
+                    lbSide1.Content = lbSide1Values[0];
+                    lbSide2.Content = lbSide2Values[0];
                 }
 
                 if (!isSmashgg)
@@ -1495,7 +1532,7 @@ namespace Scoreboard
 
         private void BtnBack_Click(object sender, RoutedEventArgs e)
         {
-            Window message = DisplayMessage("Go back to the main menu?", "yesno");
+            Window message = DisplayMessage(windowMessages["mainMenuMessage"], "yesno");
 
             bool dialogResult = (bool)message.ShowDialog();
 
@@ -1617,12 +1654,6 @@ namespace Scoreboard
             }
         }
 
-        private void SuccessfulConnection()
-        {
-            lblConnection.Content = "Connected";
-            lblConnection.Foreground = new SolidColorBrush(Color.FromRgb(0x00, 0xff, 0x00));
-        }
-
         private void ListCommand_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             bool enabled = listCommand.SelectedIndex >= 0 && listCommand.Items.Count > 0;
@@ -1692,13 +1723,13 @@ namespace Scoreboard
                 keys.Add(k);
             }
 
-            btnSaveCommand.Content = "Update";
+            btnSaveCommand.Content = btnSaveCommandValues[1];
         }
 
         private void RemoveCommand(object sender, RoutedEventArgs e)
         {
 
-            Window message = DisplayMessage("Delete command \"" + listCommand.SelectedValue + "\"?", "yesno");
+            Window message = DisplayMessage(windowMessages["deleteCommandMessage"] + "\"" + listCommand.SelectedValue + "\"?", "yesno");
             bool dialogResult = (bool)message.ShowDialog();
 
             if (dialogResult)
@@ -1832,7 +1863,7 @@ namespace Scoreboard
             SaveCommand(tbCommandName.Text, tbCommandValue.Text, isEditing);
             tbCommandName.Text = "";
             tbCommandValue.Text = "";
-            btnSaveCommand.Content = "Add";
+            btnSaveCommand.Content = btnSaveCommandValues[0];
         }
 
         private void SaveCommand(string name, string value, bool isEditing)
@@ -1942,7 +1973,7 @@ namespace Scoreboard
             List<char> chars = entry.ToCharArray().ToList();
             bool isSpace = false;
 
-            foreach(char c in chars)
+            foreach (char c in chars)
             {
                 if (c == ' ')
                 {
@@ -1972,7 +2003,7 @@ namespace Scoreboard
             Process.Start(new ProcessStartInfo(e.Uri.AbsoluteUri));
             e.Handled = true;
         }
-        
+
         private DependencyObject FindParent(DependencyObject child)
         {
             DependencyObject parent = VisualTreeHelper.GetParent(child);
@@ -1983,13 +2014,158 @@ namespace Scoreboard
                 return FindParent(parent);
         }
 
-        
+
         private Window DisplayMessage(string text, string windowType)
         {
-            Message message = new Message(text, windowType);
+            Message message = new Message(text, windowType, windowButtons);
             message.Owner = this;
 
             return message;
+        }
+
+        private void useLanguage(string languageFile)
+        {
+            string languageStrings = File.ReadAllText(AppDomain.CurrentDomain.BaseDirectory + "locale/" + languageFile);
+
+            var language = JsonConvert.DeserializeObject<JArray>(languageStrings);
+
+            foreach (JObject o in language)
+            {
+                foreach (JProperty p in o.Properties())
+                {
+                    object target = FindElement(p);
+                    if (!(p.Value is JArray))
+                    {
+                        if (target != null)
+                        {
+                            if (target is System.Windows.Controls.Button)
+                            {
+                                System.Windows.Controls.Button actualButton = (System.Windows.Controls.Button)target;
+
+                                if (actualButton.Equals(btnSmashGG) || actualButton.Equals(btnSettings))
+                                {
+                                    StackPanel sp = (StackPanel)actualButton.Content;
+
+                                    ((TextBlock)sp.Children[1]).Text = p.Value.ToString();
+                                }
+                                else
+                                    ((System.Windows.Controls.Button)target).Content = p.Value;
+                            }
+
+                            if (target is System.Windows.Controls.Label)
+                            {
+                                ((System.Windows.Controls.Label)target).Content = p.Value;
+                            }
+
+                            if (target is TabItem)
+                                ((TabItem)target).Header = p.Value;
+                        }
+                    }
+                    else
+                    {
+                        if (p.Name == "windowMessages")
+                        {
+                            windowMessages.Clear();
+
+                            foreach (JObject w in p.Value)
+                            {
+                                foreach (JProperty q in w.Properties())
+                                {
+                                    windowMessages.Add(q.Name, q.Value.ToString());
+                                }
+                            }
+                        }
+
+                        if (p.Name == "windowButtons")
+                        {
+                            windowButtons.Clear();
+
+                            foreach (JObject w in p.Value)
+                            {
+                                foreach (JProperty q in w.Properties())
+                                {
+                                    windowButtons.Add(q.Name, q.Value.ToString());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private object FindElement(JProperty p)
+        {
+            string name = p.Name;
+            string value = p.Value.ToString();
+
+            object element = FindName(name);
+
+            string[] target = null;
+
+            if (name.StartsWith("lbSide1"))
+            {
+                target = lbSide1Values;
+            }
+
+            else if (name.StartsWith("lbSide2"))
+            {
+                target = lbSide2Values;
+            }
+
+            else if (name.StartsWith("lbConnection"))
+            {
+                target = lbConnectionValues;
+            }
+
+            else if (name.StartsWith("lbInstructions"))
+            {
+                target = lbInstructionsValues;
+            }
+
+            else if (name.StartsWith("btnSaveCommand"))
+            {
+                target = btnSaveCommandValues;
+            }
+
+            else if (name.StartsWith("btnOBSConnection"))
+            {
+                target = btnOBSConnectionValues;
+            }
+
+            if (target != null)
+                if (!name.EndsWith("Alt"))
+                    target[0] = value;
+                else
+                    target[1] = value;
+
+            if(name.ToLower().Contains("select"))
+            {
+                selectTournamentText = value;
+            }
+
+            if (name.ToLower().Contains("recent"))
+            {
+                recentTournamentText = value;
+            }
+
+            if (name.StartsWith("btn"))
+            {
+                return element as System.Windows.Controls.Button;
+            }
+
+            else if (name.StartsWith("lb"))
+            {
+                return element as System.Windows.Controls.Label;
+            }
+
+            else if (name.EndsWith("Tab"))
+            {
+                return element as TabItem;
+            }
+            else
+            {
+                return null;
+            }
         }
 
         private void TabControl_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1997,7 +2173,7 @@ namespace Scoreboard
             isEditing = false;
             tbCommandName.Text = "";
             tbCommandValue.Text = "";
-            btnSaveCommand.Content = "Add";
+            btnSaveCommand.Content = btnSaveCommandValues[0];
         }
 
         private void tbOnlyNumbers_PreviewTextInput(object sender, TextCompositionEventArgs e)
@@ -2046,7 +2222,7 @@ namespace Scoreboard
 
         private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
         {
-            Window message = DisplayMessage("Close this program?", "yesno");
+            Window message = DisplayMessage(windowMessages["closeMessage"], "yesno");
 
             e.Cancel = !(bool)message.ShowDialog();
         }

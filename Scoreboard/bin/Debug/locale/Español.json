@@ -1,0 +1,172 @@
+[
+   {
+      "lbTournaments":"Torneos recientes"
+   },
+   {
+      "lbSearch":"Buscar torneos por nombre"
+   },
+   {
+      "lbOutputFolder":"Carpeta de destino"
+   },
+   {
+      "lbTheme":"Tema"
+   },
+   {
+      "lbToken":"Token de start.gg"
+   },
+   {
+      "lbEvent":"Evento"
+   },
+   {
+      "lbPhase":"Fase"
+   },
+   {
+      "lbPhaseGroup":"Grupo"
+   },
+   {
+      "lbRound":"Ronda"
+   },
+   {
+      "lbSide1":"Jugador 1"
+   },
+   {
+      "lbSide2":"Jugador 2"
+   },
+   {
+      "lbSide1Alt":"Equipo 1"
+   },
+   {
+      "lbSide2Alt":"Equipo 2"
+   },
+   {
+      "lbInfo":"Información adicional / Texto en movimiento"
+   },
+   {
+      "lbPassword":"Contraseña"
+   },
+   {
+      "lbConnection":"Desconectado"
+   },
+   {
+      "lbConnectionAlt":"Conectado"
+   },
+   {
+      "lbShortcuts":"Atajos OBS"
+   },
+   {
+      "lbInstructions":"*alt / shift / ctrl y una tecla adicional (número, letra o teclas F)*"
+   },
+   {
+      "btnSmashGG":"Conectar a start.gg"
+   },
+   {
+      "btnSubmitUrl":"Listo"
+   },
+   {
+      "btnSettings":"Ajustes"
+   },
+   {
+      "btnSaveExitSettings":"Guardar y salir"
+   },
+   {
+      "btnSwap":"← Cambiar →"
+   },
+   {
+      "btnSave":"Actualizar"
+   },
+   {
+      "btnBack":"← Volver"
+   },
+   {
+      "btnSwapCasters":"← Cambiar →"
+   },
+   {
+      "btnSaveCasters":"Actualizar"
+   },
+   {
+      "btnSaveInfo":"Guardar"
+   },
+   {
+      "btnOBSConnection":"Conectar"
+   },
+   {
+      "btnOBSConnectionAlt":"Desconectar"
+   },
+   {
+      "btnApplyCommand":"Aplicar"
+   },
+   {
+      "lbCommandName":"Nombre"
+   },
+   {
+      "lbCommandValue":"Valor"
+   },
+   {
+      "btnSaveCommand":"Añadir"
+   },
+   {
+      "btnSaveCommandAlt":"Actualizar"
+   },
+   {
+      "scoreTab":"Marcador"
+   },
+   {
+      "lbLanguage":"Idioma"
+   },
+   {
+      "tournamentSelectText":"Seleccione un torneo..."
+   },
+   {
+      "noRecentTournamentsText":"No hay torneos recientes"
+   },
+   {
+      "windowMessages":[
+         {
+            "authenticationMessage":"Se necesita un token de autentificación para mandar peticiones a start.gg. Por favor, introdúzcalo en el menu de ajustes"
+         },
+         {
+            "waitMessage":"Espere, por favor..."
+         },
+         {
+            "tooManyTournamentsMessage":"Demasiadas coincidencias. Por favor, depure su búsqueda"
+         },
+         {
+            "noTournamentsMessage":"No se encontraron torneos"
+         },
+         {
+            "tournamentUnavailableMessage":" no está disponible o ha finalizado. Por favor, compruebe la información introducida"
+         },
+         {
+            "eventsErrorMessage":"Ha ocurrido un error al obtener los eventos. Por favor, vuelva a intentarlo"
+         },
+         {
+            "deleteTournamentMessage":"¿Borrar el torneo"
+         },
+         {
+            "unsavedChangesMessage":"Tiene cambios sin guardar, ¿quiere salir?"
+         },
+         {
+            "mainMenuMessage":"¿Volver al menú principal?"
+         },
+         {
+            "deleteCommandMessage":"¿Borrar comando "
+         },
+         {
+            "closeMessage":"¿Cerrar el programa?"
+         }
+      ]
+   },
+   {
+      "windowButtons":[
+         {
+            "okButton":"Aceptar"
+         },
+         {
+            "yesButton":"Sí"
+         },
+         {
+            "noButton":"No"
+         }
+      ]
+   }
+]
