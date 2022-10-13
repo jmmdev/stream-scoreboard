@@ -485,7 +485,7 @@
                   MinWidth="{TemplateBinding ActualWidth}"
                   MaxHeight="{TemplateBinding MaxDropDownHeight}">
                                     <Border x:Name="DropDownBorder"
-                    BorderThickness="1 0 1 1"
+                    BorderThickness="0 1 0 0"
                                             BorderBrush="{DynamicResource Background}"
                     Background ="{DynamicResource FieldIdle}" >
                                     </Border>
@@ -538,7 +538,7 @@
                     <ControlTemplate TargetType="{x:Type ComboBoxItem}" >
                         <Border x:Name="Border"
                 Padding="2"
-                                BorderThickness="1 0 1 0"
+                                BorderThickness="0"
                                 BorderBrush="{DynamicResource Background}"
                 SnapsToDevicePixels="true"
                 Background="Transparent">
@@ -1063,7 +1063,7 @@
                     <ComboBox Style="{StaticResource TournamentComboBox}" Width="452" Name="cbTournaments" Height="24" VerticalAlignment="Top" VerticalContentAlignment="Center" Margin="0 24 0 0" IsEnabled="false" SelectionChanged="cbTournaments_SelectionChanged" DropDownOpened="cbTournaments_DropDownOpened"  FontSize="14" Foreground="White" Cursor="Hand" />
                     <Label Name="lbSearch" VerticalAlignment="Top" VerticalContentAlignment="Bottom" Margin="0 56 0 0" FontWeight="Bold" FontSize="14" Padding="0" />
                     <Button Style="{StaticResource StandardButton}" Name="btnSubmitUrl" Content="Done" VerticalAlignment="Top" Margin="0 120 0 0" Width="100" Height="32" FontSize="16" Click="BtnSubmitUrl_Click" FontWeight="Bold" Cursor="Hand" IsEnabled="False" />
-                    <ComboBox Name="listTournaments" Width="452" VerticalAlignment="Top" Margin="0 80 0 0" Visibility="Hidden" SelectionChanged="listTournaments_SelectionChanged" FontSize="14" ScrollViewer.HorizontalScrollBarVisibility="Disabled" PreviewMouseDown="listTournaments_PreviewMouseDown" />
+                    <ComboBox Name="listTournaments" Height="24" Width="452" VerticalAlignment="Top" Margin="0 80 0 0" Visibility="Hidden" SelectionChanged="listTournaments_SelectionChanged" FontSize="14" ScrollViewer.HorizontalScrollBarVisibility="Disabled" PreviewMouseDown="listTournaments_PreviewMouseDown" />
                     <TextBox Name="tbSearch" Height="24" VerticalAlignment="Top" VerticalContentAlignment="Center" Margin="0 80 0 0" TextChanged="TbSearch_TextChanged" KeyUp="tbSearch_KeyUp" MaxLength="50" GotFocus="tbSearch_GotFocus" LostFocus="tbSearch_LostFocus"  />
                     <Button Name="btnSearch" Width="24" Height="24" HorizontalAlignment="Right" VerticalAlignment="Top" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Margin="0 83 0 0" Click="btnSearch_Click" Content="{StaticResource searchButtonContent}" Style="{StaticResource SVGButton}" Visibility="Hidden" />
                 </Grid>
