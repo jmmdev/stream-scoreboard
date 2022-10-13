@@ -81,6 +81,9 @@ namespace Scoreboard
 
             LoadSettings();
 
+            foreach (string s in lbConnectionValues)
+                Console.WriteLine(s);
+
             LoadCommands();
 
             EnableUpdateButton(btnSaveExitSettings, false);
@@ -93,15 +96,15 @@ namespace Scoreboard
                 gridOptions.IsEnabled = true;
                 btnObsConnection.IsDefault = false;
 
+                lastIp = tbIp1.Text + "." + tbIp2.Text + "." + tbIp3.Text + "." + tbIp4.Text + ":" + tbPort.Text;
+                SaveSettingsFunc();
+
                 btnObsConnection.Content = btnOBSConnectionValues[1];
 
                 lbConnection.Content = lbConnectionValues[1];
                 lbConnection.Foreground = new SolidColorBrush(Color.FromRgb(0x00, 0xff, 0x00));
 
                 obsIsConnected = true;
-
-                lastIp = tbIp1.Text + "." + tbIp2.Text + "." + tbIp3.Text + "." + tbIp4.Text + ":" + tbPort.Text;
-                SaveSettingsFunc();
             });
 
             Action dispatcherDisconnect = new Action(() =>
@@ -293,7 +296,8 @@ namespace Scoreboard
         {
             InitializeManual();
             gridStart.Visibility = Visibility.Hidden;
-            tabControl.Visibility = Visibility.Visible;
+            gridTabControl.Visibility = Visibility.Visible;
+            tabControl.SelectedIndex = 0;
         }
 
         //Manual mode functionality
@@ -719,7 +723,8 @@ namespace Scoreboard
                     }
 
                     gridStart.Visibility = Visibility.Hidden;
-                    tabControl.Visibility = Visibility.Visible;
+                    gridTabControl.Visibility = Visibility.Visible;
+                    tabControl.SelectedIndex = 0;
                     gridSmashGG.Visibility = Visibility.Visible;
 
                     AddTournamentToFile(id, response.Data.Tournament.name);
@@ -1035,7 +1040,7 @@ namespace Scoreboard
 
         private async void LoadEvent()
         {
-            tabControl.IsEnabled = false;
+            gridTabControl.IsEnabled = false;
             if (cbEvent.SelectedIndex >= 0 && !cbEvent.SelectedValue.ToString().Contains("..."))
             {
 
@@ -1093,12 +1098,12 @@ namespace Scoreboard
                 }
             }
 
-            tabControl.IsEnabled = true;
+            gridTabControl.IsEnabled = true;
         }
 
         private async void CbPhase_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            tabControl.IsEnabled = false;
+            gridTabControl.IsEnabled = false;
             if (cbPhase.SelectedIndex >= 0 && !cbPhase.SelectedValue.ToString().Contains("..."))
             {
                 if (localPhases.Count > 1 && cbPhase.Items[0].ToString().Contains("..."))
@@ -1156,7 +1161,7 @@ namespace Scoreboard
                 {
                 }
             }
-            tabControl.IsEnabled = true;
+            gridTabControl.IsEnabled = true;
         }
 
         private void CbPhaseGroup_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1166,7 +1171,7 @@ namespace Scoreboard
 
         private async void LoadSets()
         {
-            tabControl.IsEnabled = false;
+            gridTabControl.IsEnabled = false;
             if (cbPhaseGroup.SelectedIndex >= 0 && !cbPhaseGroup.SelectedValue.ToString().Contains("..."))
             {
                 if (localGroups.Count > 1 && cbPhaseGroup.Items[0].ToString().Contains("..."))
@@ -1236,7 +1241,7 @@ namespace Scoreboard
                 {
                 }
             }
-            tabControl.IsEnabled = true;
+            gridTabControl.IsEnabled = true;
         }
 
         private void CbSet_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -1306,7 +1311,7 @@ namespace Scoreboard
 
         private void btnRefresh_Click(object sender, RoutedEventArgs e)
         {
-            tabControl.IsEnabled = false;
+            gridTabControl.IsEnabled = false;
             LoadSets();
         }
 
@@ -1538,7 +1543,7 @@ namespace Scoreboard
 
             if (dialogResult)
             {
-                tabControl.Visibility = Visibility.Hidden;
+                gridTabControl.Visibility = Visibility.Hidden;
                 gridStart.Visibility = Visibility.Visible;
                 btnRefresh.Visibility = Visibility.Hidden;
 
@@ -1629,9 +1634,9 @@ namespace Scoreboard
         private void BtnObsConnection_Click(object sender, RoutedEventArgs e)
         {
             btnObsConnection.IsEnabled = false;
-            tabControl.IsEnabled = false;
+            gridTabControl.IsEnabled = false;
             ObsConnect();
-            tabControl.IsEnabled = true;
+            gridTabControl.IsEnabled = true;
             btnObsConnection.IsEnabled = true;
         }
 
