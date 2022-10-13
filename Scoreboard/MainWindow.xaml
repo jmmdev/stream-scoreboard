@@ -968,7 +968,7 @@
 
         <StackPanel x:Key="smashGGButtonConnect" Orientation="Horizontal" >
             <Image Source="startGGLogo.png" Height="22" Margin="0 0 3 0"></Image>
-            <TextBlock Height="32" FontSize="15" Margin="3">Connect to start.gg</TextBlock>
+            <TextBlock Height="32" FontSize="15" Margin="3"></TextBlock>
         </StackPanel>
 
         <StackPanel x:Key="smashGGButtonCancel" Orientation="Horizontal">
@@ -982,7 +982,7 @@
                           Fill="{DynamicResource PlainText}" />
                 </Canvas>
             </Viewbox>
-            <TextBlock Height="32" FontSize="15" Padding="0 3 0 0" Foreground="{DynamicResource PlainText}">Settings</TextBlock>
+            <TextBlock Height="32" FontSize="15" Padding="0 3 0 0" Foreground="{DynamicResource PlainText}"></TextBlock>
         </StackPanel>
 
         <StackPanel x:Key="searchButtonContent" Orientation="Horizontal">

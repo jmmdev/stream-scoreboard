@@ -207,6 +207,8 @@ namespace Scoreboard
                     useLanguage(languageFile);
                 }
 
+                btnObsConnection.Content = obsIsConnected ? btnOBSConnectionValues[1] : btnOBSConnectionValues[0];
+
                 string outputPath = settings.outputPath;
                 tbOutputFolder.Text = outputPath;
                 outputDir = outputPath + "\\";
@@ -246,8 +248,6 @@ namespace Scoreboard
                 string theme = "Default";
                 cbThemes.SelectedValue = theme;
             }
-
-            LoadTournamentFile();
         }
 
         private void LoadCommands()
