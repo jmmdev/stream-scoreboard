@@ -868,12 +868,6 @@
         "Entry"
         {
         "MsmKey" = "8:_UNDEFINED"
-        "OwnerKey" = "8:_2179BB7FAFEC759F0BF1EEF89DAD8482"
-        "MsmSig" = "8:_UNDEFINED"
-        }
-        "Entry"
-        {
-        "MsmKey" = "8:_UNDEFINED"
         "OwnerKey" = "8:_FB7AB0091A8D471AB9C8A9F6B2A820CD"
         "MsmSig" = "8:_UNDEFINED"
         }
@@ -1045,6 +1039,12 @@
         "OwnerKey" = "8:_4FB6860BFB1AEBDBEBD948969CE7D3CC"
         "MsmSig" = "8:_UNDEFINED"
         }
+        "Entry"
+        {
+        "MsmKey" = "8:_UNDEFINED"
+        "OwnerKey" = "8:_2179BB7FAFEC759F0BF1EEF89DAD8482"
+        "MsmSig" = "8:_UNDEFINED"
+        }
     }
     "Configurations"
     {
@@ -1063,6 +1063,22 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
+            }
         }
         "Release"
         {
@@ -1079,6 +1095,22 @@
         "PrivateKeyFile" = "8:"
         "TimeStampServer" = "8:"
         "InstallerBootstrapper" = "3:2"
+            "BootstrapperCfg:{63ACBE69-63AA-4F98-B2B6-99F9E24495F2}"
+            {
+            "Enabled" = "11:TRUE"
+            "PromptEnabled" = "11:TRUE"
+            "PrerequisitesLocation" = "2:1"
+            "Url" = "8:"
+            "ComponentsUrl" = "8:"
+                "Items"
+                {
+                    "{EDC2488A-8267-493A-A98E-7D9C3B36CDF3}:.NETFramework,Version=v4.7.2"
+                    {
+                    "Name" = "8:Microsoft .NET Framework 4.7.2 (x86 and x64)"
+                    "ProductCode" = "8:.NETFramework,Version=v4.7.2"
+                    }
+                }
+            }
         }
     }
     "Deployable"
@@ -2631,7 +2663,7 @@
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Stream Scoreboard"
         "ProductCode" = "8:{3DE355FC-AB73-4970-A265-8B7233E16DDF}"
-        "PackageCode" = "8:{240E20DB-B901-4272-AAEE-4AECA00B5ADE}"
+        "PackageCode" = "8:{53C3CDAA-12D3-481E-8D56-6A36117F9441}"
         "UpgradeCode" = "8:{06157094-983D-4E46-B72B-9E76226E1C37}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
@@ -2639,14 +2671,14 @@
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
         "ProductVersion" = "8:1.0.0"
-        "Manufacturer" = "8:Default Company Name"
+        "Manufacturer" = "8:jmmdev"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
         "Title" = "8:Stream Scoreboard"
         "Subject" = "8:"
-        "ARPCONTACT" = "8:Default Company Name"
+        "ARPCONTACT" = "8:jmmdev"
         "Keywords" = "8:"
-        "ARPCOMMENTS" = "8:"
+        "ARPCOMMENTS" = "8:Scoreboard for game streaming"
         "ARPURLINFOABOUT" = "8:"
         "ARPPRODUCTICON" = "8:"
         "ARPIconIndex" = "3:0"
@@ -3180,7 +3212,7 @@
         {
             "{5259A561-127C-4D43-A0A1-72F10C7B3BF8}:_FB7AB0091A8D471AB9C8A9F6B2A820CD"
             {
-            "SourcePath" = "8:..\\Scoreboard\\obj\\Debug\\Scoreboard.exe"
+            "SourcePath" = "8:..\\Scoreboard\\obj\\Release\\Scoreboard.exe"
             "TargetName" = "8:"
             "Tag" = "8:"
             "Folder" = "8:_0CC5B78ADC3E4643B3C14C66B4EB6A1A"
