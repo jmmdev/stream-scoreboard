@@ -4,21 +4,21 @@ Stream Scoreboard is a desktop application equipped with the standard functions 
 
 First of all we have the main screen
 
-![screen1](https://user-images.githubusercontent.com/100143610/193868992-71f1a693-d868-4669-a9cb-d4308c70c462.png)
+![1](https://user-images.githubusercontent.com/100143610/195660544-c4aee492-dd1e-487f-82a9-4f3db9eec4af.png)
 
 Here we could opt to use the manual interface where we input all the information, yes, manually, including player nicknames, rounds or scores 
 
-![2](https://user-images.githubusercontent.com/100143610/194766053-08c8432f-4ccf-4348-ac6d-e26f0d7387c4.png)
+![2](https://user-images.githubusercontent.com/100143610/195660574-677f3f8f-95ad-487c-8a81-e3958a58699f.png)
 
 Did you see those tabs up there? We'll talk about them later. Let's have a look at connecting to start.gg but first we'll need an authentication token to do so. You can generate it following this guide: https://developer.start.gg/docs/authentication 
 
 Once you have it you must set it in the settings screen. Here you also can set your output directory for the OBS text files and the application theme
 
-![2](https://user-images.githubusercontent.com/100143610/194765778-616af39f-c026-4782-aeb4-bd106dad6eb0.png)
+![3](https://user-images.githubusercontent.com/100143610/195660616-433c63d9-8991-4eee-baec-ec87400e3a72.png)
 
-We're using The Big House 10 as an example. Once we search the name of the tournament we can select it from a list. It will also be saved on a recent tournaments list for easier access 
+Once we search the name of the tournament we can select it from a list. It will also be saved on a recent tournaments list for easier access 
 
-![3](https://user-images.githubusercontent.com/100143610/194765886-007cf684-ceb8-4923-b5bf-9f2edc59ff41.png)
+![4](https://user-images.githubusercontent.com/100143610/195664056-b154434d-c6f1-41ab-9dc1-d94cf5cc6b2c.png)
 
 If a tournament is already over it won't be able for selection and the application will raise an alert (like Genesis 8, for instance)
 
@@ -34,10 +34,10 @@ Note: if a set is complete or invalid in some form (say it's missing a player be
 
 Pretty straightforward right? Let's get to the tabs part. First we have the "Extra" tab where we can enter caster names and some miscellaneous information or message to be displayed on screen
 
-![7](https://user-images.githubusercontent.com/100143610/194766338-72153e3f-4523-4b73-a9fb-346154e04740.png)
+![7](https://user-images.githubusercontent.com/100143610/195661050-54ed18fe-3b4a-4c06-acd0-0534530b1b0f.png)
 
 And finally there's the "OBS Tools" tab. Here we can add, edit and remove keyboard shortcuts (using key sequences) and input them directly into OBS so we don't have to remember every single one of them. This feature uses the websocket plugin for OBS so make sure it's installed beforehand (already included with OBS v28.0.0+)
 
-![8](https://user-images.githubusercontent.com/100143610/194766345-19d96e0c-0fdc-4250-a6f0-80bad7702916.png)
+![8](https://user-images.githubusercontent.com/100143610/195661084-9585f9ec-8c66-421f-a9ee-a97b95e042f8.png)
 
-![9](https://user-images.githubusercontent.com/100143610/194766358-3704948e-12c9-41e4-9ce1-8bfac06c1760.png)
+![9](https://user-images.githubusercontent.com/100143610/195661095-3b77cf46-ec34-47f3-af0b-795f93660859.png)
