@@ -81,8 +81,6 @@ namespace Scoreboard
 
             LoadSettings();
 
-            cbTournaments.SelectedIndex = 0;
-
             LoadCommands();
 
             EnableUpdateButton(btnSaveExitSettings, false);
@@ -143,6 +141,9 @@ namespace Scoreboard
 
         private void LoadTournamentFile()
         {
+            cbTournaments.Items.Clear();
+            localTournaments.Clear();
+
             string tournamentFile = AppDomain.CurrentDomain.BaseDirectory + "tournaments.json";
 
             if (File.Exists(tournamentFile))
@@ -152,9 +153,6 @@ namespace Scoreboard
 
                 if (tournamentItems.Length > 0)
                 {
-                    localTournaments.Clear();
-                    cbTournaments.Items.Clear();
-
                     for (int i = 0; i < tournamentItems.Length; i++)
                     {
                         TournamentItem t = tournamentItems[i];
@@ -171,7 +169,7 @@ namespace Scoreboard
             ComboBoxItem firstItem = new ComboBoxItem();
             firstItem.Tag = "0";
 
-            if (cbTournaments.Items.Count > 0 && !cbTournaments.Items[0].ToString().StartsWith("No"))
+            if (cbTournaments.Items.Count > 0)
             {
                 firstItem.Content = selectTournamentText;
                 cbTournaments.Items.Insert(0, firstItem);
@@ -183,7 +181,7 @@ namespace Scoreboard
                 cbTournaments.Items.Add(firstItem);
             }
 
-            localTournaments.Insert(0, null);
+            cbTournaments.SelectedIndex = 0;
         }
 
         private void LoadSettings()
@@ -194,10 +192,6 @@ namespace Scoreboard
                 Settings settings = JsonConvert.DeserializeObject<Settings>(settingsString);
 
                 string language = settings.language;
-
-                if (string.IsNullOrEmpty(language) || string.IsNullOrWhiteSpace(language))
-                    language = "English";
-
                 cbLanguages.SelectedValue = language;
 
                 string languageFile = language + ".json";
@@ -209,9 +203,9 @@ namespace Scoreboard
 
                 btnObsConnection.Content = obsIsConnected ? btnOBSConnectionValues[1] : btnOBSConnectionValues[0];
 
-                string outputPath = settings.outputPath;
-                tbOutputFolder.Text = outputPath;
-                outputDir = outputPath + "\\";
+                string output = settings.outputPath;
+                tbOutputFolder.Text = output;
+                outputDir = output + "\\";
 
                 string theme = settings.theme;
                 cbThemes.SelectedValue = theme;
@@ -241,6 +235,16 @@ namespace Scoreboard
             }
             else
             {
+                string language = "English";
+
+                cbLanguages.SelectedValue = language;
+                string languageFile = language + ".json";
+
+                if (File.Exists(AppDomain.CurrentDomain.BaseDirectory + "locale/" + languageFile))
+                {
+                    useLanguage(languageFile);
+                }
+
                 string output = AppDomain.CurrentDomain.BaseDirectory + "Output";
                 tbOutputFolder.Text = output;
                 outputDir = output;
@@ -248,6 +252,8 @@ namespace Scoreboard
                 string theme = "Default";
                 cbThemes.SelectedValue = theme;
             }
+
+            LoadTournamentFile();
         }
 
         private void LoadCommands()
@@ -638,7 +644,7 @@ namespace Scoreboard
             }
             else if (cbTournaments.SelectedIndex >= 1)
             {
-                id = localTournaments[cbTournaments.SelectedIndex].id;
+                id = localTournaments[cbTournaments.SelectedIndex-1].id;
             }
 
             InitializeSmashGG(id);
@@ -747,36 +753,30 @@ namespace Scoreboard
                 id = id
             };
 
-            if (localTournaments.Count == 1)
-            {
-                cbTournaments.Items.RemoveAt(0);
-                cbTournaments.Items.Add(selectTournamentText);
-            }
-
             int index = TournamentExists(id);
 
-            if (index < 1)
+            if (index < 0)
             {
-                localTournaments.Insert(1, t);
+                localTournaments.Insert(0, t);
                 cbTournaments.Items.Insert(1, t.name);
             }
             else
             {
                 localTournaments.RemoveAt(index);
-                localTournaments.Insert(1, t);
+                localTournaments.Insert(0, t);
 
-                cbTournaments.Items.RemoveAt(index);
+                cbTournaments.Items.RemoveAt(index + 1);
                 cbTournaments.Items.Insert(1, t.name);
             }
 
-            TournamentItem[] actualTournaments = new ArraySegment<TournamentItem>(localTournaments.ToArray(), 1, localTournaments.Count - 1).ToArray();
+            TournamentItem[] actualTournaments = localTournaments.ToArray();
             string json = JsonConvert.SerializeObject(actualTournaments);
             File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "tournaments.json", json);
         }
 
         private int TournamentExists(string id)
         {
-            for (int i = 1; i < localTournaments.Count; i++)
+            for(int i = 0; i < localTournaments.Count; i++)
             {
                 TournamentItem t = localTournaments[i];
                 if (t != null && t.id == id)
@@ -805,18 +805,18 @@ namespace Scoreboard
                 }
 
                 cbTournaments.Items.RemoveAt(index);
-                localTournaments.RemoveAt(index);
+                localTournaments.RemoveAt(index - 1);
 
                 UpdateTournamentTags();
 
-                if (localTournaments.Count < 2)
+                if (localTournaments.Count < 1)
                 {
                     cbTournaments.Items[0] = recentTournamentText;
                     cbTournaments.SelectedIndex = 0;
                     cbTournaments.IsEnabled = false;
                 }
 
-                TournamentItem[] actualTournaments = new ArraySegment<TournamentItem>(localTournaments.ToArray(), 1, localTournaments.Count - 1).ToArray();
+                TournamentItem[] actualTournaments = localTournaments.ToArray();
                 string json = JsonConvert.SerializeObject(actualTournaments);
                 File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "tournaments.json", json);
             }
@@ -946,9 +946,9 @@ namespace Scoreboard
             string json = JsonConvert.SerializeObject(newSettings);
             File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "settings.json", json);
 
-            LoadSettings();
-
             outputDir = newSettings.outputPath + "\\";
+
+            LoadSettings();
         }
 
         private void btnCloseSettings_Click(object sender, RoutedEventArgs e)
