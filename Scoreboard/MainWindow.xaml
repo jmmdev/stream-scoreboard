@@ -986,6 +986,15 @@
             <TextBlock Height="32" FontSize="15" Padding="0 3 0 0" Foreground="{DynamicResource PlainText}"></TextBlock>
         </StackPanel>
 
+        <StackPanel x:Key="openFolderContent" Orientation="Horizontal">
+            <Viewbox Stretch="Uniform">
+                <Canvas Height="48" Width="48">
+                    <Path Data="M 49.7383 27.6289 C 49.7383 28.1563 49.4727 28.7227 48.9414 29.3203 L 40.3281 39.4727 C 39.5898 40.3438 38.5625 41.0859 37.2383 41.6914 C 35.9141 42.2969 34.6875 42.6016 33.5586 42.6016 L 5.66016 42.6016 C 5.07813 42.6016 4.5625 42.4922 4.10938 42.2695 C 3.65625 42.0469 3.42969 41.6797 3.42969 41.1641 C 3.42969 40.6367 3.69531 40.0703 4.22266 39.4727 L 12.8398 29.3203 C 13.5742 28.4492 14.6055 27.707 15.9297 27.1016 C 17.2539 26.4961 18.4805 26.1914 19.6094 26.1914 L 47.5078 26.1914 C 48.0859 26.1914 48.6055 26.3008 49.0586 26.5234 C 49.5117 26.7461 49.7383 27.1133 49.7383 27.6289 Z M 40.9414 18.8047 L 40.9414 22.9102 L 19.6094 22.9102 C 18.0039 22.9102 16.3164 23.3164 14.5586 24.1289 C 12.7969 24.9375 11.3945 25.9609 10.3516 27.1914 L 1.71094 37.3438 L 1.58203 37.5 C 1.58203 37.4297 1.57813 37.3242 1.57031 37.1797 C 1.5625 37.0313 1.55859 36.9258 1.55859 36.8594 L 1.55859 12.2422 C 1.55859 10.668 2.12109 9.32031 3.25 8.19141 C 4.37891 7.0625 5.73047 6.5 7.30078 6.5 L 15.5078 6.5 C 17.0781 6.5 18.4297 7.0625 19.5586 8.19141 C 20.6875 9.32031 21.25 10.668 21.25 12.2422 L 21.25 13.0625 L 35.1992 13.0625 C 36.7695 13.0625 38.1211 13.6289 39.25 14.7539 C 40.3789 15.8828 40.9414 17.2344 40.9414 18.8047 Z M 40.9414 18.8047"
+                          Fill="{DynamicResource ButtonIdleText}"/>
+                </Canvas>
+            </Viewbox>
+        </StackPanel>
+
         <StackPanel x:Key="searchButtonContent" Orientation="Horizontal">
             <Viewbox Stretch="Uniform">
                 <Canvas Height="22" Width="22">
@@ -1065,14 +1074,15 @@
         <Grid Name="gridSettings" Visibility="Hidden">
             <Grid Cursor="Arrow">
                 <Label Name="lbLanguage" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16" FontSize="14" Padding="0" VerticalContentAlignment="Center" FontWeight="Bold" />
-                <ComboBox Name="cbLanguages" HorizontalAlignment="Left" VerticalAlignment="Top" Width="264" Height="24" FontSize="14" Margin="16 40" SelectionChanged="cbThemes_SelectionChanged" Cursor="Hand" />
+                <ComboBox Name="cbLanguages" HorizontalAlignment="Left" VerticalAlignment="Top" Width="268" Height="24" FontSize="14" Margin="16 40" SelectionChanged="cbThemes_SelectionChanged" Cursor="Hand" />
+                
+                <Label Name="lbTheme" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="300 16 0 0" FontSize="14" Padding="0" VerticalContentAlignment="Center" FontWeight="Bold"/>
+                <ComboBox Name="cbThemes" HorizontalAlignment="Left" VerticalAlignment="Top" Width="268" Height="24" FontSize="14" Margin="300 40 0 0" SelectionChanged="cbThemes_SelectionChanged" Cursor="Hand" />
 
                 <Label Name="lbOutputFolder" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16 80" FontSize="14" Padding="0" VerticalContentAlignment="Center" FontWeight="Bold"/>
-                <TextBox Name="tbOutputFolder" Width="230" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16 104" VerticalContentAlignment="Center" TextChanged="SettingsTextChanged" IsEnabled="False" />
-                <Button Style="{StaticResource StandardButton}" Name="btnOutputFolder" Width="30" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="250 104" Content="..." FontSize="14" VerticalContentAlignment="Center" Click="BrowseOutput" Cursor="Hand"/>
-
-                <Label Name="lbTheme" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="296 80 0 0" FontSize="14" Padding="0" VerticalContentAlignment="Center" FontWeight="Bold"/>
-                <ComboBox Name="cbThemes" HorizontalAlignment="Left" VerticalAlignment="Top" Width="264" Height="24" FontSize="14" Margin="296 104 0 0" SelectionChanged="cbThemes_SelectionChanged" Cursor="Hand" />
+                <TextBox Name="tbOutputFolder" Width="484" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16 104" VerticalContentAlignment="Center" TextChanged="SettingsTextChanged" IsEnabled="False" />
+                <Button Style="{StaticResource StandardButton}" Name="btnOutputFolder" Width="30" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="504 104 0 0" Content="..." FontSize="14" VerticalContentAlignment="Center" Click="BrowseOutput" Cursor="Hand"/>
+                <Button Style="{StaticResource StandardButton}" Name="btnOpenFolder" Width="30" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="538 104 0 0" Content="{StaticResource openFolderContent}" FontSize="14" VerticalContentAlignment="Center" Click="OpenFolder" Cursor="Hand"/>
 
                 <Label Name="lbToken" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="16 144 0 0" FontSize="14" Padding="0" VerticalContentAlignment="Center" FontWeight="Bold"/>
                 <Button Name="btnHelp" Style="{StaticResource SVGButton}" Content="{StaticResource helpButtonContent}"  Width="28" Height="28" HorizontalAlignment="Left" VerticalAlignment="Top" ToolTip="What's this?" Margin="217 146 0 0" Click="btnHelp_Click" />
@@ -1083,7 +1093,7 @@
                 <Button Name="btnShowToken" Width="36" Height="36" Style="{StaticResource SVGButton}" Content="{StaticResource hideButtonContent}"  HorizontalAlignment="Left" VerticalAlignment="Top" Margin="250 176 0 0" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Click="btnShowToken_Click" Visibility="Hidden" />
 
                 <Button Style="{StaticResource StandardButton}" Name="btnSaveExitSettings" Width="120" Height="32" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="16" FontSize="14" VerticalContentAlignment="Center" Click="SaveExitSettings" Cursor="Hand" IsEnabled="false" />
-                <Button Name="btnCloseSettings" Height="24" Style="{StaticResource SVGButton}" Content="{StaticResource closeButtonContent}" HorizontalAlignment="Right" VerticalAlignment="Top" Margin="16" BorderThickness="0" Background="Transparent" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Cursor="Hand" Click="btnCloseSettings_Click"/>
+                <Button Name="btnExitSettings" Width="100" Height="32" Style="{StaticResource StandardButton}" Content="Exit" HorizontalAlignment="Left" VerticalAlignment="Bottom" Margin="144 16" FontSize="14" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" Cursor="Hand" Click="btnExitSettings_Click"/>
             </Grid>
         </Grid>
 
@@ -1171,9 +1181,9 @@
                         </Grid>
                         <Border Height="1" Margin="16 179 16 0" VerticalAlignment="Top" BorderThickness="1" BorderBrush="{DynamicResource FieldIdle}" />
                         <Grid Margin="16 195 16 0" Height="88" VerticalAlignment="Top" >
-                            <Label Name="lbInfo" Height="24" Margin="0 16 0 0" Opacity="0.5" Padding="0" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="14" FontWeight="Bold" Content="Additional info / Scrolling message" HorizontalAlignment="Left"/>
-                            <TextBox Width="465" Name="tbInfo" Margin="0 40 0 0" Padding="0" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" TextChanged="TbInfo_TextChanged"/>
-                            <Button Style="{StaticResource StandardButton}" Name="btnSaveInfo" Width="64" Height="24" FontSize="14" Margin="0 40 0 0" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="Hand" Click="BtnSaveInfo_Click" IsEnabled="false"/>
+                            <Label Name="lbInfo" Height="24" Padding="0" VerticalAlignment="Top" VerticalContentAlignment="Center" FontSize="14" FontWeight="Bold" Content="Additional info / Scrolling message" HorizontalAlignment="Left"/>
+                            <TextBox Width="454" Name="tbInfo" Margin="0 40 0 0" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" VerticalContentAlignment="Center" TextChanged="TbInfo_TextChanged"/>
+                            <Button Style="{StaticResource StandardButton}" Name="btnSaveInfo" Width="86" Height="24" FontSize="14" Margin="0 40 0 0" HorizontalAlignment="Right" VerticalAlignment="Top" Cursor="Hand" Click="BtnSaveInfo_Click" IsEnabled="false"/>
                         </Grid>
                     </Grid>
                 </TabItem>

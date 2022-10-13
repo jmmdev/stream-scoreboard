@@ -4,8 +4,8 @@
     <SolidColorBrush x:Key="StandardButtonMouseOver">#dd9900</SolidColorBrush>
     <SolidColorBrush x:Key="StandardButtonPressed">#ffdd00</SolidColorBrush>
 
-    <SolidColorBrush x:Key="ButtonIdleText">#000055</SolidColorBrush>
-    <SolidColorBrush x:Key="ButtonMouseOverText">#000055</SolidColorBrush>
+    <SolidColorBrush x:Key="ButtonIdleText">#111122</SolidColorBrush>
+    <SolidColorBrush x:Key="ButtonMouseOverText">#111122</SolidColorBrush>
 
     <SolidColorBrush x:Key="FieldIdle">#333344</SolidColorBrush>
     <SolidColorBrush x:Key="FieldHighlight">#555566</SolidColorBrush>

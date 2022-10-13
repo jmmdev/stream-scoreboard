@@ -250,7 +250,7 @@ namespace Scoreboard
 
                 string output = AppDomain.CurrentDomain.BaseDirectory + "Output";
                 tbOutputFolder.Text = output;
-                outputDir = output;
+                outputDir = output + "\\";
 
                 string theme = "Default";
                 cbThemes.SelectedValue = theme;
@@ -704,7 +704,7 @@ namespace Scoreboard
 
                 if (response.Data.Tournament.events != null)
                 {
-                    if (response.Data.Tournament.state < 1 && response.Data.Tournament.state > 4 || response.Data.Tournament.state == 3)
+                    if (response.Data.Tournament.state < 1 && response.Data.Tournament.state > 4)
                     {
                         Window message = DisplayMessage(response.Data.Tournament.name + windowMessages["tournamentUnavailableMessage"] , "ok");
                         message.ShowDialog();
@@ -859,6 +859,11 @@ namespace Scoreboard
             }
         }
 
+        private void OpenFolder(object sender, RoutedEventArgs e)
+        {
+            Process.Start("explorer.exe", tbOutputFolder.Text);
+        }
+
         private void cbThemes_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             EnableUpdateButton(btnSaveExitSettings, true);
@@ -951,12 +956,10 @@ namespace Scoreboard
             string json = JsonConvert.SerializeObject(newSettings);
             File.WriteAllText(AppDomain.CurrentDomain.BaseDirectory + "settings.json", json);
 
-            outputDir = newSettings.outputPath + "\\";
-
             LoadSettings();
         }
 
-        private void btnCloseSettings_Click(object sender, RoutedEventArgs e)
+        private void btnExitSettings_Click(object sender, RoutedEventArgs e)
         {
             if (!btnSaveExitSettings.IsEnabled)
             {
@@ -1498,6 +1501,9 @@ namespace Scoreboard
 
         private void SaveChanges(object sender, RoutedEventArgs e)
         {
+            if(!Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
             File.WriteAllText(outputDir + "event.txt", cbEvent.Text);
 
             string round = cbRound.SelectedValue.ToString();
@@ -1506,6 +1512,30 @@ namespace Scoreboard
                 round += " " + tbRoundNum.Text;
 
             File.WriteAllText(outputDir + "round.txt", round);
+
+            if (isSmashgg)
+            {
+                string fullRound = "";
+
+                if(cbPhase.Items.Count > 1)
+                {
+                    string phase = cbPhase.SelectedValue.ToString();
+                    File.WriteAllText(outputDir + "phase.txt", phase);
+
+                    fullRound += phase + "\n\n";
+                }
+
+                if(cbPhaseGroup.Items.Count > 1)
+                {
+                    string group = cbPhaseGroup.SelectedValue.ToString();
+                    File.WriteAllText(outputDir + "group.txt", group);
+
+                    fullRound += group + " - ";
+                }
+
+                fullRound += round;
+                File.WriteAllText(outputDir + "fullRound.txt", fullRound);
+            }
 
             string p1 = tbPlayer1.Text;
             string p2 = tbPlayer2.Text;
@@ -1588,6 +1618,9 @@ namespace Scoreboard
 
         private void SaveCasters(object sender, RoutedEventArgs e)
         {
+            if (!Directory.Exists(outputDir))
+                Directory.CreateDirectory(outputDir);
+
             string c1 = tbCaster1.Text;
             string c2 = tbCaster2.Text;
 
