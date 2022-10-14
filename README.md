@@ -26,9 +26,9 @@ If a tournament is already over it won't be able for selection and the applicati
 
 Lightening start.gg API requests size is crucial to minimize errors, that's why we're getting information about the tournament in small bits. Selecting field values will unlock more fields to select until we can check the sets field. Here we can select a set and it will complete the information just as if we did it manually
 
-![5](https://user-images.githubusercontent.com/100143610/194766156-f0f5babf-c9f0-48d3-933f-dea97e857dbc.png)
+![5](https://user-images.githubusercontent.com/100143610/195884917-2b975614-e55b-4aa8-a328-cbf842f3866c.png)
 
-![6](https://user-images.githubusercontent.com/100143610/194766160-cd3007cf-d852-47e5-8b80-af0aa20c6847.png)
+![6](https://user-images.githubusercontent.com/100143610/195884933-46c44725-61de-4cab-81d5-ce59f9a0b899.png)
 
 Note: if a set is complete or invalid in some form (say it's missing a player because they're still playing the previous set or the bracket hasn't been updated) it won't be able for selection. That's why there's a refresh button right next to the set selection, it can be clicked and it will update all the sets available
 
