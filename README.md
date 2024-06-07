@@ -12,7 +12,7 @@ Here we could opt to use the manual interface where we input all the information
 
 Did you see those tabs up there? We'll talk about them later. Let's have a look at connecting to start.gg but first we'll need an authentication token to do so. You can generate it following this guide: https://developer.start.gg/docs/authentication 
 
-Once you have it you must set it in the settings screen. Here you also can set your output directory for the OBS text files and the application theme
+Once you have it you must set it in the settings screen. You can also set your output directory for the OBS text files and the application theme and language
 
 ![3](https://user-images.githubusercontent.com/100143610/195660616-433c63d9-8991-4eee-baec-ec87400e3a72.png)
 
@@ -26,17 +26,17 @@ If a tournament is already over it won't be able for selection and the applicati
 
 Lightening start.gg API requests size is crucial to minimize errors, that's why we're getting information about the tournament in small bits. Selecting field values will unlock more fields to select until we can check the sets field. Here we can select a set and it will complete the information just as if we did it manually
 
-![5](https://user-images.githubusercontent.com/100143610/194766156-f0f5babf-c9f0-48d3-933f-dea97e857dbc.png)
+![5](https://user-images.githubusercontent.com/100143610/195884917-2b975614-e55b-4aa8-a328-cbf842f3866c.png)
 
-![6](https://user-images.githubusercontent.com/100143610/194766160-cd3007cf-d852-47e5-8b80-af0aa20c6847.png)
+![6](https://user-images.githubusercontent.com/100143610/195884933-46c44725-61de-4cab-81d5-ce59f9a0b899.png)
 
 Note: if a set is complete or invalid in some form (say it's missing a player because they're still playing the previous set or the bracket hasn't been updated) it won't be able for selection. That's why there's a refresh button right next to the set selection, it can be clicked and it will update all the sets available
 
-Pretty straightforward right? Let's get to the tabs part. First we have the "Extra" tab where we can enter caster names and some miscellaneous information or message to be displayed on screen
+Pretty straightforward right? Let's get to the tabs part. First we have the Extra tab where we can enter caster names and some miscellaneous information or message to be displayed on screen
 
 ![7](https://user-images.githubusercontent.com/100143610/195661050-54ed18fe-3b4a-4c06-acd0-0534530b1b0f.png)
 
-And finally there's the "OBS Tools" tab. Here we can add, edit and remove keyboard shortcuts (using key sequences) and input them directly into OBS so we don't have to remember every single one of them. This feature uses the websocket plugin for OBS so make sure it's installed beforehand (already included with OBS v28.0.0+)
+And finally there's the OBS tab. Here we can add, edit and remove keyboard shortcuts (using key sequences) and input them directly into OBS so we don't have to remember every single one of them. This feature uses the websocket plugin for OBS so make sure it's installed beforehand (already included with OBS v28.0.0+)
 
 ![8](https://user-images.githubusercontent.com/100143610/195661084-9585f9ec-8c66-421f-a9ee-a97b95e042f8.png)
 
