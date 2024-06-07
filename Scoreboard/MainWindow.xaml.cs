@@ -81,9 +81,6 @@ namespace Scoreboard
 
             LoadSettings();
 
-            foreach (string s in lbConnectionValues)
-                Console.WriteLine(s);
-
             LoadCommands();
 
             EnableUpdateButton(btnSaveExitSettings, false);
@@ -1623,11 +1620,14 @@ namespace Scoreboard
 
             string c1 = tbCaster1.Text;
             string c2 = tbCaster2.Text;
-
-            File.WriteAllText(outputDir + "caster1.txt", c1);
+            string c = c1;
 
             if (!string.IsNullOrEmpty(c2) && !string.IsNullOrWhiteSpace(c2))
-                File.WriteAllText(outputDir + "caster2.txt", c2);
+                c += " & " + c2;
+
+            File.WriteAllText(outputDir + "caster1.txt", c1);
+            File.WriteAllText(outputDir + "caster2.txt", c2);
+            File.WriteAllText(outputDir + "casters.txt", c);
 
             EnableUpdateButton(btnSaveCasters, false);
         }

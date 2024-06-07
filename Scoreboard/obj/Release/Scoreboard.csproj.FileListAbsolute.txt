@@ -79,7 +79,7 @@ D:\Projects\stream-scoreboard\Scoreboard\obj\Release\Scoreboard_MarkupCompile.lr
 D:\Projects\stream-scoreboard\Scoreboard\obj\Release\MainWindow.baml
 D:\Projects\stream-scoreboard\Scoreboard\obj\Release\Message.baml
 D:\Projects\stream-scoreboard\Scoreboard\obj\Release\Scoreboard.g.resources
-D:\Projects\stream-scoreboard\Scoreboard\obj\Release\Scoreboard.csproj.CopyComplete
 D:\Projects\stream-scoreboard\Scoreboard\obj\Release\Scoreboard.exe
 D:\Projects\stream-scoreboard\Scoreboard\obj\Release\Scoreboard.pdb
 D:\Projects\stream-scoreboard\Scoreboard\obj\Release\Scoreboard.csproj.AssemblyReference.cache
+D:\Projects\stream-scoreboard\Scoreboard\obj\Release\Scoreboard.csproj.Up2Date
