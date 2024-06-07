@@ -2922,15 +2922,15 @@
         {
         "Name" = "8:Microsoft Visual Studio"
         "ProductName" = "8:Stream Scoreboard"
-        "ProductCode" = "8:{3DE355FC-AB73-4970-A265-8B7233E16DDF}"
-        "PackageCode" = "8:{880754E3-14D6-4139-A281-4C5C4B749828}"
+        "ProductCode" = "8:{331729C6-EBB5-45E3-A975-189622B18236}"
+        "PackageCode" = "8:{40D20A2D-A45D-4C71-B72B-09377998D148}"
         "UpgradeCode" = "8:{06157094-983D-4E46-B72B-9E76226E1C37}"
         "AspNetVersion" = "8:4.0.30319.0"
         "RestartWWWService" = "11:FALSE"
         "RemovePreviousVersions" = "11:FALSE"
         "DetectNewerInstalledVersion" = "11:TRUE"
         "InstallAllUsers" = "11:FALSE"
-        "ProductVersion" = "8:1.0.0"
+        "ProductVersion" = "8:1.0.1"
         "Manufacturer" = "8:jmmdev"
         "ARPHELPTELEPHONE" = "8:"
         "ARPHELPLINK" = "8:"
@@ -3084,7 +3084,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_31BAA93DD6A44C11B0DDFD4B60A7586E"
                     {
                     "Sequence" = "3:100"
-                    "DisplayName" = "8:Finalizado"
+                    "DisplayName" = "8:Finished"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdAdminFinishedDlg.wid"
@@ -3115,7 +3115,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_3ADC1496C8D749CB947BD20C55726B77"
                     {
                     "Sequence" = "3:100"
-                    "DisplayName" = "8:Pantalla de bienvenida"
+                    "DisplayName" = "8:Welcome"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdWelcomeDlg.wid"
@@ -3163,7 +3163,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_6D13F1B844ED4A068476D23F9300065A"
                     {
                     "Sequence" = "3:200"
-                    "DisplayName" = "8:Carpeta de instalación"
+                    "DisplayName" = "8:Installation Folder"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdFolderDlg.wid"
@@ -3198,7 +3198,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_AE55ECD45AC34271A1478FC3390160AC"
                     {
                     "Sequence" = "3:300"
-                    "DisplayName" = "8:Confirmar instalación"
+                    "DisplayName" = "8:Confirm Installation"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdConfirmDlg.wid"
@@ -3229,7 +3229,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_B032C108E4554B5A919F35B71B5493C4"
                     {
                     "Sequence" = "3:100"
-                    "DisplayName" = "8:Finalizado"
+                    "DisplayName" = "8:Finished"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdFinishedDlg.wid"
@@ -3273,7 +3273,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_19E18DC8946745AD8F32A5796A4F7376"
                     {
                     "Sequence" = "3:100"
-                    "DisplayName" = "8:Pantalla de bienvenida"
+                    "DisplayName" = "8:Welcome"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdAdminWelcomeDlg.wid"
@@ -3321,7 +3321,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_44582F1A6D62440EB79088CAAE05FD72"
                     {
                     "Sequence" = "3:200"
-                    "DisplayName" = "8:Carpeta de instalación"
+                    "DisplayName" = "8:Installation Folder"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdAdminFolderDlg.wid"
@@ -3343,7 +3343,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_D86999FAE3234C8E9BB5D773D3717B6F"
                     {
                     "Sequence" = "3:300"
-                    "DisplayName" = "8:Confirmar instalación"
+                    "DisplayName" = "8:Confirm Installation"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdAdminConfirmDlg.wid"
@@ -3374,7 +3374,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_0179EF9D5E0B4B2EBE1182A645695AD0"
                     {
                     "Sequence" = "3:100"
-                    "DisplayName" = "8:Progreso"
+                    "DisplayName" = "8:Progress"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdAdminProgressDlg.wid"
@@ -3418,7 +3418,7 @@
                     "{688940B3-5CA9-4162-8DEE-2993FA9D8CBC}:_D24151424786471F8451A5716FF5C408"
                     {
                     "Sequence" = "3:100"
-                    "DisplayName" = "8:Progreso"
+                    "DisplayName" = "8:Progress"
                     "UseDynamicProperties" = "11:TRUE"
                     "IsDependency" = "11:FALSE"
                     "SourcePath" = "8:<VsdDialogDir>\\VsdProgressDlg.wid"

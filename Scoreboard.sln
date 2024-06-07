@@ -1,11 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.10.34928.147
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.34902.97
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scoreboard", "Scoreboard\Scoreboard.csproj", "{33015BE8-1BF8-478D-93E4-FDFEF705A62E}"
 EndProject
-Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "ScoreboardSetup", "ScoreboardSetup\ScoreboardSetup.vdproj", "{6637F795-2FDB-4796-87D5-55E76B292272}"
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "Stream Scoreboard", "Stream Scoreboard\Stream Scoreboard.vdproj", "{5997A2DD-AA9C-443B-B254-DB3165DD5721}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -17,8 +17,10 @@ Global
 		{33015BE8-1BF8-478D-93E4-FDFEF705A62E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33015BE8-1BF8-478D-93E4-FDFEF705A62E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33015BE8-1BF8-478D-93E4-FDFEF705A62E}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6637F795-2FDB-4796-87D5-55E76B292272}.Debug|Any CPU.ActiveCfg = Debug
-		{6637F795-2FDB-4796-87D5-55E76B292272}.Release|Any CPU.ActiveCfg = Release
+		{5997A2DD-AA9C-443B-B254-DB3165DD5721}.Debug|Any CPU.ActiveCfg = Debug
+		{5997A2DD-AA9C-443B-B254-DB3165DD5721}.Debug|Any CPU.Build.0 = Debug
+		{5997A2DD-AA9C-443B-B254-DB3165DD5721}.Release|Any CPU.ActiveCfg = Release
+		{5997A2DD-AA9C-443B-B254-DB3165DD5721}.Release|Any CPU.Build.0 = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

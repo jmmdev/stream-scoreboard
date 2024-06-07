@@ -81,5 +81,4 @@ D:\Projects\stream-scoreboard\Scoreboard\obj\Release\Message.baml
 D:\Projects\stream-scoreboard\Scoreboard\obj\Release\Scoreboard.g.resources
 D:\Projects\stream-scoreboard\Scoreboard\obj\Release\Scoreboard.exe
 D:\Projects\stream-scoreboard\Scoreboard\obj\Release\Scoreboard.pdb
-D:\Projects\stream-scoreboard\Scoreboard\obj\Release\Scoreboard.csproj.AssemblyReference.cache
-D:\Projects\stream-scoreboard\Scoreboard\obj\Release\Scoreboard.csproj.Up2Date
+D:\Projects\stream-scoreboard\Scoreboard\obj\Release\Scoreboard.csproj.CopyComplete

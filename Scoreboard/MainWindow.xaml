@@ -896,7 +896,7 @@
 
         <Style TargetType="Hyperlink">
             <Setter Property="Foreground" Value="{DynamicResource LinkColor}"/>
-            <Setter Property="TextDecorations" Value="" />
+            <Setter Property="TextDecorations" Value="None" />
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
                     <Setter Property="Foreground" Value="{DynamicResource PlainText}" />
@@ -1103,7 +1103,7 @@
                     <Grid Cursor="Arrow">
                         <Label Name="lbEvent" Width="180" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8" Padding="0" VerticalContentAlignment="Bottom" FontSize="14" FontWeight="Bold"/>
                         <ComboBox Name="cbEvent" Width="180" Height="24" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="8,32,0,0" Cursor="Hand" SelectionChanged="CbEvent_SelectionChanged"/>
-                        <Button Style="{StaticResource RefreshButton}" Name="btnRefresh" Width="32" Height="32" Content="↺" FontSize="19" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="188 72 0 0" Click="btnRefresh_Click" Visibility="Hidden" />
+                        <Button Style="{StaticResource RefreshButton}" Name="btnRefresh" Width="32" Height="32" Content="↺" FontSize="24" FontWeight="Bold" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="188 70 0 0" Click="btnRefresh_Click" Visibility="Hidden" />
                         <Grid Name="gridSmashGG" Height="112" VerticalAlignment="Top" Visibility="Hidden">
                             <Label Name="lbPhase" Width="180" Height="24" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 8" Padding="0" VerticalContentAlignment="Bottom" FontSize="14" FontWeight="Bold"/>
                             <ComboBox Name="cbPhase" Width="180" Height="24" HorizontalAlignment="Center" VerticalAlignment="Top" Margin="0 32 0 0" Cursor="Hand" SelectionChanged="CbPhase_SelectionChanged"/>
@@ -1242,7 +1242,7 @@
         </Grid>
         <Label HorizontalAlignment="Right" VerticalAlignment="Bottom" FontStyle="Italic" FontFamily="Calibri" FontSize="13" Margin="4 0">
             <Hyperlink NavigateUri="https://devjosm.vercel.app" RequestNavigate="Hyperlink_RequestNavigate">
-                jmmdev.github.io
+                devjosm.vercel.app
             </Hyperlink>
         </Label>
     </Grid>

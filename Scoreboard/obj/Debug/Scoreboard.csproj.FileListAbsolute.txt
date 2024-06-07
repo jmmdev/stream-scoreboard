@@ -81,5 +81,4 @@ D:\Projects\stream-scoreboard\Scoreboard\obj\Debug\Scoreboard.csproj.GenerateRes
 D:\Projects\stream-scoreboard\Scoreboard\obj\Debug\Scoreboard.csproj.CoreCompileInputs.cache
 D:\Projects\stream-scoreboard\Scoreboard\obj\Debug\Scoreboard.exe
 D:\Projects\stream-scoreboard\Scoreboard\obj\Debug\Scoreboard.pdb
-D:\Projects\stream-scoreboard\Scoreboard\obj\Debug\Scoreboard.csproj.AssemblyReference.cache
-D:\Projects\stream-scoreboard\Scoreboard\obj\Debug\Scoreboard.csproj.Up2Date
+D:\Projects\stream-scoreboard\Scoreboard\obj\Debug\Scoreboard.csproj.CopyComplete
